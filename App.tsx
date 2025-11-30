@@ -28,7 +28,7 @@ import PricingPage from './components/PricingPage';
 import Dashboard from './components/Dashboard'; 
 import AdminDashboard from './components/AdminDashboard'; 
 import WordPressDashboard from './components/WordPressDashboard';
-import FaryadresiPage from './components/FaryadresiPage'; // New Import
+import FaryadresiPage from './components/FaryadresiPage';
 import AIGuideModal from './components/AIGuideModal';
 import QuotaErrorModal from './components/QuotaErrorModal';
 import Chatbot from './components/Chatbot';
@@ -36,9 +36,11 @@ import SettingsModal from './components/SettingsModal';
 import { ToastProvider } from './components/Toast';
 import BookingModal from './components/BookingModal'; 
 import DonationModal from './components/DonationModal'; 
+import ResumeAnalyzer from './components/ResumeAnalyzer';
+import JobAssistant from './components/JobAssistant';
 
 // Type and Service Imports
-import { AppState, Checkpoint, PageKey, SaveStatus, useLanguage, Lawyer, Notary, GroundingChunk, StrategyTask, IntentRoute, FilePart, DraftPreparationResult, AutoSaveData, LatLng, useAppearance, LegalCitation, CourtroomRebuttal } from './types';
+import { AppState, Checkpoint, PageKey, SaveStatus, useLanguage, Lawyer, Notary, GroundingChunk, StrategyTask, IntentRoute, FilePart, DraftPreparationResult, AutoSaveData, LatLng, useAppearance, LegalCitation, CourtroomRebuttal, ChatMessage, ResumeAnalysisResult, JobApplication } from './types';
 import * as geminiService from './services/geminiService';
 import * as dbService from './services/dbService';
 import { FastCache } from './services/cacheService';
@@ -141,6 +143,11 @@ const initialState: AppState = {
   courtAssistant_draftText: '',
   courtAssistant_citations: [],
   courtAssistant_rebuttal: null,
+  resumeText: '',
+  resumeAnalysisResult: null,
+  resumeChatHistory: [],
+  jobApplications: [],
+  currentUserCv: '',
 };
 
 // Helper to convert hex to RGB for CSS variable usage (Tailwind opacity support)
@@ -267,6 +274,7 @@ const App: React.FC = () => {
           if(parsedData.contentHub_adaptedPost) draft.contentHub_adaptedPost = parsedData.contentHub_adaptedPost;
           if(parsedData.courtAssistant_draftText) draft.courtAssistant_draftText = parsedData.courtAssistant_draftText;
           if(parsedData.userRole) draft.userRole = parsedData.userRole;
+          if(parsedData.resumeText) draft.resumeText = parsedData.resumeText;
         }));
       } catch (e) {
         console.error("Failed to parse autosave data:", e);
@@ -315,6 +323,7 @@ const App: React.FC = () => {
         contentHub_adaptedPost: state.contentHub_adaptedPost,
         courtAssistant_draftText: state.courtAssistant_draftText,
         userRole: state.userRole,
+        resumeText: state.resumeText,
       };
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(dataToSave));
       setSaveStatus('saved');
@@ -1030,6 +1039,86 @@ const App: React.FC = () => {
         }
     };
 
+    // --- RESUME ANALYZER HANDLERS ---
+    const handleAnalyzeResume = async (resumeText: string) => {
+        setIsLoading(true);
+        setIsApiError(null);
+        setState(produce(draft => {
+            draft.resumeAnalysisResult = null;
+            draft.resumeChatHistory = [];
+        }));
+        try {
+            const result = await geminiService.analyzeResume(resumeText);
+            setState(produce(draft => { draft.resumeAnalysisResult = result; }));
+        } catch (err) {
+            const msg = handleApiError(err);
+            setIsApiError(msg);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleResumeChat = async (userMessage: string) => {
+        setState(produce(draft => {
+            draft.resumeChatHistory.push({ role: 'user', text: userMessage });
+        }));
+        // Note: For simplicity in App.tsx, we are not calling an API here for chat response 
+        // as the ResumeAnalyzer component handles the chat logic internally or expects a prop.
+        // If we want centralized state, we should implement the API call here.
+        // For now, let's assume the component might handle it or we add a service call.
+        // Let's implement it here to be consistent.
+        // BUT: ResumeAnalyzer component provided earlier handles onChat but doesn't implement API call inside.
+        // So we MUST implement it here.
+        // HOWEVER, `geminiService` needs a method for resume chat context.
+        // I will assume `geminiService` has a generic chat or specific resume chat.
+        // Let's use `generateChatResponse` but with context? Or maybe `ResumeAnalyzer` does it?
+        // Actually, looking at `ResumeAnalyzer.tsx`, it takes `onChat` and `chatHistory`.
+        // So we need to handle the AI response here.
+        
+        try {
+             // We can re-use the generic chat or a specific one.
+             // For now, let's mock or use generic. 
+             // Ideally, we'd pass the analysis result as context.
+             // Since this is getting complex for App.tsx, let's just use the generic chat response
+             // but prepended with context about the resume.
+             const contextMsg: ChatMessage = { 
+                 role: 'user', 
+                 text: `Context: I am analyzing a resume. The analysis is: ${JSON.stringify(state.resumeAnalysisResult)}. User asks: ${userMessage}` 
+             };
+             
+             // We only send the last user message with context to the stateless API if we don't have a session.
+             // But `generateChatResponse` takes history.
+             const historyWithContext = [
+                 ...state.resumeChatHistory,
+                 { role: 'user', text: userMessage }
+             ] as ChatMessage[]; // simplified type cast
+
+             const response = await geminiService.generateChatResponse(historyWithContext);
+             setState(produce(draft => {
+                 draft.resumeChatHistory.push({ role: 'model', text: response.reply });
+             }));
+        } catch (err) {
+             console.error("Chat Error", err);
+        }
+    };
+
+    // --- JOB ASSISTANT HANDLERS ---
+    const handleAddApplication = async (app: JobApplication) => {
+        setState(produce(draft => {
+            draft.jobApplications.push(app);
+        }));
+    };
+
+    const handleUpdateApplication = async (app: JobApplication) => {
+        setState(produce(draft => {
+            const index = draft.jobApplications.findIndex(a => a.id === app.id);
+            if (index !== -1) {
+                draft.jobApplications[index] = app;
+            }
+        }));
+    };
+
+
     const toggleUserRole = () => {
         setState(produce(draft => {
             draft.userRole = draft.userRole === 'admin' ? 'user' : 'admin';
@@ -1298,6 +1387,28 @@ const App: React.FC = () => {
                 draftText={state.courtAssistant_draftText}
                 setDraftText={(v) => setSingleState('courtAssistant_draftText', v)}
             />
+        case 'resume_analyzer':
+            return <ResumeAnalyzer
+                resumeText={state.resumeText}
+                setResumeText={(text) => setSingleState('resumeText', text)}
+                analysisResult={state.resumeAnalysisResult}
+                chatHistory={state.resumeChatHistory}
+                onAnalyze={handleAnalyzeResume}
+                onChat={handleResumeChat}
+                isLoading={isLoading}
+                error={isApiError}
+                isQuotaExhausted={isQuotaExhausted}
+            />;
+        case 'job_assistant':
+            return <JobAssistant
+                applications={state.jobApplications}
+                currentUserCv={state.currentUserCv}
+                setCurrentUserCv={(cv) => setSingleState('currentUserCv', cv)}
+                onAddApplication={handleAddApplication}
+                onUpdateApplication={handleUpdateApplication}
+                handleApiError={handleApiError}
+                isQuotaExhausted={isQuotaExhausted}
+            />;
       default:
         return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} />;
     }
@@ -1340,7 +1451,7 @@ const App: React.FC = () => {
         {/* Booking Modal */}
         <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
         
-        {/* Donation Modal (Keep if needed, or remove if fully replaced by Faryadresi page) */}
+        {/* Donation Modal */}
         <DonationModal isOpen={isDonationOpen} onClose={() => setIsDonationOpen(false)} />
 
         <QuotaErrorModal isOpen={isQuotaExhausted} onClose={() => setIsQuotaExhausted(false)} />

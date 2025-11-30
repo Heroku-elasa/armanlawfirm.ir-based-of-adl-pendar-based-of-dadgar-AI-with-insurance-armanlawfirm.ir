@@ -1,6 +1,7 @@
 
 import { GoogleGenAI, Type, Modality } from "@google/genai";
-import { GroundingChunk, StrategyTask, IntentRoute, DraftPreparationResult, ChatMessage, FilePart, LatLng, DailyTrend, GeneratedPost, VideoScript, PublishingStrategy, VideoTool, LegalCitation, CourtroomRebuttal, InstagramReel, InstagramStory, InstagramGrowthPlan } from '../types';
+import { GroundingChunk, StrategyTask, IntentRoute, DraftPreparationResult, ChatMessage, FilePart, LatLng, DailyTrend, GeneratedPost, VideoScript, PublishingStrategy, VideoTool, LegalCitation, CourtroomRebuttal, InstagramReel, InstagramStory, InstagramGrowthPlan, ResumeAnalysisResult, JobDetails, JobSearchSuggestion, JobApplication } from '../types';
+import { RESUME_ANALYSIS_CRITERIA } from '../constants';
 
 // Initialize the Google GenAI SDK
 // We use a singleton pattern to reuse the client instance
@@ -338,7 +339,7 @@ export async function routeUserIntent(goal: string, promptTemplate: string): Pro
             properties: {
                 module: {
                     type: Type.STRING,
-                    enum: ['legal_drafter', 'lawyer_finder', 'news_summarizer', 'case_strategist', 'notary_finder', 'web_analyzer', 'contract_analyzer', 'evidence_analyzer', 'image_generator', 'corporate_services', 'insurance_services', 'site_architect', 'content_hub', 'court_assistant']
+                    enum: ['legal_drafter', 'lawyer_finder', 'news_summarizer', 'case_strategist', 'notary_finder', 'web_analyzer', 'contract_analyzer', 'evidence_analyzer', 'image_generator', 'corporate_services', 'insurance_services', 'site_architect', 'content_hub', 'court_assistant', 'resume_analyzer', 'job_assistant']
                 },
                 confidencePercentage: { type: Type.NUMBER },
                 reasoning: { type: Type.STRING },
@@ -364,7 +365,7 @@ export async function routeUserIntent(goal: string, promptTemplate: string): Pro
         if (Array.isArray(parsedResult)) {
             return parsedResult.filter((item: any) =>
                 typeof item === 'object' && item !== null &&
-                ['legal_drafter', 'lawyer_finder', 'news_summarizer', 'case_strategist', 'notary_finder', 'web_analyzer', 'contract_analyzer', 'evidence_analyzer', 'image_generator', 'corporate_services', 'insurance_services', 'site_architect', 'content_hub', 'court_assistant'].includes(item.module)
+                ['legal_drafter', 'lawyer_finder', 'news_summarizer', 'case_strategist', 'notary_finder', 'web_analyzer', 'contract_analyzer', 'evidence_analyzer', 'image_generator', 'corporate_services', 'insurance_services', 'site_architect', 'content_hub', 'court_assistant', 'resume_analyzer', 'job_assistant'].includes(item.module)
             ) as IntentRoute[];
         }
         throw new Error("Received invalid data structure from AI.");
@@ -517,6 +518,29 @@ export async function extractTextFromImage(file: FilePart): Promise<string> {
         return response.text || "";
     } catch (error) {
         throwEnhancedError(error, 'Failed to extract text from image.');
+    }
+}
+
+export async function extractTextFromDocument(file: FilePart): Promise<string> {
+    // This function handles PDF and Image text extraction using Gemini
+    // For DOCX, we use Mammoth in the component, but this serves as a fallback or for PDFs.
+    const ai = getAI();
+    const model = 'gemini-2.5-flash';
+    const prompt = 'Extract all text from this document. Preserve the structure and content exactly as it is.';
+
+    const parts = [
+        { text: prompt },
+        { inlineData: { mimeType: file.mimeType, data: file.data } }
+    ];
+
+    try {
+        const response = await ai.models.generateContent({
+            model,
+            contents: [{ parts }],
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to extract text from document.');
     }
 }
 
@@ -1057,4 +1081,281 @@ export async function getCourtRebuttal(statement: string, promptTemplate: string
     } catch (error) {
         throwEnhancedError(error, 'Failed to generate rebuttal.');
     }
+}
+
+// --- RESUME & JOB FUNCTIONS ---
+
+export async function analyzeResume(resumeText: string): Promise<ResumeAnalysisResult> {
+    const ai = getAI();
+    const criteriaJson = JSON.stringify(RESUME_ANALYSIS_CRITERIA.map(c => ({ id: c.id, requirement: c.requirement.en })));
+    
+    const prompt = `You are an expert Resume Analyst. Analyze the following resume text against these criteria: ${criteriaJson}.
+    
+    Resume Text:
+    """
+    ${resumeText}
+    """
+    
+    Output a JSON object with the following structure:
+    {
+      "overallScore": number (0-100),
+      "predictedJobTitle": string (e.g., "Senior Software Engineer"),
+      "summaryAndRecommendations": string (markdown format, summarizing strengths and giving concrete improvement tips),
+      "analysis": [
+        {
+          "id": string (matching criteria id),
+          "category": string (e.g., "Contact Info", "Experience"),
+          "requirement": string (description of what was checked),
+          "status": "present" | "missing" | "implicit",
+          "evidence": string (short text snippet or explanation)
+        },
+        ...
+      ]
+    }`;
+
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            overallScore: { type: Type.NUMBER },
+            predictedJobTitle: { type: Type.STRING },
+            summaryAndRecommendations: { type: Type.STRING },
+            analysis: {
+                type: Type.ARRAY,
+                items: {
+                    type: Type.OBJECT,
+                    properties: {
+                        id: { type: Type.STRING },
+                        category: { type: Type.STRING },
+                        requirement: { type: Type.STRING },
+                        status: { type: Type.STRING, enum: ['present', 'missing', 'implicit'] },
+                        evidence: { type: Type.STRING }
+                    },
+                    required: ['id', 'category', 'requirement', 'status', 'evidence']
+                }
+            }
+        },
+        required: ['overallScore', 'predictedJobTitle', 'summaryAndRecommendations', 'analysis']
+    };
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: prompt }] }],
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: responseSchema,
+            },
+        });
+
+        const jsonText = response.text?.trim() || "{}";
+        return JSON.parse(jsonText.replace(/^```json\s*|```$/g, ''));
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to analyze resume.');
+    }
+}
+
+export async function generateImprovedResume(originalResume: string, analysis: ResumeAnalysisResult, chatHistory: ChatMessage[], language: 'en' | 'fa'): Promise<string> {
+    const ai = getAI();
+    const prompt = `You are an expert Resume Writer. Rewrite and improve the following resume based on the analysis provided and any additional context from the chat history.
+    The output should be a professional, ATS-friendly Markdown document.
+    Language: ${language === 'fa' ? 'Persian' : 'English'}.
+    
+    Original Resume:
+    """${originalResume}"""
+    
+    Analysis Weaknesses:
+    ${analysis.analysis.filter(i => i.status !== 'present').map(i => `- ${i.requirement}`).join('\n')}
+    
+    User Chat Context:
+    ${chatHistory.map(m => `${m.role}: ${m.text}`).join('\n')}
+    
+    Output ONLY the full Markdown content of the improved resume.`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: prompt }] }],
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to improve resume.');
+    }
+}
+
+export async function syncLinkedInProfile(url: string): Promise<string> {
+    // In a real app, this would use a backend scraper or official API.
+    // For this demo, we'll simulate it with a search-grounded request to Gemini 
+    // to try and fetch public info, but warn it's not perfect.
+    const ai = getAI();
+    const prompt = `Find the public LinkedIn profile for this URL: ${url}. 
+    Extract the full work experience, education, skills, and summary. 
+    Format it as a clean text resume. If you cannot access it, write a template based on the URL name.`;
+
+    const result = await performSearch(prompt, false);
+    return result.text;
+}
+
+export async function suggestJobSearches(resumeText: string): Promise<JobSearchSuggestion[]> {
+    const ai = getAI();
+    const prompt = `Based on this resume, suggest 3 specific job titles to search for. For each, provide a short reasoning and 3-5 keywords.
+    Resume: """${resumeText.substring(0, 2000)}..."""
+    Return JSON array: jobTitle, reasoning, keywords (array of strings).`;
+
+    const responseSchema = {
+        type: Type.ARRAY,
+        items: {
+            type: Type.OBJECT,
+            properties: {
+                jobTitle: { type: Type.STRING },
+                reasoning: { type: Type.STRING },
+                keywords: { type: Type.ARRAY, items: { type: Type.STRING } }
+            },
+            required: ['jobTitle', 'reasoning', 'keywords']
+        }
+    };
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: prompt }] }],
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: responseSchema,
+            },
+        });
+
+        const jsonText = response.text?.trim() || "[]";
+        return JSON.parse(jsonText.replace(/^```json\s*|```$/g, ''));
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to suggest jobs.');
+    }
+}
+
+export async function scrapeJobDetails(url: string): Promise<JobDetails> {
+    const ai = getAI();
+    const prompt = `Analyze the job posting at this URL: ${url}.
+    Extract: Title, Company Name, Full Description, and Required Skills.
+    Return JSON: title, company, description, skills (array of strings).`;
+
+    // Use search tool to "scrape" via Google cache/index
+    const result = await performSearch(prompt, false);
+    
+    // The search result text might be natural language, we need to convert it to JSON
+    // We'll use a second call to format it if performSearch returns text
+    const formatPrompt = `Convert this text into a JSON object with keys: title, company, description, skills (array). Text: """${result.text}"""`;
+    
+    const responseSchema = {
+        type: Type.OBJECT,
+        properties: {
+            title: { type: Type.STRING },
+            company: { type: Type.STRING },
+            description: { type: Type.STRING },
+            skills: { type: Type.ARRAY, items: { type: Type.STRING } }
+        },
+        required: ['title', 'company', 'description', 'skills']
+    };
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: formatPrompt }] }],
+            config: {
+                responseMimeType: "application/json",
+                responseSchema: responseSchema,
+            },
+        });
+        const jsonText = response.text?.trim() || "{}";
+        return JSON.parse(jsonText.replace(/^```json\s*|```$/g, ''));
+    } catch (e) {
+        // Fallback
+        return {
+            title: "Unknown Job",
+            company: "Unknown Company",
+            description: result.text,
+            skills: []
+        };
+    }
+}
+
+export async function generateTailoredResume(jobDetails: JobDetails, userCv: string): Promise<string> {
+    const ai = getAI();
+    const prompt = `You are a professional resume writer. Tailor the following resume for the specific job description below.
+    Highlight relevant skills and experience. Use strong action verbs. Output in Markdown.
+    
+    Job Details:
+    Title: ${jobDetails.title} at ${jobDetails.company}
+    Description: ${jobDetails.description}
+    
+    User Resume:
+    """${userCv}"""`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: prompt }] }],
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to tailor resume.');
+    }
+}
+
+export async function generateCoverLetter(jobDetails: JobDetails, userCv: string): Promise<string> {
+    const ai = getAI();
+    const prompt = `Write a compelling cover letter for the following job, based on the candidate's resume.
+    Tone: Professional and enthusiastic.
+    
+    Job Details:
+    Title: ${jobDetails.title} at ${jobDetails.company}
+    Description: ${jobDetails.description}
+    
+    Candidate Resume:
+    """${userCv}"""`;
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: [{ parts: [{ text: prompt }] }],
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Failed to write cover letter.');
+    }
+}
+
+export async function chatWithJobCoach(history: ChatMessage[], application: JobApplication): Promise<string> {
+    const ai = getAI();
+    const systemPrompt = `You are a career coach helping the user apply for the position of ${application.jobTitle} at ${application.company}.
+    Context:
+    - Job Description: ${application.jobDescription.substring(0, 500)}...
+    - User Resume status: ${application.status}
+    
+    Answer the user's questions about interview prep, salary negotiation, or application tips specifically for this role. Keep answers concise.`;
+
+    const contents = [
+        { role: 'user', parts: [{ text: systemPrompt }] }, // System context as first user msg
+        ...history.map(msg => ({ role: msg.role, parts: [{ text: msg.text }] }))
+    ];
+
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.5-flash",
+            contents: contents,
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Job Coach chat failed.');
+    }
+}
+
+export async function sendWhatsAppApproval(appId: string, phone: string): Promise<void> {
+    // Mock
+    console.log(`Sending approval request for app ${appId} to ${phone}`);
+    await new Promise(resolve => setTimeout(resolve, 1000));
+}
+
+export async function applyByEmail(appId: string, email: string): Promise<void> {
+    // Mock
+    console.log(`Sending application ${appId} to ${email}`);
+    await new Promise(resolve => setTimeout(resolve, 1500));
 }

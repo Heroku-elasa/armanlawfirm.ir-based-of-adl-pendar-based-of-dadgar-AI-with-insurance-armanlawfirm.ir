@@ -8,6 +8,15 @@ export const REPORT_TYPES = [
     { value: 'complaint' },
 ];
 
+export const RESUME_ANALYSIS_CRITERIA = [
+    { id: 'contact', requirement: { en: 'Contact Information', fa: 'اطلاعات تماس' } },
+    { id: 'summary', requirement: { en: 'Professional Summary', fa: 'خلاصه سوابق حرفه‌ای' } },
+    { id: 'experience', requirement: { en: 'Work Experience', fa: 'سوابق شغلی' } },
+    { id: 'education', requirement: { en: 'Education', fa: 'تحصیلات' } },
+    { id: 'skills', requirement: { en: 'Skills', fa: 'مهارت‌ها' } },
+    { id: 'formatting', requirement: { en: 'Formatting & Clarity', fa: 'قالب‌بندی و خوانایی' } },
+];
+
 export const DEFAULT_SUGGESTIONS = {
     legal_drafter_topic: [
         "مطالبه وجه چک",
@@ -102,7 +111,9 @@ export const fa = {
         restoreConfirm: 'آیا از بازیابی این وضعیت مطمئن هستید؟ تغییرات ذخیره‌نشده از بین خواهند رفت.',
         deleteConfirm: 'آیا از حذف این وضعیت مطمئن هستید؟',
         booking: 'اخذ نوبت مشاوره',
-        donation: 'فریادرسی (Donation)'
+        donation: 'فریادرسی (Donation)',
+        resumeAnalyzer: 'تحلیلگر رزومه',
+        jobAssistant: 'دستیار شغلی'
     },
     dashboard: {
         welcome: 'خوش آمدید،',
@@ -125,7 +136,6 @@ export const fa = {
         },
         dailyTip: 'نکته حقوقی روز: مهلت تجدیدنظرخواهی برای احکام حضوری دادگاه‌های عمومی و انقلاب ۲۰ روز است.'
     },
-    // Booking & Donation Translations
     booking: {
         title: 'رزرو وقت مشاوره',
         subtitle: 'نوع مشاوره خود را انتخاب کنید',
@@ -160,7 +170,125 @@ export const fa = {
         title: 'منشور اخلاقی دفتر',
         text: 'ما در عدل پندار متعهد هستیم که با صداقت، امانتداری و تخصص، مدافع حقوق موکلین خود باشیم. اولویت ما صلح و سازش است، اما در دفاع از حق، قاطع و سازش‌ناپذیر خواهیم بود.'
     },
-    // ... rest of fa ... (Keeping existing translations)
+    resumeAnalyzer: {
+        title: 'تحلیلگر هوشمند رزومه',
+        subtitle: 'رزومه خود را بارگذاری کنید تا نقاط قوت و ضعف آن را شناسایی کرده و برای شغل ایده‌آل خود آماده شوید.',
+        uploadTab: 'بارگذاری فایل',
+        textTab: 'متن رزومه',
+        linkedin: {
+            tab: 'لینکدین',
+            importButton: 'دریافت پروفایل'
+        },
+        dropzone: 'فایل رزومه (PDF, DOCX) را اینجا بکشید یا کلیک کنید',
+        analyzeButton: 'تحلیل رزومه',
+        analyzingButton: 'در حال تحلیل...',
+        improveButton: 'بازنویسی حرفه‌ای رزومه',
+        improvingButton: 'در حال بازنویسی...',
+        findingJobs: 'جستجوی شغل...',
+        findJobsButton: 'پیشنهاد شغل',
+        placeholder: 'متن رزومه خود را اینجا وارد کنید...',
+        aiThoughts: {
+            title: 'فرآیند تحلیل AI',
+            finalizing: 'نهایی‌سازی گزارش...'
+        },
+        progressBar: {
+            upload: 'بارگذاری',
+            parse: 'استخراج متن',
+            analyze: 'تحلیل محتوا',
+            complete: 'تکمیل'
+        },
+        overallScore: 'امتیاز کلی',
+        predictedRole: 'نقش پیشنهادی',
+        chat: {
+            placeholder: 'سوالی درباره رزومه دارید؟ (مثلا: چطور بخش مهارت‌ها را بهتر کنم؟)',
+            listening: 'در حال گوش دادن...'
+        },
+        table: {
+            title: 'جزئیات تحلیل',
+            requirement: 'معیار',
+            status: 'وضعیت',
+            evidence: 'شواهد / توضیحات',
+            present: 'موجود',
+            missing: 'ناقص',
+            implicit: 'ضمنی',
+            noEvidence: 'موردی یافت نشد'
+        },
+        improvedTitle: 'رزومه بازنویسی شده',
+        jobsTitle: 'فرصت‌های شغلی پیشنهادی'
+    },
+    jobAssistant: {
+        subtitle: 'مدیریت هوشمند درخواست‌های شغلی و ساخت رزومه اختصاصی برای هر موقعیت.',
+        error: {
+            unsupportedFile: 'فرمت فایل پشتیبانی نمی‌شود.',
+            noCv: 'لطفا ابتدا رزومه خود را در تب "رزومه من" وارد کنید.',
+            noJob: 'لطفا لینک یا توضیحات شغل را وارد کنید.'
+        },
+        status: {
+            scraping: 'در حال خواندن آگهی...',
+            generatingResume: 'نوشتن رزومه اختصاصی...',
+            generatingCoverLetter: 'نوشتن نامه پوششی...',
+            sendingApproval: 'ارسال برای تایید...',
+            applying: 'در حال ارسال درخواست...',
+            approvalWaiting: 'در انتظار تایید شما...',
+            draft: 'پیش‌نویس',
+            pending_approval: 'منتظر تایید',
+            applying: 'در حال ارسال',
+            applied: 'ارسال شده',
+            viewed: 'دیده شده',
+            interview_scheduled: 'مصاحبه',
+            offer_received: 'پیشنهاد همکاری',
+            rejected: 'رد شده',
+            error: 'خطا'
+        },
+        tabs: {
+            apply: 'درخواست جدید',
+            dashboard: 'داشبورد پیگیری',
+            cv: 'رزومه من'
+        },
+        apply: {
+            title: 'ساخت درخواست شغلی',
+            jobUrlLabel: 'لینک آگهی شغلی',
+            jobUrlPlaceholder: 'https://linkedin.com/jobs/...',
+            jobDescLabel: 'توضیحات شغل (اگر لینک ندارید)',
+            jobDescPlaceholder: 'شرح وظایف و مهارت‌های مورد نیاز...',
+            generateButton: 'ساخت رزومه و کاورلتر اختصاصی'
+        },
+        dashboard: {
+            title: 'پیگیری درخواست‌ها',
+            jobTitle: 'عنوان شغل',
+            company: 'شرکت',
+            date: 'تاریخ',
+            status: 'وضعیت',
+            noApps: 'هنوز درخواستی ثبت نشده است.'
+        },
+        cv: {
+            title: 'پروفایل و رزومه پایه',
+            description: 'این رزومه به عنوان مبنای ساخت رزومه‌های اختصاصی استفاده می‌شود.',
+            linkedinLabel: 'لینک پروفایل لینکدین',
+            linkedinPlaceholder: 'https://linkedin.com/in/username',
+            syncButton: 'همگام‌سازی',
+            syncingButton: 'در حال دریافت...',
+            dropzone: 'آپلود فایل رزومه (PDF/DOCX)',
+            parsing: 'در حال پردازش فایل...',
+            placeholder: 'متن کامل رزومه خود را اینجا وارد کنید...'
+        },
+        preview: {
+            title: 'پیش‌نمایش و ویرایش',
+            resume: 'رزومه اختصاصی',
+            coverLetter: 'نامه پوششی (Cover Letter)',
+            whatsappButton: 'ارسال جهت تایید (WhatsApp)',
+            applyButton: 'ارسال ایمیل درخواست'
+        },
+        jobSearch: {
+            title: 'پیشنهادهای شغلی',
+            button: 'یافتن شغل‌های مرتبط',
+            loading: 'در حال جستجو...'
+        },
+        autoSave: {
+            saved: 'ذخیره شد',
+            saving: 'در حال ذخیره...'
+        }
+    },
     pricing: {
         title: 'سرویس‌های هوشمند حقوقی',
         subtitle: 'خدمات حقوقی با سرعت و دقت هوش مصنوعی و نظارت متخصصین',
@@ -381,18 +509,6 @@ export const fa = {
         buttonText: 'ایجاد پیش‌نویس',
         validationError: 'لطفا موضوع و شرح مختصر را تکمیل کنید.'
     },
-    reportTypes: {
-        petition: 'دادخواست',
-        contract: 'قرارداد',
-        statement: 'اظهارنامه',
-        power_of_attorney: 'وکالت‌نامه',
-        legal_warning: 'اخطار قانونی',
-        complaint: 'شکوائیه'
-    },
-    reportExamples: {
-        petition: { topic: 'مطالبه وجه سفته', description: 'اینجانب یک فقره سفته به مبلغ ۱۰۰ میلیون تومان از آقای رضا رضایی در اختیار دارم که با وجود سررسید و مراجعات مکرر، از پرداخت آن خودداری کرده است. تقاضای رسیدگی و صدور حکم محکومیت ایشان را دارم.' },
-        contract: { topic: 'قرارداد اجاره یک واحد آپارتمان مسکونی', description: 'قرارداد اجاره یک دستگاه آپارتمان به مساحت ۹۰ متر مربع واقع در تهران، خیابان آزادی، پلاک ۱۰، طبقه ۳، واحد ۵، بین موجر آقای احمد احمدی و مستاجر خانم سارا ساروی به مدت یک سال شمسی منعقد می‌گردد.' }
-    },
     reportPrompts: {
         petition: 'بر اساس موضوع "{topic}" و شرح "{description}"، یک دادخواست کامل و رسمی برای ارائه به دادگاه عمومی حقوقی در ایران تنظیم کن. تمام ارکان دادخواست از جمله خواهان، خوانده، خواسته، دلایل و منضمات و شرح دادخواست را به طور دقیق و با ادبیات حقوقی مناسب بنویس.',
         contract: 'یک پیش‌نویس قرارداد کامل و جامع با موضوع "{topic}" و بر اساس توضیحات "{description}" تهیه کن. تمام مواد ضروری قرارداد از جمله مشخصات طرفین، موضوع قرارداد، مدت، مبلغ، تعهدات طرفین، شرایط فسخ و مرجع حل اختلاف را در نظر بگیر.',
@@ -400,6 +516,10 @@ export const fa = {
         power_of_attorney: 'بر اساس موضوع "{topic}" و توضیحات "{description}"، یک وکالت‌نامه جامع و رسمی تنظیم کن که در آن حدود اختیارات وکیل به طور دقیق مشخص شده باشد.',
         legal_warning: 'یک اخطار قانونی برای ارسال به طرف مقابل با موضوع "{topic}" و بر اساس شرح "{description}" بنویس. اخطار باید شامل درخواست مشخص، مهلت انجام آن و عواقب قانونی عدم توجه به اخطار باشد.',
         complaint: 'یک شکوائیه برای ارائه به دادسرای عمومی و انقلاب با موضوع "{topic}" و بر اساس شرح "{description}" تنظیم کن. ارکان شکوائیه از جمله شاکی، مشتکی‌عنه، موضوع شکایت و شرح آن را به طور کامل و دقیق بنویس.'
+    },
+    reportExamples: {
+        petition: { topic: 'مطالبه وجه سفته', description: 'اینجانب یک فقره سفته به مبلغ ۱۰۰ میلیون تومان از آقای رضا رضایی در اختیار دارم که با وجود سررسید و مراجعات مکرر، از پرداخت آن خودداری کرده است. تقاضای رسیدگی و صدور حکم محکومیت ایشان را دارم.' },
+        contract: { topic: 'قرارداد اجاره یک واحد آپارتمان مسکونی', description: 'قرارداد اجاره یک دستگاه آپارتمان به مساحت ۹۰ متر مربع واقع در تهران، خیابان آزادی، پلاک ۱۰، طبقه ۳، واحد ۵، بین موجر آقای احمد احمدی و مستاجر خانم سارا ساروی به مدت یک سال شمسی منعقد می‌گردد.' }
     },
     reportDisplay: {
         title: 'سند تولید شده',
@@ -574,7 +694,7 @@ export const fa = {
         confidence: 'میزان اطمینان',
         button: 'با راهنمای هوشمند شروع کنید',
         validationError: 'لطفا هدف خود را برای دریافت پیشنهاد وارد کنید.',
-        prompt: 'بر اساس هدف کاربر که "{goal}" است، سه ابزار برتر از لیست زیر را که بیشترین ارتباط را با نیاز او دارند، پیشنهاد بده. برای هر کدام، دلیل انتخاب و درصد اطمینان را مشخص کن. خروجی باید یک آرایه JSON از اشیاء با کلیدهای module, confidencePercentage, reasoning باشد. لیست ماژول‌ها: legal_drafter, lawyer_finder, news_summarizer, case_strategist, notary_finder, web_analyzer, contract_analyzer, evidence_analyzer, image_generator, corporate_services, insurance_services, site_architect, general_questions, content_hub, court_assistant',
+        prompt: 'بر اساس هدف کاربر که "{goal}" است، سه ابزار برتر از لیست زیر را که بیشترین ارتباط را با نیاز او دارند، پیشنهاد بده. برای هر کدام، دلیل انتخاب و درصد اطمینان را مشخص کن. خروجی باید یک آرایه JSON از اشیاء با کلیدهای module, confidencePercentage, reasoning باشد. لیست ماژول‌ها: legal_drafter, lawyer_finder, news_summarizer, case_strategist, notary_finder, web_analyzer, contract_analyzer, evidence_analyzer, image_generator, corporate_services, insurance_services, site_architect, general_questions, content_hub, court_assistant, resume_analyzer, job_assistant',
         example: {
             prompt: 'یک چک دارم که پاس نشده است و میخواهم آن را وصول کنم.'
         }
@@ -975,7 +1095,9 @@ export const en = {
         restoreConfirm: 'Are you sure you want to restore this state? Unsaved changes will be lost.',
         deleteConfirm: 'Are you sure you want to delete this checkpoint?',
         booking: 'Book Consultation',
-        donation: 'Donate (Faryadrasi)'
+        donation: 'Donate (Faryadrasi)',
+        resumeAnalyzer: 'Resume Analyzer',
+        jobAssistant: 'Job Assistant'
     },
     dashboard: {
         welcome: 'Welcome,',
@@ -998,7 +1120,6 @@ export const en = {
         },
         dailyTip: 'Daily Tip: The appeal deadline for verdicts in general courts is 20 days.'
     },
-    // Booking & Donation Translations
     booking: {
         title: 'Book Consultation',
         subtitle: 'Choose your consultation type',
@@ -1033,7 +1154,125 @@ export const en = {
         title: 'Our Mission',
         text: 'At Adl Pendar, we are committed to defending our clients\' rights with honesty, integrity, and expertise. Our priority is peace and reconciliation, but we remain firm and uncompromising in the defense of justice.'
     },
-    // ... rest of en ... (Keeping existing translations)
+    resumeAnalyzer: {
+        title: 'AI Resume Analyzer',
+        subtitle: 'Upload your resume to identify strengths and weaknesses and prepare for your ideal job.',
+        uploadTab: 'Upload File',
+        textTab: 'Resume Text',
+        linkedin: {
+            tab: 'LinkedIn',
+            importButton: 'Import Profile'
+        },
+        dropzone: 'Drag & drop resume file (PDF, DOCX) here, or click to select',
+        analyzeButton: 'Analyze Resume',
+        analyzingButton: 'Analyzing...',
+        improveButton: 'Rewrite Professional Resume',
+        improvingButton: 'Rewriting...',
+        findingJobs: 'Finding jobs...',
+        findJobsButton: 'Find Jobs',
+        placeholder: 'Paste your resume text here...',
+        aiThoughts: {
+            title: 'AI Analysis Process',
+            finalizing: 'Finalizing report...'
+        },
+        progressBar: {
+            upload: 'Upload',
+            parse: 'Parse Text',
+            analyze: 'Analyze Content',
+            complete: 'Complete'
+        },
+        overallScore: 'Overall Score',
+        predictedRole: 'Predicted Role',
+        chat: {
+            placeholder: 'Ask about your resume (e.g., How to improve skills section?)',
+            listening: 'Listening...'
+        },
+        table: {
+            title: 'Analysis Details',
+            requirement: 'Criteria',
+            status: 'Status',
+            evidence: 'Evidence / Notes',
+            present: 'Present',
+            missing: 'Missing',
+            implicit: 'Implicit',
+            noEvidence: 'No evidence found'
+        },
+        improvedTitle: 'Rewritten Resume',
+        jobsTitle: 'Suggested Job Opportunities'
+    },
+    jobAssistant: {
+        subtitle: 'Smartly manage job applications and create tailored resumes for each position.',
+        error: {
+            unsupportedFile: 'File format not supported.',
+            noCv: 'Please enter your resume in the "My Resume" tab first.',
+            noJob: 'Please enter job URL or description.'
+        },
+        status: {
+            scraping: 'Reading job ad...',
+            generatingResume: 'Writing tailored resume...',
+            generatingCoverLetter: 'Writing cover letter...',
+            sendingApproval: 'Sending for approval...',
+            applying: 'Sending application...',
+            approvalWaiting: 'Waiting for your approval...',
+            draft: 'Draft',
+            pending_approval: 'Pending Approval',
+            applying: 'Applying',
+            applied: 'Applied',
+            viewed: 'Viewed',
+            interview_scheduled: 'Interview',
+            offer_received: 'Offer',
+            rejected: 'Rejected',
+            error: 'Error'
+        },
+        tabs: {
+            apply: 'New Application',
+            dashboard: 'Tracking Dashboard',
+            cv: 'My Resume'
+        },
+        apply: {
+            title: 'Create Job Application',
+            jobUrlLabel: 'Job Ad URL',
+            jobUrlPlaceholder: 'https://linkedin.com/jobs/...',
+            jobDescLabel: 'Job Description (if no URL)',
+            jobDescPlaceholder: 'Job duties and required skills...',
+            generateButton: 'Create Tailored Resume & Cover Letter'
+        },
+        dashboard: {
+            title: 'Track Applications',
+            jobTitle: 'Job Title',
+            company: 'Company',
+            date: 'Date',
+            status: 'Status',
+            noApps: 'No applications logged yet.'
+        },
+        cv: {
+            title: 'Base Profile & Resume',
+            description: 'This resume is used as the basis for creating tailored resumes.',
+            linkedinLabel: 'LinkedIn Profile URL',
+            linkedinPlaceholder: 'https://linkedin.com/in/username',
+            syncButton: 'Sync',
+            syncingButton: 'Fetching...',
+            dropzone: 'Upload Resume File (PDF/DOCX)',
+            parsing: 'Processing file...',
+            placeholder: 'Enter your full resume text here...'
+        },
+        preview: {
+            title: 'Preview & Edit',
+            resume: 'Tailored Resume',
+            coverLetter: 'Cover Letter',
+            whatsappButton: 'Send for Approval (WhatsApp)',
+            applyButton: 'Send Application Email'
+        },
+        jobSearch: {
+            title: 'Job Suggestions',
+            button: 'Find Related Jobs',
+            loading: 'Searching...'
+        },
+        autoSave: {
+            saved: 'Saved',
+            saving: 'Saving...'
+        }
+    },
     pricing: {
         title: 'Smart Legal Services',
         subtitle: 'Legal services with AI speed/accuracy and expert supervision',
@@ -1447,7 +1686,7 @@ export const en = {
         confidence: 'Confidence',
         button: 'Start with Smart Guide',
         validationError: 'Please enter your goal.',
-        prompt: 'Based on user goal "{goal}", suggest top 3 tools from this list most relevant to their need. For each, provide reasoning and confidence percentage. Output a JSON array of objects with keys module, confidencePercentage, reasoning. Modules: legal_drafter, lawyer_finder, news_summarizer, case_strategist, notary_finder, web_analyzer, contract_analyzer, evidence_analyzer, image_generator, corporate_services, insurance_services, site_architect, general_questions, content_hub, court_assistant',
+        prompt: 'Based on user goal "{goal}", suggest top 3 tools from this list most relevant to their need. For each, provide reasoning and confidence percentage. Output a JSON array of objects with keys module, confidencePercentage, reasoning. Modules: legal_drafter, lawyer_finder, news_summarizer, case_strategist, notary_finder, web_analyzer, contract_analyzer, evidence_analyzer, image_generator, corporate_services, insurance_services, site_architect, general_questions, content_hub, court_assistant, resume_analyzer, job_assistant',
         example: {
             prompt: 'I have a bounced check and want to collect it.'
         }

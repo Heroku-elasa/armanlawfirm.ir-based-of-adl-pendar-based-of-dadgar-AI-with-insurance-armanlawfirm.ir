@@ -70,6 +70,8 @@ const AIGuideModal: React.FC<AIGuideModalProps> = ({
     pricing: t('header.pricing'),
     wp_dashboard: 'WordPress Dashboard',
     faryadresi: t('header.donation'),
+    resume_analyzer: t('resumeAnalyzer.title'),
+    job_assistant: t('jobAssistant.tabs.apply'),
   };
 
   return (

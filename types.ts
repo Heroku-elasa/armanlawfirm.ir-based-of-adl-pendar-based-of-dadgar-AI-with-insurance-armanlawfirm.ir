@@ -135,7 +135,7 @@ export const useLanguage = () => {
 };
 
 // --- TYPE DEFINITIONS ---
-export type PageKey = 'dashboard' | 'legal_drafter' | 'lawyer_finder' | 'news_summarizer' | 'case_strategist' | 'notary_finder' | 'web_analyzer' | 'contract_analyzer' | 'evidence_analyzer' | 'image_generator' | 'corporate_services' | 'insurance_services' | 'site_architect' | 'external_service' | 'general_questions' | 'blog' | 'content_hub' | 'court_assistant' | 'pricing' | 'wp_dashboard' | 'faryadresi';
+export type PageKey = 'dashboard' | 'legal_drafter' | 'lawyer_finder' | 'news_summarizer' | 'case_strategist' | 'notary_finder' | 'web_analyzer' | 'contract_analyzer' | 'evidence_analyzer' | 'image_generator' | 'corporate_services' | 'insurance_services' | 'site_architect' | 'external_service' | 'general_questions' | 'blog' | 'content_hub' | 'court_assistant' | 'pricing' | 'wp_dashboard' | 'faryadresi' | 'resume_analyzer' | 'job_assistant';
 
 export interface LatLng {
   latitude: number;
@@ -149,6 +149,7 @@ export type SaveStatus = 'idle' | 'saving' | 'saved';
 export interface ChatMessage {
   role: 'user' | 'model';
   text: string;
+  image?: string;
 }
 
 // FIX: Added the missing FilePart interface, which is used for file uploads.
@@ -336,6 +337,54 @@ export interface ChatHistoryItem {
     image?: string;
 }
 
+// --- RESUME & JOB TYPES ---
+export type ResumeAnalysisStatus = 'present' | 'missing' | 'implicit' | 'pending' | 'done';
+
+export interface ResumeAnalysisItem {
+    id: string;
+    category: string;
+    requirement: string;
+    status: ResumeAnalysisStatus;
+    evidence?: string;
+}
+
+export interface ResumeAnalysisResult {
+    overallScore: number;
+    predictedJobTitle: string;
+    summaryAndRecommendations: string;
+    analysis: ResumeAnalysisItem[];
+}
+
+export interface JobSearchSuggestion {
+    jobTitle: string;
+    reasoning: string;
+    keywords: string[];
+}
+
+export type JobApplicationStatus = 'draft' | 'pending_approval' | 'applying' | 'applied' | 'viewed' | 'interview_scheduled' | 'offer_received' | 'rejected' | 'error';
+
+export interface JobApplication {
+    id: string;
+    jobTitle: string;
+    company: string;
+    jobUrl: string;
+    status: JobApplicationStatus;
+    cvText: string;
+    jobDescription: string;
+    tailoredResume: string;
+    coverLetter: string;
+    lastUpdated: number;
+    appliedDate?: number;
+    chatHistory: ChatMessage[];
+}
+
+export interface JobDetails {
+    title: string;
+    company: string;
+    description: string;
+    skills: string[];
+}
+
 // --- APP STATE & CHECKPOINT SETUP ---
 
 // Interface for data to be auto-saved to localStorage
@@ -401,6 +450,8 @@ export interface AutoSaveData {
   courtAssistant_draftText: string;
   // User Role Persistence
   userRole?: 'user' | 'admin';
+  // Resume & Jobs
+  resumeText?: string;
 }
 
 export interface AppState {
@@ -499,6 +550,13 @@ export interface AppState {
   courtAssistant_draftText: string;
   courtAssistant_citations: LegalCitation[];
   courtAssistant_rebuttal: CourtroomRebuttal | null;
+  // Resume Analyzer
+  resumeText: string;
+  resumeAnalysisResult: ResumeAnalysisResult | null;
+  resumeChatHistory: ChatMessage[];
+  // Job Assistant
+  jobApplications: JobApplication[];
+  currentUserCv: string; // Shared CV for Job Assistant
 }
 export interface PricingPlan {
     title: string;
