@@ -103,10 +103,10 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
         <div className="flex items-center justify-between h-20">
           <div className="flex items-center lg:flex-1 overflow-hidden">
             <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange('home'); }} className="flex-shrink-0 flex items-center space-x-3 rtl:space-x-reverse group mr-4 rtl:ml-4">
-              <img src={customLogo} alt="Adl Pendar Logo" className="w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
+              <img src={customLogo} alt="Arman Law Firm Logo" className="w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
               <div className="flex flex-col">
-                  <span className="font-bold text-lg sm:text-xl text-gray-800 dark:text-brand-gold transition-colors">عدل پندار</span>
-                  <span className="text-[10px] text-gray-500 dark:text-gray-400 tracking-wider hidden sm:inline">موسسه حقوقی</span>
+                  <span className="font-bold text-lg sm:text-xl text-gray-800 dark:text-brand-gold transition-colors">موسسه حقوقی آرمان</span>
+                  <span className="text-[10px] text-gray-500 dark:text-gray-400 tracking-wider hidden sm:inline">Arman Law Firm</span>
               </div>
             </a>
             

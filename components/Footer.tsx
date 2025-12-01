@@ -37,15 +37,15 @@ const SiteFooter: React.FC<SiteFooterProps> = ({ setPage }) => {
                     {/* Column 1: Logo & Description */}
                     <div className="space-y-6 md:col-span-1">
                         <div className="flex items-center space-x-3 rtl:space-x-reverse group">
-                             <img src={customLogo} alt="Adl Pendar Logo" className="w-16 h-16 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
+                             <img src={customLogo} alt="Arman Law Firm Logo" className="w-16 h-16 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
                              <div className="flex flex-col">
-                                <span className="font-bold text-2xl text-gray-900 dark:text-white group-hover:text-brand-gold transition-colors">عدل پندار</span>
-                                <span className="text-xs text-gray-500 tracking-wider">موسسه حقوقی</span>
+                                <span className="font-bold text-2xl text-gray-900 dark:text-white group-hover:text-brand-gold transition-colors">موسسه حقوقی آرمان</span>
+                                <span className="text-xs text-gray-500 tracking-wider">Arman Law Firm</span>
                              </div>
                         </div>
                         <p className="text-sm font-semibold text-brand-gold">{t('footer.slogan')}</p>
                         <p className="text-sm leading-loose text-gray-600 dark:text-gray-400 whitespace-pre-line">
-                            خدمات اینترنتی گروه حقوقی عدل پندار در اوقات اداری بصورت حضوری و در ساعتهای دیگر بصورت غير حضوری قابل دسترس شما خواهد بود.
+                            خدمات اینترنتی موسسه حقوقی آرمان در اوقات اداری بصورت حضوری و در ساعتهای دیگر بصورت غير حضوری قابل دسترس شما خواهد بود.
                         </p>
                         <div className="flex space-x-4 rtl:space-x-reverse">
                             {/* Instagram */}
