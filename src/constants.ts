@@ -1,4 +1,5 @@
 
+
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -228,7 +229,7 @@ export const fa = {
             generatingResume: 'نوشتن رزومه اختصاصی...',
             generatingCoverLetter: 'نوشتن نامه پوششی...',
             sendingApproval: 'ارسال برای تایید...',
-            applying: 'در حال ارسال درخواست...',
+            sendingApplication: 'در حال ارسال درخواست...',
             approvalWaiting: 'در انتظار تایید شما...',
             draft: 'پیش‌نویس',
             pending_approval: 'منتظر تایید',
@@ -1212,7 +1213,7 @@ export const en = {
             generatingResume: 'Writing tailored resume...',
             generatingCoverLetter: 'Writing cover letter...',
             sendingApproval: 'Sending for approval...',
-            applying: 'Sending application...',
+            sendingApplication: 'Sending application...',
             approvalWaiting: 'Waiting for your approval...',
             draft: 'Draft',
             pending_approval: 'Pending Approval',
@@ -1434,4 +1435,612 @@ export const en = {
             analysisTitle: 'Legal Analysis',
             lawTitle: 'Relevant Law',
             rebuttalTitle: 'Suggested Rebuttal',
-            personaLabel
+            personaLabel: 'Select Persona:',
+            personas: {
+                neutral_judge: 'Neutral Judge',
+                aggressive_lawyer: 'Aggressive Lawyer',
+                wise_counselor: 'Wise Counselor',
+                detailed_analyst: 'Detailed Analyst'
+            },
+            voiceAction: 'Play Audio',
+            generatingAudio: 'Generating audio...',
+            examples: [
+                'Judge: You provided no proof of ownership, so the case is dismissed.',
+                'Opposing Counsel: My client was abroad, so the contract is considered void.',
+                'Judge: This check is not criminal because it has no date.',
+                'Opposing party: I have no debt because five years have passed.'
+            ]
+        },
+        prompts: {
+            citation: 'Read the following text/file. Identify specific Iranian legal articles (Civil Code, Penal Code, etc.) that support the arguments. Return a JSON array of objects with keys: text_segment, law_name, article_number, relevance_explanation.',
+            liveRebuttal: 'You are a legal assistant in court with the persona "{persona}". The following input (text or audio) was said by the judge or opposing counsel: "{statement}". 1. Is this legally correct? 2. What law applies? 3. What should I say? Return a JSON object with keys: validity_status ("valid", "invalid", "debatable"), analysis, relevant_law, suggested_rebuttal (suggested response matching your persona).'
+        }
+    },
+    generalQuestionsPage: {
+        title: 'Help Center & FAQ',
+        subtitle: 'Find all your answers here or ask our AI assistant.',
+        searchPlaceholder: 'Search questions (e.g., How to find a lawyer?)',
+        categories: {
+            general: 'General',
+            legal: 'Legal Services',
+            ai: 'AI Tools',
+            security: 'Security & Privacy'
+        },
+        aiSection: {
+            title: 'Did not find your answer?',
+            subtitle: 'Ask Dadgar AI directly for immediate assistance.',
+            inputPlaceholder: 'Type your question here...',
+            button: 'Ask AI',
+            thinking: 'Searching for answer...'
+        },
+        items: [
+            { category: 'general', q: 'What is Adl Pendar?', a: 'Adl Pendar is a comprehensive legal platform combining top-tier lawyers with advanced AI to provide faster and more accurate legal services.' },
+            { category: 'general', q: 'How do I sign up?', a: 'Currently, registration is not mandatory for many tools. Some specific services may require authentication.' },
+            { category: 'legal', q: 'Are AI-generated contracts valid?', a: 'These contracts are drafted based on current laws, but we always recommend review by a lawyer before final signature.' },
+            { category: 'legal', q: 'How much does a lawyer cost?', a: 'Fees vary by case type and lawyer expertise. You can check rates in the Lawyer Finder section.' },
+            { category: 'ai', q: 'How does the AI work?', a: 'We use advanced Google Gemini language models trained on legal texts to provide high-quality outputs.' },
+            { category: 'ai', q: 'Does the AI make mistakes?', a: 'Like any system, errors are possible. Always treat outputs as drafts and consult a professional.' },
+            { category: 'security', q: 'Where is my data stored?', a: 'Your data is stored locally in your browser and sent encrypted only for processing.' }
+        ]
+    },
+    generatorForm: {
+        title: 'Draft Legal Document',
+        docType: 'Document Type',
+        topic: 'Topic',
+        topicPlaceholder: 'e.g., Check Claim',
+        description: 'Brief Description',
+        descriptionPlaceholder: 'Enter the main details of your case or request here...',
+        useExample: 'Use Example',
+        buttonText: 'Create Draft',
+        validationError: 'Please complete the topic and description.'
+    },
+    reportTypes: {
+        petition: 'Petition',
+        contract: 'Contract',
+        statement: 'Statement',
+        power_of_attorney: 'Power of Attorney',
+        legal_warning: 'Legal Warning',
+        complaint: 'Complaint'
+    },
+    reportExamples: {
+        petition: { topic: 'Promissory Note Claim', description: 'I hold a promissory note for 100 million Tomans from Mr. Reza Rezaei, who has refused to pay despite the due date and repeated requests. I request legal proceedings and a judgment for payment.' },
+        contract: { topic: 'Apartment Lease Contract', description: 'Lease agreement for a 90 sqm apartment located in Tehran, Azadi St, No 10, Floor 3, Unit 5, between Landlord Mr. Ahmad Ahmadi and Tenant Ms. Sara Saravi for one solar year.' }
+    },
+    reportPrompts: {
+        petition: 'Based on the topic "{topic}" and description "{description}", write a formal petition for an Iranian court. Include plaintiff, defendant, demands, evidence, and a detailed explanation in appropriate legal language.',
+        contract: 'Draft a comprehensive contract with the topic "{topic}" based on description "{description}". Include all necessary articles such as parties, subject, duration, amount, obligations, termination conditions, and dispute resolution.',
+        statement: 'Write a formal legal statement regarding "{topic}" based on description "{description}". The tone should be respectful but firm, clearly stating the declarer\'s legal demand.',
+        power_of_attorney: 'Based on topic "{topic}" and description "{description}", draft a comprehensive official power of attorney clearly defining the limits of the attorney\'s authority.',
+        legal_warning: 'Write a legal warning to the opposing party regarding "{topic}" based on description "{description}". Include the specific demand, deadline, and legal consequences of non-compliance.',
+        complaint: 'Draft a complaint for the Public Prosecutor\'s Office regarding "{topic}" based on description "{description}". Clearly state the complainant, accused, subject of complaint, and detailed explanation.'
+    },
+    reportDisplay: {
+        title: 'Generated Document',
+        export: 'Export',
+        copy: 'Copy Text',
+        downloadMD: 'Download Markdown',
+        downloadDOCX: 'Download Word (DOCX)',
+        downloadHTML: 'Download HTML',
+        printPDF: 'Print / PDF',
+        shareEmail: 'Share via Email',
+        shareWhatsApp: 'Share via WhatsApp',
+        sendToSupport: 'Send to Support (WhatsApp)',
+        docTitle: 'Document Generated by Dadgar AI',
+        headerDate: 'Date',
+        headerCaseNo: 'Case No.',
+        caseNoPlaceholder: '________',
+        generating: 'Generating content...',
+        placeholder1: 'Your document will appear here',
+        placeholder2: 'Fill out the form and click "Create Draft".'
+    },
+    lawyerFinder: {
+        prompt: 'Based on the following legal specialties in Iran: "{queries}" as a lawyer, create a markdown table of {maxResults} top lawyers. Columns: Name, Main Specialty, City, Address, Contact Info (Phone/Email), Website (markdown link). Add a "Relevance Score" column (%) based on the query. Add a "Experience (Years)" column.',
+        keywordsLabel: 'Specialty or Topic',
+        keywordsPlaceholder: 'e.g., Real estate lawyer in North Tehran, Divorce specialist...',
+        maxResults: 'Max Results',
+        findButton: 'Find Lawyers',
+        finding: 'Searching...',
+        savedTitle: 'Saved Lawyers',
+        clearAll: 'Clear All',
+        notesLabel: 'Your Notes',
+        notesPlaceholder: 'Important notes, appointments, etc.',
+        remove: 'Remove',
+        crateTitle: 'Found Lawyers Crate',
+        crateSubtitle: 'Search results are collected here.',
+        semanticSearchBadge: 'Semantic Smart Search',
+        clearCrate: 'Clear Crate',
+        confirmClearCrate: 'Are you sure you want to clear all found lawyers? This cannot be undone.',
+        filterByCity: 'Filter by City',
+        filterBySpecialty: 'Filter by Specialty',
+        filterByExperience: 'Min Experience (Years)',
+        sortBy: 'Sort By',
+        sort: {
+            relevance: 'Relevance',
+            name: 'Name',
+            experience_desc: 'Most Experience',
+            city_specialty: 'City & Specialty',
+            city: 'City'
+        },
+        address: 'Address',
+        contact: 'Contact',
+        saved: 'Saved',
+        save: 'Save',
+        sendWhatsApp: 'Send Draft via WhatsApp',
+        whatsAppMessage: 'Hello, I am sending a draft petition/contract for your review and consultation.',
+        noFilterResults: 'No results found with these filters.',
+        parseErrorTitle: 'Response received but format is unparseable.',
+        crateEmpty: 'No lawyers searched yet. Enter keywords to start.',
+        validationError: 'Please enter a specialty or topic to search.',
+        aiGeneratedQueryTitle: 'AI Suggested Search',
+        aiGeneratedQuerySubtitle: 'Based on your document, we suggest searching for:',
+        confirmAndSearch: 'Confirm & Search',
+        editQuery: 'Edit Query',
+        useLocation: 'Use my current location for better results',
+        example: {
+            keywords: 'Registry and Document Specialist Lawyer in Tehran'
+        }
+    },
+    notaryFinder: {
+        prompt: 'Based on query "{query}", create a markdown table of relevant Notary Public offices in Iran. Columns: Office Name, City, Exact Address, Contact Info, Website (if available).',
+        keywordsLabel: 'Services or Location',
+        keywordsPlaceholder: 'e.g., Car title transfer in Karaj, Signature certification...',
+        findButton: 'Find Notary',
+        finding: 'Searching...',
+        resultsTitle: 'Search Results',
+        filterByCity: 'Filter by City',
+        filterByOfficeName: 'Filter by Office Name',
+        filterByService: 'Filter by Service',
+        sortBy: 'Sort By',
+        sort: {
+            officeName: 'نام دفتر',
+            city: 'شهر'
+        },
+        address: 'Address',
+        contact: 'Contact',
+        services: 'Services',
+        sendWhatsApp: 'Send Draft via WhatsApp',
+        whatsAppMessage: 'Hello, I am sending a draft document for review and inquiry.',
+        noFilterResults: 'No results found with these filters.',
+        parseErrorTitle: 'Response received but format is unparseable.',
+        parseErrorSubtitle: 'Raw AI response shown below:',
+        validationError: 'Please enter a query to search.',
+        aiGeneratedQueryTitle: 'AI Suggested Search',
+        aiGeneratedQuerySubtitle: 'Based on your document, we suggest searching for:',
+        confirmAndSearch: 'Confirm & Search',
+        editQuery: 'Edit Query',
+        useLocation: 'Use my current location for better results',
+        example: {
+            keywords: 'Notary office near Valiasr Square Tehran'
+        }
+    },
+    newsSummarizer: {
+        prompt: 'Summarize the latest and most important legal and judicial news in Iran regarding "{query}" into an analytical report. Cite original sources and links.',
+        queryLabel: 'News Topic',
+        queryPlaceholder: 'e.g., Latest Check Law changes, Bar Association news...',
+        buttonText: 'Summarize',
+        summarizing: 'Summarizing...',
+        sourcesTitle: 'Sources',
+        validationError: 'Please enter a topic to summarize.',
+        example: {
+            query: 'Latest parliament approvals regarding dowry'
+        }
+    },
+    caseStrategist: {
+        prompt: 'I have a legal goal: "{goal}". Provide a step-by-step practical strategy to achieve this in the form of a task list. For each task, specify: Name, Description, Effort % of total project, Deliverable Type (e.g., Petition, Bill, Document List), and a Suggested Prompt for AI generation. Output must be a JSON array of objects.',
+        goalLabel: 'Your Main Goal',
+        goalPlaceholder: 'e.g., Registering an LLC, Getting child custody, Voiding a contract...',
+        buttonText: 'Generate Strategy',
+        generating: 'Generating strategy...',
+        resultsTitle: 'Suggested Strategy',
+        effort: 'Effort',
+        deliverable: 'Deliverable',
+        suggestedPrompt: 'Suggested Prompt',
+        executeTask: 'Execute Task',
+        executingTask: 'Executing...',
+        validationError: 'Please enter your main goal.',
+        prepareDraftPrompt: 'Based on the following legal strategy task, prepare content for the "AI Assistant" form. Task Name: {taskName}. Description: {description}. Suggested Prompt: {suggestedPrompt}. Output a JSON object with keys docType, topic, description. Choose docType from: {docTypeOptions}',
+        example: {
+            goal: 'Suing neighbor for unreasonable noise'
+        },
+        markComplete: 'Mark Complete',
+        markCancelled: 'Cancel Task',
+        restore: 'Restore',
+        completedBadge: 'Completed',
+        cancelledBadge: 'Cancelled'
+    },
+    webAnalyzer: {
+        prompt: 'Analyze the web page at {url} and answer the question "{query}". Provide a detailed report and cite main sources.',
+        urlLabel: 'Web Page URL',
+        urlPlaceholder: 'https://example.com/page.html',
+        queryLabel: 'Your Question',
+        queryPlaceholder: 'e.g., Extract main legal points, Has this bill been passed?...',
+        buttonText: 'Analyze',
+        analyzing: 'Analyzing...',
+        validationError: 'Please enter URL and your question.',
+        example: {
+            url: 'https://www.khabaronline.ir/news/1883375/',
+            query: 'What is this news about and what are the details?'
+        }
+    },
+    siteArchitect: {
+        prompt: 'Analyze the website at {url} thoroughly. Provide a report with two main sections: 1) "Site Structure Analysis" (covering HTML, CSS, JS, Head and Body) and 2) "Site Critique" (covering strengths, weaknesses in UX/UI, Content, SEO, Technical issues, and Recommendations). If the user has a specific question, answer it as well: "{query}"',
+        urlLabel: 'Website URL',
+        urlPlaceholder: 'https://example.com',
+        queryLabel: 'Specific Question (Optional)',
+        queryPlaceholder: 'e.g., Is this site mobile friendly? How is the security?',
+        buttonText: 'Analyze Site Structure',
+        analyzing: 'Analyzing structure...',
+        validationError: 'Please enter a website URL.',
+        example: {
+            url: 'https://dadgar.ai',
+            query: 'What are the security weaknesses of this site?'
+        }
+    },
+    aiGuide: {
+        title: 'Smart Guide',
+        subtitle: 'Explain your goal or problem simply, and we will suggest the best tool.',
+        placeholder: 'e.g., "I want to sue my employer" or "I need a rental contract"...',
+        submitButton: 'Get Suggestions',
+        gettingSuggestions: 'Thinking...',
+        resultsTitle: 'Suggested Tools',
+        goTo: 'Go to Tool',
+        confidence: 'Confidence',
+        button: 'Start with Smart Guide',
+        validationError: 'Please enter your goal.',
+        prompt: 'Based on user goal "{goal}", suggest top 3 tools from this list most relevant to their need. For each, provide reasoning and confidence percentage. Output a JSON array of objects with keys module, confidencePercentage, reasoning. Modules: legal_drafter, lawyer_finder, news_summarizer, case_strategist, notary_finder, web_analyzer, contract_analyzer, evidence_analyzer, image_generator, corporate_services, insurance_services, site_architect, general_questions, content_hub, court_assistant, resume_analyzer, job_assistant',
+        example: {
+            prompt: 'I have a bounced check and want to collect it.'
+        }
+    },
+    contractAnalyzer: {
+        prompt: 'Analyze this contract carefully. Look for ambiguous clauses, one-sided terms, or conditions harmful to one party. Also answer the user question: {userQuery}',
+        uploadTab: 'Upload File',
+        textTab: 'Enter Text',
+        dropzoneText: 'Drag contract file (PDF, DOCX, TXT, JPG, PNG) here or click to select',
+        unsupportedFileType: 'File type not supported. Please use PDF, DOCX, TXT, JPG, or PNG.',
+        userQueryLabel: 'Your Question',
+        userQueryPlaceholder: 'e.g., What are termination conditions? Is there a late penalty? (Optional)',
+        analyzeButton: 'Analyze Contract',
+        analyzing: 'Analyzing...',
+        example: {
+            userQuery: 'Is there a confidentiality clause in this contract?'
+        }
+    },
+    evidenceAnalyzer: {
+        prompt: 'Analyze this image as evidence. Extract readable text, identify objects, people, and key details. Provide analysis based on user question: {userQuery}',
+        dropzoneText: 'Drag evidence image (JPG, PNG) here or click to select',
+        userQueryLabel: 'Your Request',
+        userQueryPlaceholder: 'e.g., Extract text from receipt, Any signs of tampering? (Optional)',
+        analyzeButton: 'Analyze Image',
+        analyzing: 'Analyzing...',
+        example: {
+            userQuery: 'What is the license plate number in the image?'
+        },
+        extractText: {
+            button: 'Extract Text from Image',
+            extracting: 'Extracting text...',
+            title: 'Extracted Text',
+            copy: 'Copy Text',
+            copied: 'Copied!'
+        }
+    },
+    imageGenerator: {
+        promptLabel: 'Image Description',
+        promptPlaceholder: 'e.g., A glowing scale of justice in a modern courtroom...',
+        aspectRatioLabel: 'Aspect Ratio',
+        buttonText: 'Generate Image',
+        generating: 'Generating image...',
+        placeholder: 'Your image will appear here',
+        download: 'Download Image',
+        validationError: 'Please enter a description.',
+    },
+    corporateServices: {
+        title: 'Corporate Smart Services',
+        subtitle: 'AI tools for company registration and management.',
+        heroDescription: 'Smart tools for company registration & management',
+        nameGenerator: {
+            title: 'Company Name Generator',
+            description: 'Enter keywords and company type to get creative name suggestions.',
+            keywordsLabel: 'Keywords (Industry, Activity)',
+            keywordsPlaceholder: 'e.g., Tech, Food, Construction',
+            typeLabel: 'Company Type',
+            types: {
+                llc: 'Limited Liability Company (LLC)',
+                private_joint_stock: 'Private Joint Stock',
+                public_joint_stock: 'Public Joint Stock'
+            },
+            buttonText: 'Generate Names',
+            generating: 'Generating names...',
+            resultsTitle: 'Suggested Names'
+        },
+        articlesDrafter: {
+            title: 'Articles of Association Drafter',
+            description: 'Enter basic info to draft articles of association.',
+            nameLabel: 'Company Name',
+            namePlaceholder: 'Enter full company name',
+            activityLabel: 'Company Activity',
+            activityPlaceholder: 'Full description of main activities...',
+            capitalLabel: 'Initial Capital (Rials)',
+            capitalPlaceholder: 'e.g., 1,000,000',
+            buttonText: 'Draft Articles',
+        },
+        complianceQA: {
+            title: 'Legal Q&A',
+            description: 'Ask questions about company registration and management laws.',
+            queryLabel: 'Your Question',
+            queryPlaceholder: 'e.g., Steps to register a Private Joint Stock company?',
+            buttonText: 'Get Answer',
+            gettingAnswer: 'Searching for answer...'
+        },
+        prompts: {
+            nameGenerator: 'Based on keywords "{keywords}", suggest 5 creative and formal names for an Iranian company of type "{companyType}". Names must be in Persian. Output only a JSON array of strings.',
+            articlesDrafter: 'Based on the following info, draft comprehensive Articles of Association for an Iranian company of type "{companyType}". Use markdown.\\n- Name: {companyName}\\n- Activity: {activity}\\n- Capital: {capital} Rials',
+            complianceQA: 'You are a legal expert on Iranian corporate law. Answer this question accurately and concisely:\\n\\n"{query}"'
+        }
+    },
+    insuranceServices: {
+        title: 'Insurance Smart Assistant',
+        subtitle: 'AI tools for your insurance needs.',
+        heroDescription: 'Policy analysis, claim drafting & advice',
+        policyAnalyzer: {
+            title: 'Policy Analyzer',
+            description: 'Upload your policy and ask about coverage and conditions.',
+            userQueryPlaceholder: 'e.g., Is dental covered?'
+        },
+        claimDrafter: {
+            title: 'Claim Drafter',
+            description: 'Enter incident details to draft a formal claim letter.',
+            incidentTypeLabel: 'Incident Type',
+            incidentTypePlaceholder: 'e.g., Car accident, Fire',
+            policyNumberLabel: 'Policy Number',
+            policyNumberPlaceholder: 'Enter your policy number',
+            descriptionLabel: 'Incident Description',
+            descriptionPlaceholder: 'Describe what happened...',
+            buttonText: 'Draft Claim'
+        },
+        recommender: {
+            title: 'Insurance Recommender',
+            description: 'Tell us your needs, we suggest the best insurance.',
+            queryLabel: 'Your Need',
+            queryPlaceholder: 'e.g., Best insurance for a 2023 Peugeot 207?',
+            buttonText: 'Get Recommendation',
+            gettingAnswer: 'Thinking...'
+        },
+        riskAssessor: {
+            title: 'Risk Assessor',
+            description: 'Describe your asset/activity to identify risks.',
+            assetTypeLabel: 'Asset/Activity Type',
+            assetTypePlaceholder: 'e.g., Chemical warehouse, Residential building',
+            descriptionLabel: 'Details',
+            descriptionPlaceholder: 'Safety details, location...',
+            buttonText: 'Assess Risk',
+            assessing: 'Assessing...'
+        },
+        fraudDetector: {
+            title: 'Fraud Detector',
+            description: 'Analyze a claim description for suspicious signs (For experts).',
+            claimDescriptionLabel: 'Claim Description',
+            claimDescriptionPlaceholder: 'Full claim details...',
+            buttonText: 'Analyze',
+            analyzing: 'Analyzing...'
+        },
+        autoClaimAssessor: {
+            title: 'Visual Auto Claim Assessor',
+            description: 'Upload accident photo to estimate damage.',
+            userQueryPlaceholder: 'Any specific question? (Optional)',
+            buttonText: 'Assess Image',
+            assessing: 'Processing...'
+        },
+        quoteSimulator: {
+            title: 'Premium Simulator',
+            description: 'Enter details to estimate insurance premium.',
+            carModelLabel: 'Car Model',
+            carModelPlaceholder: 'e.g., Peugeot 206',
+            carYearLabel: 'Year',
+            carYearPlaceholder: 'e.g., 1399',
+            driverAgeLabel: 'Driver Age',
+            driverAgePlaceholder: 'e.g., 35',
+            drivingHistoryLabel: 'Insurance History (Years)',
+            drivingHistoryPlaceholder: 'e.g., 5',
+            buttonText: 'Calculate Estimate',
+            calculating: 'Calculating...'
+        },
+        lifeNeedsAnalyzer: {
+            title: 'Life Insurance Needs',
+            description: 'Calculate appropriate life insurance coverage.',
+            ageLabel: 'Age',
+            incomeLabel: 'Annual Income',
+            dependentsLabel: 'Dependents',
+            debtsLabel: 'Total Debts',
+            goalsLabel: 'Financial Goals',
+            goalsPlaceholder: 'e.g., Buying house, Kids education',
+            buttonText: 'Analyze Needs',
+            analyzing: 'Analyzing...'
+        },
+        prompts: {
+             policyAnalyzer: 'Analyze this insurance policy and answer user question: {userQuery}',
+             claimDrafter: 'Write a formal insurance claim letter for incident "{incidentType}" under policy "{policyNumber}". Description: {description}',
+             recommender: 'Suggest best insurance based on user need and explain why. Need: {query}',
+             riskAssessor: 'Assess risks for "{assetType}" based on description "{description}" and suggest mitigation strategies.',
+             fraudDetector: 'Analyze this insurance claim for potential fraud indicators: {claimDescription}',
+             autoClaimAssessor: 'Analyze this car accident image. Estimate damage extent and affected parts. User question: {userQuery}',
+             quoteSimulator: 'Estimate Third Party and Body insurance premium for {carModel} year {carYear}, driver age {driverAge}, {drivingHistory} years no-claim bonus in Iran.',
+             lifeNeedsAnalyzer: 'Based on age {age}, income {income}, {dependents} dependents, {debts} debt, and goals "{goals}", suggest appropriate life insurance coverage.'
+        }
+    },
+    contentHub: {
+        title: 'Content Hub',
+        subtitle: 'Create creative content for social media with the power of AI.',
+        platformSelectorTitle: '1. Select Platform',
+        topicTitle: '2. Select Topic',
+        trendsTab: 'Trends',
+        textTab: 'Custom Text',
+        searchTab: 'Search',
+        fetchingTrends: 'Fetching daily trends...',
+        customTextPlaceholder: 'Write your topic or post content here...',
+        selectSearchTopic: 'Select a popular topic:',
+        userSearchSuggestions: ['Business Law', 'Real Estate Law', 'Life Insurance', 'Uncontested Divorce', 'Company Registration'],
+        generateButton: 'Generate Post',
+        generatingPost: 'Writing...',
+        resultsTitle: '3. Result',
+        placeholder: 'Your generated post will appear here.',
+        copySuccess: 'Copied!',
+        copyButton: 'Copy Text',
+        connectAccountToPublish: 'You need to connect your account to publish directly.',
+        publishToPlatformButton: 'Publish to {platform}',
+        adaptingForWebsite: 'Converting to website post...',
+        adaptForWebsiteButton: 'Convert to Blog Post',
+        fetchingStrategy: 'Fetching strategy...',
+        getStrategyButton: 'Get Publishing Strategy',
+        strategyTitle: 'Publishing Strategy',
+        bestTime: 'Best Time to Post',
+        nextPost: 'Next Post Idea',
+        generatingVideo: 'Writing script...',
+        generateVideoButton: 'Generate Video Script',
+        findingTools: 'Searching tools...',
+        findVideoTools: 'Find Video Tools',
+        toolName: 'Tool Name',
+        toolCost: 'Cost',
+        toolFarsi: 'Persian Support',
+        toolFeatures: 'Features',
+        toolQuality: 'Quality',
+        websitePreviewTitle: 'Website Post Preview',
+        publishToWebsiteButton: 'Publish to Website',
+        publishedSuccess: 'Successfully published to website (Simulated).',
+        timecode: 'Time',
+        visual: 'Visual',
+        voiceover: 'Voiceover',
+        emotion: 'Emotion',
+        instagramAdmin: {
+            button: 'Instagram Admin Pro 2025',
+            title: 'Instagram Admin Desk',
+            subtitle: 'Professional tools for organic growth, Reels, and Stories based on 2025 algorithm',
+            tools: {
+                reel: 'Viral Reel Script',
+                story: 'Interactive Storyboard',
+                growth: '2025 Growth Strategy'
+            },
+            reel: {
+                placeholder: 'Reel Topic (e.g., Check Laws Tips)',
+                generate: 'Generate Reel Script',
+                hook: 'Hook (First 3s)',
+                audio: 'Suggested Audio',
+                caption: 'Viral Caption',
+                scene: 'Scene'
+            },
+            story: {
+                placeholder: 'Story Topic (e.g., Insurance Q&A)',
+                generate: 'Create Storyboard',
+                frame: 'Frame',
+                sticker: 'Interactive Sticker'
+            },
+            growth: {
+                placeholder: 'Profile Type (e.g., Real Estate Lawyer, Legal Blogger)',
+                generate: 'Generate Growth Strategy',
+                audit: 'Profile Audit',
+                strategy: 'Content Strategy 2025',
+                hashtags: 'Hashtag Strategy',
+                engagement: 'Engagement Tactic'
+            }
+        }
+    },
+    blog: {
+        title: 'Adl Pendar Legal Blog',
+        subtitle: 'Latest news and articles in law and technology',
+        readMore: 'Read More',
+        back: 'Back to Blog',
+        posts: [
+            {
+                id: '1',
+                title: 'AI in Law: Opportunity or Threat?',
+                excerpt: 'Examining the impact of AI on the future of legal careers and how to use modern tools to advance cases.',
+                content: '## AI in Law\n\nThe entry of artificial intelligence into the legal world has sparked much debate. Many worry about robots replacing lawyers, but the reality is different.\n\n### Advantages of AI\n\n1. **Speed in drafting contracts:** Tools like Dadgar AI can prepare accurate drafts in seconds.\n2. **Big Data Analysis:** Reviewing thousands of document pages in a short time.\n3. **Reducing Human Error:** High accuracy in calculations and checking conflict of laws.\n\n### Conclusion\n\nAI is a tool to empower lawyers, not replace them. Lawyers who use this technology will outperform their competitors.',
+                image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
+                date: '2024/05/04',
+                author: 'Adl Pendar Editorial',
+                category: 'Legal Tech'
+            },
+            {
+                id: '2',
+                title: 'Key Tips for Drafting Lease Agreements',
+                excerpt: 'What landlords and tenants need to know before signing a contract to avoid future legal issues.',
+                content: '## Lease Agreements\n\nDrafting a lease agreement correctly can prevent many legal disputes.\n\n### Important Tips:\n\n* **Duration:** Specify the start and end dates precisely.\n* **Rent & Deposit:** Clarify payment methods and account numbers.\n* **Termination Conditions:** Clearly state when parties have the right to terminate.\n* **Repairs:** Distinguish between major and minor repair responsibilities.\n\nUsing Dadgar AI smart assistant to draft contracts can give you more confidence.',
+                image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80',
+                date: '2024/04/29',
+                author: 'Lawyer Ali Mohammadi',
+                category: 'Real Estate'
+            },
+            {
+                id: '3',
+                title: 'Registering Knowledge-Based Companies: Step-by-Step',
+                excerpt: 'Legal steps, required documents, and benefits of registering knowledge-based companies in Iran.',
+                content: '## Knowledge-Based Companies\n\nGiven government support for knowledge-based companies, many startups are seeking this status.\n\n### Main Steps:\n\n1. Register a regular company (Private Joint Stock or LLC).\n2. Register in the Vice Presidency for Science and Technology system.\n3. Product evaluation by brokers.\n\n### Benefits:\n\n* Tax exemptions.\n* Military service facilities for key employees.\n* Low-interest loans.',
+                image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=80',
+                date: '2024/04/14',
+                author: 'Corporate Legal Team',
+                category: 'Business'
+            }
+        ]
+    },
+    camera: {
+        use: 'Use Camera',
+        takePicture: 'Take Picture',
+        cancel: 'Cancel',
+        error: 'Camera access error',
+        permissionDenied: 'Permission denied. Check settings.',
+        notFound: 'Camera not found.',
+        unsupported: 'Browser does not support camera.',
+        captureSectionTitle: 'Text captured from camera',
+        orDivider: 'OR',
+        extractingText: 'Extracting text...'
+    },
+    thinkingMode: {
+        label: 'Deep Thinking Mode (Experimental)',
+        description: 'Uses a more powerful model with longer processing time for complex analysis.'
+    },
+    chatbot: {
+        title: 'Dadgar Chatbot',
+        welcomeMessage: 'Hello! I am Dadgar AI assistant. How can I help you?',
+        placeholder: 'Type your message...',
+        initialSuggestions: {
+            s1: 'What are your services?',
+            s2: 'How to find a lawyer?',
+            s3: 'I want to draft a contract.'
+        }
+    },
+    aiSuggestions: {
+        thinking: 'Thinking...',
+        noResults: 'No suggestions found'
+    },
+    footer: {
+        description: 'Adl Pendar Legal Group with specialized first-grade lawyers, providing expert legal services in Rasht and across Gilan. Leveraging AI power, we simplify and accelerate complex processes.',
+        quickLinksTitle: 'Quick Links',
+        contactTitle: 'Contact Us',
+        copyright: '© 2024 Adl Pendar. All rights reserved.',
+        madeBy: 'Made with ❤️ in Iran',
+        poweredBy: 'Powered by Google Gemini',
+        viewOnGitHub: 'View on GitHub',
+        email: 'info@adlpendar.ir',
+        address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
+        phone: '09027370260',
+        quickLinks: [
+            { text: 'Home', type: 'page', value: 'home' },
+            { text: 'Services', type: 'scroll', value: 'services' },
+            { text: 'Pricing & Services', type: 'page', value: 'pricing' },
+            { text: 'AI Drafter', type: 'page', value: 'legal_drafter' },
+            { text: 'About', type: 'scroll', value: 'about' },
+            { text: 'Lawyer Finder', type: 'page', value: 'lawyer_finder' },
+            { text: 'Blog', type: 'page', value: 'blog' },
+            { text: 'Reviews', type: 'scroll', value: 'reviews' },
+            { text: 'Content Hub', type: 'page', value: 'content_hub' },
+            { text: 'Contact', type: 'scroll', value: 'footer' }
+        ],
+        slogan: 'Eyes must be washed, the truth must be seen'
+    },
+    quotaErrorModal: {
+        title: 'Quota Exceeded',
+        body: 'Your free usage quota for the AI service has been exceeded. Please upgrade your plan or try again later.',
+        cta: 'Upgrade Plan',
+        close: 'Close'
+    }
+};

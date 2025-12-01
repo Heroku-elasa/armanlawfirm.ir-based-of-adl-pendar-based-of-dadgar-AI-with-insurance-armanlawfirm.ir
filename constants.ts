@@ -1,4 +1,5 @@
 
+
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -228,7 +229,7 @@ export const fa = {
             generatingResume: 'نوشتن رزومه اختصاصی...',
             generatingCoverLetter: 'نوشتن نامه پوششی...',
             sendingApproval: 'ارسال برای تایید...',
-            applying: 'در حال ارسال درخواست...',
+            sendingApplication: 'در حال ارسال درخواست...',
             approvalWaiting: 'در انتظار تایید شما...',
             draft: 'پیش‌نویس',
             pending_approval: 'منتظر تایید',
@@ -1212,7 +1213,7 @@ export const en = {
             generatingResume: 'Writing tailored resume...',
             generatingCoverLetter: 'Writing cover letter...',
             sendingApproval: 'Sending for approval...',
-            applying: 'Sending application...',
+            sendingApplication: 'Sending application...',
             approvalWaiting: 'Waiting for your approval...',
             draft: 'Draft',
             pending_approval: 'Pending Approval',
