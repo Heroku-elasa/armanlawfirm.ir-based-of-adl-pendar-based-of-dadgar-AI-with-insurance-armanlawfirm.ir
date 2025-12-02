@@ -1,5 +1,4 @@
 
-
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -509,6 +508,14 @@ export const fa = {
         useExample: 'استفاده از نمونه',
         buttonText: 'ایجاد پیش‌نویس',
         validationError: 'لطفا موضوع و شرح مختصر را تکمیل کنید.'
+    },
+    reportTypes: {
+        petition: 'دادخواست',
+        contract: 'قرارداد',
+        statement: 'اظهارنامه',
+        power_of_attorney: 'وکالت‌نامه',
+        legal_warning: 'اخطار قانونی',
+        complaint: 'شکوائیه'
     },
     reportPrompts: {
         petition: 'بر اساس موضوع "{topic}" و شرح "{description}"، یک دادخواست کامل و رسمی برای ارائه به دادگاه عمومی حقوقی در ایران تنظیم کن. تمام ارکان دادخواست از جمله خواهان، خوانده، خواسته، دلایل و منضمات و شرح دادخواست را به طور دقیق و با ادبیات حقوقی مناسب بنویس.',
@@ -1144,7 +1151,7 @@ export const en = {
     },
     caseStudies: {
         title: 'Success Stories',
-        subtitle: 'Recent cases handled by Arman Law Firm',
+        subtitle: 'Recent cases handled by Adl Pendar Legal Group',
         cases: [
             { title: 'Reclaiming Agricultural Land', desc: 'Successfully reclaimed 5 hectares of illegally seized land in Gilan province.', outcome: 'Final dispossession order issued.' },
             { title: 'Crypto Fraud Recovery', desc: 'Pursued an online exchange fraud case and recovered assets for 20 victims.', outcome: 'Accused arrested and funds returned.' },
@@ -1153,7 +1160,7 @@ export const en = {
     },
     mission: {
         title: 'Our Mission',
-        text: 'At Arman Law Firm, we are committed to defending our clients\' rights with honesty, integrity, and expertise. Our priority is peace and reconciliation, but we remain firm and uncompromising in the defense of justice.'
+        text: 'At Adl Pendar, we are committed to defending our clients\' rights with honesty, integrity, and expertise. Our priority is peace and reconciliation, but we remain firm and uncompromising in the defense of justice.'
     },
     resumeAnalyzer: {
         title: 'AI Resume Analyzer',
@@ -1368,9 +1375,9 @@ export const en = {
         },
         location: {
             title: 'In-Person Visit',
-            address: 'Tehran, Nelson Mandela (Jordan) Blvd, Taheri St, No 18',
+            address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
             hours: 'Saturday to Thursday 9:00 to 18:00, Friday Closed',
-            mapAlt: 'Google Maps - Tehran, Jordan'
+            mapAlt: 'Google Maps - Rasht, Gilan'
         },
         cta: {
             main: 'Book Online or In-Person Consultation',
@@ -1592,8 +1599,8 @@ export const en = {
         filterByService: 'Filter by Service',
         sortBy: 'Sort By',
         sort: {
-            officeName: 'نام دفتر',
-            city: 'شهر'
+            officeName: 'Office Name',
+            city: 'City'
         },
         address: 'Address',
         contact: 'Contact',
