@@ -180,15 +180,24 @@ const App: React.FC = () => {
       return saved ? JSON.parse(saved) : [];
   });
 
-  // Check Auth Status on Load
+  // Check Auth Status on Load & Listen for Changes (e.g. Email Link Redirect)
   useEffect(() => {
-      supabase.auth.getUser().then(({ data }) => {
-          if (data?.user) setUser(data.user);
-          else {
-              // Optionally force login or just stay guest
-              // setIsLoginOpen(true);
+      // Initial Session Check
+      supabase.auth.getSession().then(({ data: { session } }) => {
+          setUser(session?.user ?? null);
+      });
+
+      // Listen for auth changes (Login, Logout, OAuth redirect, Magic Link)
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+          setUser(session?.user ?? null);
+          
+          // If we just logged in via a hash URL (magic link), clean the URL
+          if (session?.user && window.location.hash.includes('access_token')) {
+              window.history.replaceState(null, '', window.location.pathname);
           }
       });
+
+      return () => subscription.unsubscribe();
   }, []);
 
   const handleSaveLawyer = (lawyer: Lawyer) => {

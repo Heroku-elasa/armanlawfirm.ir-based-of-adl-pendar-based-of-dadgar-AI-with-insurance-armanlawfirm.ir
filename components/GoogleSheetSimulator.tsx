@@ -58,19 +58,29 @@ const GoogleSheetSimulator: React.FC = () => {
     // Initialize DB and load data
     useEffect(() => {
         const loadData = async () => {
-            await dbService.initDB();
-            const existingCases = await dbService.getAllCases();
-            
-            if (existingCases.length === 0) {
-                // Seed mock data
-                for (const c of MOCK_CASES) {
-                    await dbService.saveCase(c);
+            try {
+                await dbService.initDB();
+                const existingCases = await dbService.getAllCases();
+                
+                if (existingCases.length === 0) {
+                    setCases(MOCK_CASES); // Set data immediately for UI responsiveness
+                    // Try to seed silently
+                    try {
+                        for (const c of MOCK_CASES) {
+                            await dbService.saveCase(c);
+                        }
+                    } catch (seedError) {
+                        console.warn("Could not seed database (likely 'cases' table missing in Supabase):", seedError);
+                    }
+                } else {
+                    setCases(existingCases);
                 }
-                setCases(MOCK_CASES);
-            } else {
-                setCases(existingCases);
+            } catch (err) {
+                console.error("Failed to load data:", err);
+                setCases(MOCK_CASES); // Fallback to mock data
+            } finally {
+                setIsLoading(false);
             }
-            setIsLoading(false);
         };
         loadData();
     }, []);
@@ -82,7 +92,8 @@ const GoogleSheetSimulator: React.FC = () => {
             }
             addToast("اطلاعات با موفقیت ذخیره شد (DB)", "success");
         } catch (e) {
-            addToast("خطا در ذخیره اطلاعات", "error");
+            console.error(e);
+            addToast("خطا در ذخیره اطلاعات. لطفا اتصال اینترنت و تنظیمات دیتابیس را بررسی کنید.", "error");
         }
     };
 
