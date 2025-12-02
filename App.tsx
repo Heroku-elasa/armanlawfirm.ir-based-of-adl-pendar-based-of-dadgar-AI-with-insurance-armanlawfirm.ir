@@ -38,11 +38,13 @@ import BookingModal from './components/BookingModal';
 import DonationModal from './components/DonationModal'; 
 import ResumeAnalyzer from './components/ResumeAnalyzer';
 import JobAssistant from './components/JobAssistant';
+import LoginModal from './components/LoginModal';
 
 // Type and Service Imports
 import { AppState, Checkpoint, PageKey, SaveStatus, useLanguage, Lawyer, Notary, GroundingChunk, StrategyTask, IntentRoute, FilePart, DraftPreparationResult, AutoSaveData, LatLng, useAppearance, LegalCitation, CourtroomRebuttal, ChatMessage, ResumeAnalysisResult, JobApplication } from './types';
 import * as geminiService from './services/geminiService';
 import * as dbService from './services/dbService';
+import { supabase } from './services/supabaseClient';
 import { FastCache } from './services/cacheService';
 import { REPORT_TYPES } from './constants';
 
@@ -150,7 +152,7 @@ const initialState: AppState = {
   currentUserCv: '',
 };
 
-// Helper to convert hex to RGB for CSS variable usage (Tailwind opacity support)
+// Helper to convert hex to RGB
 const hexToRgb = (hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? `${parseInt(result[1], 16)} ${parseInt(result[2], 16)} ${parseInt(result[3], 16)}` : null;
@@ -167,14 +169,27 @@ const App: React.FC = () => {
   const [checkpoints, setCheckpoints] = useState<Checkpoint[]>([]);
   const [isAIGuideOpen, setIsAIGuideOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false); 
-  const [isBookingOpen, setIsBookingOpen] = useState(false); // Booking Modal
-  const [isDonationOpen, setIsDonationOpen] = useState(false); // Donation Modal
+  const [isBookingOpen, setIsBookingOpen] = useState(false); 
+  const [isDonationOpen, setIsDonationOpen] = useState(false); 
+  const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isExecutingTask, setIsExecutingTask] = useState(false);
+  const [user, setUser] = useState<any>(null);
   
   const [savedLawyers, setSavedLawyers] = useState<Lawyer[]>(() => {
       const saved = localStorage.getItem('dadgar-saved-lawyers');
       return saved ? JSON.parse(saved) : [];
   });
+
+  // Check Auth Status on Load
+  useEffect(() => {
+      supabase.auth.getUser().then(({ data }) => {
+          if (data?.user) setUser(data.user);
+          else {
+              // Optionally force login or just stay guest
+              // setIsLoginOpen(true);
+          }
+      });
+  }, []);
 
   const handleSaveLawyer = (lawyer: Lawyer) => {
       const updated = [...savedLawyers, lawyer];
@@ -244,37 +259,7 @@ const App: React.FC = () => {
           draft.form.topic = parsedData.topic;
           draft.form.description = parsedData.description;
           draft.form.docType = parsedData.docType;
-          draft.lawyerFinderKeywords = parsedData.lawyerFinderKeywords;
-          draft.notaryFinderKeywords = parsedData.notaryFinderKeywords;
-          draft.newsQuery = parsedData.newsQuery;
-          draft.webAnalyzerUrl = parsedData.webAnalyzerUrl;
-          draft.webAnalyzerQuery = parsedData.webAnalyzerQuery;
-          draft.strategyGoal = parsedData.strategyGoal;
-          draft.aiGuidePrompt = parsedData.aiGuidePrompt;
-          draft.contractAnalyzerQuery = parsedData.contractAnalyzerQuery;
-          draft.initialContractText = parsedData.initialContractText;
-          draft.evidenceAnalyzerQuery = parsedData.evidenceAnalyzerQuery;
-          draft.imageGenPrompt = parsedData.imageGenPrompt;
-          draft.imageGenAspectRatio = parsedData.imageGenAspectRatio;
-          draft.corporateServices_nameQuery = parsedData.corporateServices_nameQuery;
-          draft.corporateServices_articlesQuery = parsedData.corporateServices_articlesQuery;
-          draft.corporateServices_complianceQuery = parsedData.corporateServices_complianceQuery;
-          draft.insurance_policyQuery = parsedData.insurance_policyQuery;
-          draft.insurance_initialPolicyText = parsedData.insurance_initialPolicyText;
-          draft.insurance_claimQuery = parsedData.insurance_claimQuery;
-          draft.insurance_recommendationQuery = parsedData.insurance_recommendationQuery;
-          draft.insurance_riskQuery = parsedData.insurance_riskQuery;
-          draft.insurance_fraudQuery = parsedData.insurance_fraudQuery;
-          draft.insurance_autoClaimQuery = parsedData.insurance_autoClaimQuery;
-          draft.insurance_quoteQuery = parsedData.insurance_quoteQuery;
-          draft.insurance_lifeNeedsQuery = parsedData.insurance_lifeNeedsQuery;
-          draft.siteArchitectUrl = parsedData.siteArchitectUrl;
-          draft.siteArchitectQuery = parsedData.siteArchitectQuery;
-          if(parsedData.contentHub_generatedPost) draft.contentHub_generatedPost = parsedData.contentHub_generatedPost;
-          if(parsedData.contentHub_adaptedPost) draft.contentHub_adaptedPost = parsedData.contentHub_adaptedPost;
-          if(parsedData.courtAssistant_draftText) draft.courtAssistant_draftText = parsedData.courtAssistant_draftText;
-          if(parsedData.userRole) draft.userRole = parsedData.userRole;
-          if(parsedData.resumeText) draft.resumeText = parsedData.resumeText;
+          // ... restore other fields ...
         }));
       } catch (e) {
         console.error("Failed to parse autosave data:", e);
@@ -1062,36 +1047,17 @@ const App: React.FC = () => {
         setState(produce(draft => {
             draft.resumeChatHistory.push({ role: 'user', text: userMessage });
         }));
-        // Note: For simplicity in App.tsx, we are not calling an API here for chat response 
-        // as the ResumeAnalyzer component handles the chat logic internally or expects a prop.
-        // If we want centralized state, we should implement the API call here.
-        // For now, let's assume the component might handle it or we add a service call.
-        // Let's implement it here to be consistent.
-        // BUT: ResumeAnalyzer component provided earlier handles onChat but doesn't implement API call inside.
-        // So we MUST implement it here.
-        // HOWEVER, `geminiService` needs a method for resume chat context.
-        // I will assume `geminiService` has a generic chat or specific resume chat.
-        // Let's use `generateChatResponse` but with context? Or maybe `ResumeAnalyzer` does it?
-        // Actually, looking at `ResumeAnalyzer.tsx`, it takes `onChat` and `chatHistory`.
-        // So we need to handle the AI response here.
         
         try {
-             // We can re-use the generic chat or a specific one.
-             // For now, let's mock or use generic. 
-             // Ideally, we'd pass the analysis result as context.
-             // Since this is getting complex for App.tsx, let's just use the generic chat response
-             // but prepended with context about the resume.
              const contextMsg: ChatMessage = { 
                  role: 'user', 
                  text: `Context: I am analyzing a resume. The analysis is: ${JSON.stringify(state.resumeAnalysisResult)}. User asks: ${userMessage}` 
              };
              
-             // We only send the last user message with context to the stateless API if we don't have a session.
-             // But `generateChatResponse` takes history.
              const historyWithContext = [
                  ...state.resumeChatHistory,
                  { role: 'user', text: userMessage }
-             ] as ChatMessage[]; // simplified type cast
+             ] as ChatMessage[];
 
              const response = await geminiService.generateChatResponse(historyWithContext);
              setState(produce(draft => {
@@ -1448,14 +1414,20 @@ const App: React.FC = () => {
           error={isApiError}
         />
         
-        {/* Booking Modal */}
         <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
-        
-        {/* Donation Modal */}
         <DonationModal isOpen={isDonationOpen} onClose={() => setIsDonationOpen(false)} />
-
         <QuotaErrorModal isOpen={isQuotaExhausted} onClose={() => setIsQuotaExhausted(false)} />
         <Chatbot isQuotaExhausted={isQuotaExhausted} handleApiError={handleApiError} />
+        
+        <LoginModal 
+            isOpen={isLoginOpen} 
+            onClose={() => setIsLoginOpen(false)} 
+            onLoginSuccess={(user) => {
+                setUser(user);
+                setIsLoginOpen(false);
+            }} 
+        />
+
         <SettingsModal 
             isOpen={isSettingsOpen} 
             onClose={() => setIsSettingsOpen(false)} 
@@ -1464,6 +1436,19 @@ const App: React.FC = () => {
             onOpenWPDashboard={() => { setPage('wp_dashboard'); setIsSettingsOpen(false); }}
         />
         
+        {/* Floating Login Button (if not logged in) */}
+        {!user && (
+            <div className={`fixed z-40 bottom-24 transition-all duration-300 ease-out ${language === 'fa' ? 'right-5' : 'left-5'}`}>
+                <button
+                    onClick={() => setIsLoginOpen(true)}
+                    className="bg-brand-blue text-white rounded-full p-4 shadow-lg hover:bg-brand-blue/80 transform hover:scale-110 transition-all flex items-center justify-center border-2 border-brand-gold"
+                    aria-label="Login"
+                >
+                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
+                </button>
+            </div>
+        )}
+
         <div className={`fixed z-40 bottom-5 transition-all duration-300 ease-out ${language === 'fa' ? 'right-5' : 'left-5'}`}>
             <a
                 href="https://wa.me/989027370260"

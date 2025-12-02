@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useLanguage, AppState, Checkpoint, PageKey, Lawyer } from '../types';
+import GoogleSheetSimulator from './GoogleSheetSimulator';
 
 interface DashboardProps {
     setPage: (page: 'home' | PageKey) => void;
@@ -28,7 +29,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setPage, checkpoints, savedLawyer
     const currentDate = new Date().toLocaleDateString(language === 'fa' ? 'fa-IR' : 'en-US', { weekday: 'long', day: 'numeric', month: 'long' });
 
     return (
-        <div className="py-8 animate-fade-in space-y-6">
+        <div className="py-8 animate-fade-in space-y-8">
             {/* Welcome Banner */}
             <div className="bg-gradient-to-r from-brand-blue to-[#1e3a8a] text-white p-8 rounded-2xl shadow-xl flex flex-col md:flex-row justify-between items-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
@@ -45,29 +46,30 @@ const Dashboard: React.FC<DashboardProps> = ({ setPage, checkpoints, savedLawyer
                 </div>
             </div>
 
-            {/* Main Grid */}
+            {/* Quick Actions Bar */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {quickActions.map(action => (
+                    <button
+                        key={action.key}
+                        onClick={() => setPage(action.key as PageKey)}
+                        className="flex items-center gap-3 p-4 rounded-xl bg-white dark:bg-brand-blue/30 border border-gray-200 dark:border-gray-700 shadow-sm hover:border-brand-gold/50 hover:shadow-md transition-all group"
+                    >
+                        <span className="text-2xl group-hover:scale-110 transition-transform">{action.icon}</span>
+                        <span className="text-sm font-bold text-gray-700 dark:text-gray-200">{action.label}</span>
+                    </button>
+                ))}
+            </div>
+
+            {/* GOOGLE SHEET SIMULATOR (Main Case Management) */}
+            <div className="w-full">
+                <GoogleSheetSimulator />
+            </div>
+
+            {/* Lower Grid */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 
-                {/* Left Column (Actions & Strategy) */}
+                {/* Left Column (Strategy) */}
                 <div className="lg:col-span-2 space-y-6">
-                    
-                    {/* Quick Actions */}
-                    <div className="bg-white dark:bg-brand-blue/30 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm">
-                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t('dashboard.quickActions')}</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                            {quickActions.map(action => (
-                                <button
-                                    key={action.key}
-                                    onClick={() => setPage(action.key as PageKey)}
-                                    className="flex flex-col items-center justify-center p-4 rounded-xl bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all border border-transparent hover:border-brand-gold/30 group"
-                                >
-                                    <span className="text-3xl mb-2 group-hover:scale-110 transition-transform">{action.icon}</span>
-                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300 text-center">{action.label}</span>
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
                     {/* Active Strategy Progress */}
                     {totalTasks > 0 ? (
                         <div className="bg-white dark:bg-brand-blue/30 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm relative overflow-hidden">
@@ -110,7 +112,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setPage, checkpoints, savedLawyer
                                             </div>
                                         </div>
                                         <button 
-                                            onClick={() => { onRestoreCheckpoint(ckpt.id); addToast("Draft restored.", "success"); }}
+                                            onClick={() => { onRestoreCheckpoint(ckpt.id); }}
                                             className="text-xs font-bold text-brand-gold hover:text-white bg-brand-blue/80 px-3 py-1.5 rounded-md hover:bg-brand-blue transition-colors"
                                         >
                                             {t('dashboard.restoreDraft')}
@@ -126,7 +128,7 @@ const Dashboard: React.FC<DashboardProps> = ({ setPage, checkpoints, savedLawyer
                     </div>
                 </div>
 
-                {/* Right Column (Saved Lawyers & Calendar) */}
+                {/* Right Column (Saved Lawyers) */}
                 <div className="lg:col-span-1 space-y-6">
                     {/* Saved Lawyers */}
                     <div className="bg-white dark:bg-brand-blue/30 p-6 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm h-full flex flex-col">
@@ -166,10 +168,5 @@ const Dashboard: React.FC<DashboardProps> = ({ setPage, checkpoints, savedLawyer
         </div>
     );
 };
-
-function addToast(msg: string, type: string) {
-    // Helper to avoid prop drilling toast hook just for this mock
-    // In real app, Dashboard should be wrapped or useToast called inside
-}
 
 export default Dashboard;
