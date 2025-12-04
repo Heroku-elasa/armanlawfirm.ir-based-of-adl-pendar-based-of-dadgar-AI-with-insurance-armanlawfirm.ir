@@ -26,6 +26,14 @@ export interface CaseData {
     user_id?: string; // Links to auth user
 }
 
+export interface SeoAuditData {
+    id?: number;
+    created_at?: string;
+    url: string;
+    score: number;
+    results: any; // JSON object for details
+}
+
 // --- INDEXEDDB SETUP (Keeping for Lawyer Cache) ---
 let db: IDBDatabase;
 
@@ -34,9 +42,12 @@ export const initDB = (): Promise<boolean> => {
     if (db) {
       return resolve(true);
     }
+    if (typeof window === 'undefined') {
+        return resolve(false);
+    }
     const request = indexedDB.open(DB_NAME, DB_VERSION);
     request.onerror = () => { console.error('IndexedDB error'); reject('Error opening IndexedDB.'); };
-    request.onsuccess = (event) => { db = request.result; resolve(true); };
+    request.onsuccess = (event) => { db = (event.target as IDBOpenDBRequest).result; resolve(true); };
     request.onupgradeneeded = (event) => {
       const dbInstance = (event.target as IDBOpenDBRequest).result;
       if (!dbInstance.objectStoreNames.contains(STORE_LAWYERS)) {
@@ -80,6 +91,12 @@ export const clearAllLawyers = (): Promise<void> => {
     });
 };
 
+// --- HELPER: Check for Missing Table Error ---
+const isTableMissingError = (error: any) => {
+    const msg = (error?.message || JSON.stringify(error)).toLowerCase();
+    return msg.includes('does not exist') || msg.includes('could not find the table') || msg.includes('relation');
+};
+
 // --- CASES (Supabase) ---
 
 // Helper to map Frontend CamelCase to DB SnakeCase
@@ -118,7 +135,8 @@ const fromDbCase = (c: any): CaseData => ({
     branch: c.branch,
     defendant: c.defendant,
     amount: c.amount,
-    description: c.description
+    description: c.description,
+    user_id: c.user_id
 });
 
 export const getAllCases = async (): Promise<CaseData[]> => {
@@ -129,7 +147,11 @@ export const getAllCases = async (): Promise<CaseData[]> => {
             .order('created_at', { ascending: false });
 
         if (error) {
-            console.error("Supabase fetch error:", error);
+            if (isTableMissingError(error)) {
+                console.warn("Supabase: Table 'cases' not found. Using mock data. (Please create tables via Admin Dashboard)");
+                return [];
+            }
+            console.error("Supabase fetch error:", error.message || JSON.stringify(error));
             return [];
         }
         return (data || []).map(fromDbCase);
@@ -140,8 +162,7 @@ export const getAllCases = async (): Promise<CaseData[]> => {
 };
 
 export const saveCase = async (caseData: CaseData): Promise<any> => {
-    // If auth user exists, attach ID (Supabase RLS usually handles this via auth.uid(), 
-    // but explicit assignment might be needed depending on table policies)
+    // If auth user exists, attach ID
     const { data: { user } } = await supabase.auth.getUser();
     
     const dbPayload = {
@@ -155,12 +176,55 @@ export const saveCase = async (caseData: CaseData): Promise<any> => {
         .select();
 
     if (error) {
-        throw new Error(error.message);
+        if (isTableMissingError(error)) {
+             console.warn("Supabase: Table 'cases' not found. Save skipped. (Please create tables via Admin Dashboard)");
+             return null;
+        }
+        throw new Error(error.message || "Unknown Supabase error during save");
     }
     return data?.[0]?.id;
 };
 
 export const deleteCase = async (id: number | string): Promise<void> => {
     const { error } = await supabase.from('cases').delete().eq('id', id);
-    if (error) throw new Error(error.message);
+    if (error) {
+        if (isTableMissingError(error)) {
+             console.warn("Supabase: Table 'cases' not found. Delete skipped.");
+             return;
+        }
+        throw new Error(error.message || "Unknown Supabase error during delete");
+    }
+};
+
+// --- SEO AUDITS (Supabase) ---
+
+export const saveSeoAudit = async (audit: SeoAuditData): Promise<void> => {
+    const { error } = await supabase
+        .from('seo_audits')
+        .insert([audit]);
+    
+    if (error) {
+        if (isTableMissingError(error)) {
+            console.warn("Supabase: Table 'seo_audits' not found. Save skipped.");
+            return;
+        }
+        console.error("Error saving SEO audit:", error.message || JSON.stringify(error));
+    }
+};
+
+export const getSeoAudits = async (): Promise<SeoAuditData[]> => {
+    const { data, error } = await supabase
+        .from('seo_audits')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        if (isTableMissingError(error)) {
+            console.warn("Supabase: Table 'seo_audits' not found. Returning empty list.");
+            return [];
+        }
+        console.error("Error fetching SEO audits:", error.message || JSON.stringify(error));
+        return [];
+    }
+    return data || [];
 };

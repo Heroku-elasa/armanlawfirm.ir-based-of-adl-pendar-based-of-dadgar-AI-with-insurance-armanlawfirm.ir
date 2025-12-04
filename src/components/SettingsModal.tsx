@@ -92,7 +92,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] animate-fade-in backdrop-blur-sm" onClick={onClose}>
             <div className="bg-white dark:bg-brand-blue rounded-xl shadow-2xl w-full max-w-md m-4 overflow-hidden border border-brand-gold/30" onClick={e => e.stopPropagation()}>
                 <div className="bg-brand-blue/50 p-4 border-b border-brand-gold/20 flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-white">تماس</h2>
+                    <h2 className="text-xl font-bold text-white">تنظیمات سایت (Site Settings)</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
@@ -142,12 +142,24 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
 
                     <hr className="border-gray-200 dark:border-gray-700" />
 
-                    {/* Contact Info (Replaces View Modes) */}
+                    {/* Role & Dashboard Management */}
                     <section className="space-y-4">
-                        <div className="bg-brand-blue/10 border border-brand-gold/30 rounded-xl p-4 text-center space-y-2">
-                             <h3 className="text-lg font-bold text-gray-900 dark:text-white">تهران، جردن، خیابان طاهری</h3>
-                             <p className="text-2xl font-black text-brand-gold" dir="ltr">۰۲۱-۲۲۰۴۱۶۵۵</p>
-                        </div>
+                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-2">View Modes</h3>
+                        
+                        {onToggleRole && currentRole && (
+                            <div className="flex items-center justify-between bg-gray-100 dark:bg-gray-800 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <div>
+                                    <p className="text-sm font-bold text-gray-800 dark:text-white">Current Mode: {currentRole === 'admin' ? 'Admin' : 'User'}</p>
+                                    <p className="text-xs text-gray-500">Switch between User and Admin dashboard layouts.</p>
+                                </div>
+                                <button 
+                                    onClick={onToggleRole}
+                                    className={`px-3 py-1.5 rounded text-xs font-bold text-white transition-colors ${currentRole === 'admin' ? 'bg-purple-600 hover:bg-purple-700' : 'bg-blue-600 hover:bg-blue-700'}`}
+                                >
+                                    Switch Role
+                                </button>
+                            </div>
+                        )}
 
                         {onOpenWPDashboard && (
                             <button 

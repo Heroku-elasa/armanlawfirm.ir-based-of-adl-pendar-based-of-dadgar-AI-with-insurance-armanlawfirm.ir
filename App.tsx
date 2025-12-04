@@ -180,16 +180,47 @@ const App: React.FC = () => {
       return saved ? JSON.parse(saved) : [];
   });
 
+  const checkUserRole = (email: string | undefined): 'user' | 'admin' => {
+      return email === 'admin@armanlawfirm.ir' ? 'admin' : 'user';
+  };
+
+  // SEO: Update Page Title
+  useEffect(() => {
+    const titles: Record<string, string> = {
+      home: 'Arman Law Firm | دستیار هوشمند حقوقی',
+      legal_drafter: 'تنظیم دادخواست هوشمند | Arman Law Firm',
+      lawyer_finder: 'جستجوی وکیل پایه یک | Arman Law Firm',
+      court_assistant: 'دستیار هوشمند دادگاه | Arman Law Firm',
+      pricing: 'تعرفه‌ها و خدمات | Arman Law Firm',
+      blog: 'مجله حقوقی آرمان',
+      dashboard: 'داشبورد کاربری | Arman Law Firm',
+      contact: 'تماس با ما | Arman Law Firm'
+    };
+    
+    document.title = titles[state.page] || 'Arman Law Firm | خدمات حقوقی آنلاین';
+  }, [state.page]);
+
   // Check Auth Status on Load & Listen for Changes (e.g. Email Link Redirect)
   useEffect(() => {
       // Initial Session Check
       supabase.auth.getSession().then(({ data: { session } }) => {
           setUser(session?.user ?? null);
+          if (session?.user) {
+              const role = checkUserRole(session.user.email);
+              setState(produce(draft => { draft.userRole = role; }));
+          }
       });
 
       // Listen for auth changes (Login, Logout, OAuth redirect, Magic Link)
       const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
           setUser(session?.user ?? null);
+          if (session?.user) {
+              const role = checkUserRole(session.user.email);
+              setState(produce(draft => { draft.userRole = role; }));
+          } else {
+              // Reset role to user on logout
+              setState(produce(draft => { draft.userRole = 'user'; }));
+          }
           
           // If we just logged in via a hash URL (magic link), clean the URL
           if (session?.user && window.location.hash.includes('access_token')) {
@@ -1118,7 +1149,7 @@ const App: React.FC = () => {
       case 'home':
         return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} />;
       case 'wp_dashboard':
-        return <WordPressDashboard setPage={setPage} />;
+        return <WordPressDashboard setPage={setPage} userRole={state.userRole} />;
       case 'dashboard':
         return state.userRole === 'admin' ? (
             <AdminDashboard />
@@ -1434,6 +1465,9 @@ const App: React.FC = () => {
             onLoginSuccess={(user) => {
                 setUser(user);
                 setIsLoginOpen(false);
+                // Also update role immediately on login success
+                const role = checkUserRole(user.email);
+                setState(produce(draft => { draft.userRole = role; }));
             }} 
         />
 

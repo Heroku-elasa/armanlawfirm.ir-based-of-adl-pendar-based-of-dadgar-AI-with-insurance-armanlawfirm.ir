@@ -15,6 +15,8 @@ export interface ColorScheme {
 
 export const THEME_PRESETS: ColorScheme[] = [
     { id: 'legal', name: 'Default Legal', primary: '#bef264', secondary: '#111827' }, // Lime-400, Gray-900
+    { id: 'official', name: 'Official (SSAA)', primary: '#0891b2', secondary: '#334155' }, // Cyan-600, Slate-700
+    { id: 'registry', name: 'Registry (Sabt)', primary: '#00897b', secondary: '#37474f' }, // Teal-600, BlueGrey-800
     { id: 'corporate', name: 'Corporate Trust', primary: '#60a5fa', secondary: '#1e3a8a' }, // Blue-400, Blue-900
     { id: 'justice', name: 'Crimson Justice', primary: '#fb7185', secondary: '#881337' }, // Rose-400, Rose-900
     { id: 'growth', name: 'Emerald Growth', primary: '#34d399', secondary: '#064e3b' }, // Emerald-400, Emerald-900
