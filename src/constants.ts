@@ -1,5 +1,4 @@
 
-
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -384,9 +383,9 @@ export const fa = {
         },
         location: {
             title: 'مراجعه حضوری',
-            address: 'تهران، جردن، خیابان طاهری',
+            address: 'رشت، بلوار شهید ضیابری، ساختمان ستاره‌شهر، طبقه ۵، واحد ۹',
             hours: 'شنبه تا پنجشنبه ۹:۰۰ تا ۱۸:۰۰، جمعه تعطیل',
-            mapAlt: 'نقشه گوگل مپس - تهران، جردن'
+            mapAlt: 'نقشه گوگل مپس - رشت، گیلان'
         },
         cta: {
             main: 'رزرو مشاوره آنلاین یا حضوری',
@@ -509,6 +508,14 @@ export const fa = {
         useExample: 'استفاده از نمونه',
         buttonText: 'ایجاد پیش‌نویس',
         validationError: 'لطفا موضوع و شرح مختصر را تکمیل کنید.'
+    },
+    reportTypes: {
+        petition: 'دادخواست',
+        contract: 'قرارداد',
+        statement: 'اظهارنامه',
+        power_of_attorney: 'وکالت‌نامه',
+        legal_warning: 'اخطار قانونی',
+        complaint: 'شکوائیه'
     },
     reportPrompts: {
         petition: 'بر اساس موضوع "{topic}" و شرح "{description}"، یک دادخواست کامل و رسمی برای ارائه به دادگاه عمومی حقوقی در ایران تنظیم کن. تمام ارکان دادخواست از جمله خواهان، خوانده، خواسته، دلایل و منضمات و شرح دادخواست را به طور دقیق و با ادبیات حقوقی مناسب بنویس.',
@@ -1029,8 +1036,8 @@ export const fa = {
         poweredBy: 'قدرت گرفته از Google Gemini',
         viewOnGitHub: 'مشاهده در گیت‌هاب',
         email: 'info@adlpendar.ir',
-        address: 'تهران، جردن، خیابان طاهری',
-        phone: '۰۲۱-۲۲۰۴۱۶۵۵',
+        address: 'رشت، بلوار شهید ضیابری، ساختمان ستاره‌شهر، طبقه ۵، واحد ۹',
+        phone: '۰۹۰۲۷۳۷۰۲۶۰',
         quickLinks: [
             { text: 'خانه', type: 'page', value: 'home' },
             { text: 'خدمات ما', type: 'scroll', value: 'services' },
@@ -1368,9 +1375,9 @@ export const en = {
         },
         location: {
             title: 'In-Person Visit',
-            address: 'Tehran, Jordan, Taheri St.',
+            address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
             hours: 'Saturday to Thursday 9:00 to 18:00, Friday Closed',
-            mapAlt: 'Google Maps - Tehran, Jordan'
+            mapAlt: 'Google Maps - Rasht, Gilan'
         },
         cta: {
             main: 'Book Online or In-Person Consultation',
@@ -2021,7 +2028,7 @@ export const en = {
         poweredBy: 'Powered by Google Gemini',
         viewOnGitHub: 'View on GitHub',
         email: 'info@adlpendar.ir',
-        address: 'Tehran, Jordan, Taheri St.',
+        address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
         phone: '09027370260',
         quickLinks: [
             { text: 'Home', type: 'page', value: 'home' },

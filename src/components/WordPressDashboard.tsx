@@ -48,15 +48,11 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
         // Only show Appearance, Plugins, Users, Settings to Admin
         ...(userRole === 'admin' ? [
             { name: 'Appearance', icon: 'dashicons-admin-appearance', active: activeMenu === 'Appearance' },
-            { name: 'Themes', icon: 'dashicons-art', active: activeMenu === 'Themes' }, // Explicit Themes menu
             { name: 'Plugins', icon: 'dashicons-admin-plugins', badge: 3, active: activeMenu === 'Plugins' },
             { name: 'Users', icon: 'dashicons-admin-users', active: activeMenu === 'Users' },
             { name: 'Tools', icon: 'dashicons-admin-tools', active: activeMenu === 'Tools' },
             { name: 'Settings', icon: 'dashicons-admin-settings', active: activeMenu === 'Settings' },
-        ] : [
-            // For non-admins, show Themes for demo purposes as per request
-            { name: 'Themes', icon: 'dashicons-art', active: activeMenu === 'Themes' },
-        ]),
+        ] : []),
     ];
 
     const recentActivity = [
@@ -94,26 +90,6 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
             }
         }
         setIsThemeMenuOpen(false);
-    };
-
-    const applyThemeTemplate = (template: 'default' | 'official' | 'registry') => {
-        let schemeId = '';
-        
-        if (template === 'registry') {
-            schemeId = 'registry';
-            if (theme === 'dark') toggleTheme();
-        } else if (template === 'official') {
-            schemeId = 'official';
-            if (theme === 'dark') toggleTheme();
-        } else {
-            schemeId = 'legal';
-            if (theme === 'light') toggleTheme();
-        }
-
-        const scheme = THEME_PRESETS.find(p => p.id === schemeId);
-        if (scheme) {
-            setColorScheme(scheme);
-        }
     };
 
     return (
@@ -196,7 +172,7 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
-                        {/* Theme Switcher in Top Bar as fallback */}
+                        {/* Theme Switcher */}
                         <div className="relative">
                             <button 
                                 onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
@@ -313,89 +289,6 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
                                         )}
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    ) : activeMenu === 'Themes' || activeMenu === 'Appearance' ? (
-                        /* THEMES / APPEARANCE VIEW */
-                        <div className="animate-fade-in p-6 bg-white border border-[#dcdcde] shadow-sm">
-                            <h2 className="text-lg font-semibold text-[#1d2327] mb-4">Theme Templates</h2>
-                            <p className="text-[#646970] mb-6">Choose a pre-configured look for your dashboard.</p>
-                            
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                <button 
-                                    onClick={() => applyThemeTemplate('default')}
-                                    className="bg-white border border-[#dcdcde] hover:border-[#2271b1] rounded-lg overflow-hidden group transition-all text-left flex flex-col h-full shadow-sm hover:shadow-md"
-                                >
-                                    <div className="h-32 bg-[#111827] flex items-center justify-center relative">
-                                        <div className="w-16 h-16 rounded-full border-4 border-[#bef264] bg-[#111827]"></div>
-                                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
-                                    </div>
-                                    <div className="p-4 border-t border-[#dcdcde]">
-                                        <span className="font-bold text-[#1d2327] block mb-1">Modern Dark</span>
-                                        <span className="text-xs text-[#646970]">Dark mode with Neon Green accents.</span>
-                                    </div>
-                                </button>
-
-                                <button 
-                                    onClick={() => applyThemeTemplate('official')}
-                                    className="bg-white border border-[#dcdcde] hover:border-[#2271b1] rounded-lg overflow-hidden group transition-all text-left flex flex-col h-full shadow-sm hover:shadow-md"
-                                >
-                                    <div className="h-32 bg-[#f0f0f1] flex items-center justify-center relative">
-                                        <div className="w-16 h-16 rounded-full border-4 border-[#0891b2] bg-white"></div>
-                                    </div>
-                                    <div className="p-4 border-t border-[#dcdcde]">
-                                        <span className="font-bold text-[#1d2327] block mb-1">Official (SSAA)</span>
-                                        <span className="text-xs text-[#646970]">Light mode with Official Cyan Blue.</span>
-                                    </div>
-                                </button>
-
-                                <button 
-                                    onClick={() => applyThemeTemplate('registry')}
-                                    className="bg-white border border-[#dcdcde] hover:border-[#2271b1] rounded-lg overflow-hidden group transition-all text-left flex flex-col h-full shadow-sm hover:shadow-md"
-                                >
-                                    <div className="h-32 bg-[#f0f0f1] flex items-center justify-center relative">
-                                        <div className="w-16 h-16 rounded-full border-4 border-[#00897b] bg-white"></div>
-                                    </div>
-                                    <div className="p-4 border-t border-[#dcdcde]">
-                                        <span className="font-bold text-[#1d2327] block mb-1">Registry (Sabt)</span>
-                                        <span className="text-xs text-[#646970]">Light mode with Registry Teal.</span>
-                                    </div>
-                                </button>
-                            </div>
-
-                            <hr className="border-[#dcdcde] mb-8" />
-
-                            <h2 className="text-lg font-semibold text-[#1d2327] mb-6">Color Palettes</h2>
-                            <p className="text-[#646970] mb-6">Fine-tune the color scheme.</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {THEME_PRESETS.map(preset => (
-                                    <div key={preset.id} className="bg-white border border-[#dcdcde] hover:border-[#2271b1] transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => handleThemeChange(preset.id)}>
-                                        {/* Preview Mockup */}
-                                        <div className="aspect-video bg-gray-100 border-b border-[#f0f0f1] relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="w-32 h-20 bg-white shadow-sm rounded flex flex-col overflow-hidden border border-gray-200">
-                                                    <div className="h-4 w-full" style={{background: preset.secondary}}></div>
-                                                    <div className="flex-1 bg-gray-50 relative">
-                                                         <div className="absolute top-2 left-2 w-10 h-2 rounded" style={{background: preset.primary}}></div>
-                                                         <div className="absolute top-6 left-2 w-20 h-1.5 rounded bg-gray-200"></div>
-                                                         <div className="absolute top-9 left-2 w-16 h-1.5 rounded bg-gray-200"></div>
-                                                    </div>
-                                                </div>
-                                             </div>
-                                             {/* Overlay for activation */}
-                                             <div className="absolute inset-0 bg-[#2271b1]/90 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                 <span className="text-white font-bold px-4 py-2 border-2 border-white rounded uppercase text-xs tracking-wider">Activate</span>
-                                             </div>
-                                        </div>
-                                        <div className="p-4 flex justify-between items-center">
-                                            <h3 className="font-semibold text-[#1d2327]">{preset.name}</h3>
-                                            <div className="flex gap-1">
-                                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: preset.primary}}></div>
-                                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: preset.secondary}}></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     ) : activeMenu === 'Users' && userRole === 'admin' ? (

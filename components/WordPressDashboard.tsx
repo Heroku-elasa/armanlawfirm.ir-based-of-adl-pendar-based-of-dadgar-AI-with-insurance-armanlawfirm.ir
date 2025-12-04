@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLanguage, PageKey, useAppearance, THEME_PRESETS } from '../types';
+import { useLanguage, PageKey } from '../types';
 import SeoChecker from './SeoChecker';
 import { getSeoAudits, SeoAuditData } from '../services/dbService';
 
@@ -19,13 +19,11 @@ interface WordPressDashboardProps {
 
 const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRole }) => {
     const { t } = useLanguage();
-    const { setColorScheme, theme, toggleTheme } = useAppearance(); // Added theme hook
     const [activeMenu, setActiveMenu] = useState('Dashboard');
     const [draftTitle, setDraftTitle] = useState('');
     const [draftContent, setDraftContent] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isHelpOpen, setIsHelpOpen] = useState(false);
-    const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); // Theme menu state
     
     // SEO History State
     const [auditHistory, setAuditHistory] = useState<SeoAuditData[]>([]);
@@ -48,15 +46,11 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
         // Only show Appearance, Plugins, Users, Settings to Admin
         ...(userRole === 'admin' ? [
             { name: 'Appearance', icon: 'dashicons-admin-appearance', active: activeMenu === 'Appearance' },
-            { name: 'Themes', icon: 'dashicons-art', active: activeMenu === 'Themes' }, // Explicit Themes menu
             { name: 'Plugins', icon: 'dashicons-admin-plugins', badge: 3, active: activeMenu === 'Plugins' },
             { name: 'Users', icon: 'dashicons-admin-users', active: activeMenu === 'Users' },
             { name: 'Tools', icon: 'dashicons-admin-tools', active: activeMenu === 'Tools' },
             { name: 'Settings', icon: 'dashicons-admin-settings', active: activeMenu === 'Settings' },
-        ] : [
-            // For non-admins, show Themes for demo purposes as per request
-            { name: 'Themes', icon: 'dashicons-art', active: activeMenu === 'Themes' },
-        ]),
+        ] : []),
     ];
 
     const recentActivity = [
@@ -80,20 +74,6 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
         if (window.confirm("Are you sure you want to delete this user?")) {
             setUsers(users.filter(u => u.id !== id));
         }
-    };
-
-    const handleThemeChange = (schemeId: string) => {
-        const scheme = THEME_PRESETS.find(p => p.id === schemeId);
-        if (scheme) {
-            setColorScheme(scheme);
-            // Auto-switch mode based on preset convention
-            if (schemeId === 'registry' || schemeId === 'official') {
-                if (theme === 'dark') toggleTheme();
-            } else if (schemeId === 'legal') {
-                if (theme === 'light') toggleTheme();
-            }
-        }
-        setIsThemeMenuOpen(false);
     };
 
     return (
@@ -176,31 +156,6 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
-                        {/* Theme Switcher in Top Bar as fallback */}
-                        <div className="relative">
-                            <button 
-                                onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
-                                className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6] focus:outline-none"
-                            >
-                                <span className="dashicons-art">🎨</span>
-                                <span>Appearance</span>
-                            </button>
-                            {isThemeMenuOpen && (
-                                <div className="absolute top-8 right-0 w-48 bg-[#1d2327] shadow-lg border border-[#2c3338] z-50">
-                                    {THEME_PRESETS.map((preset) => (
-                                        <button
-                                            key={preset.id}
-                                            onClick={() => handleThemeChange(preset.id)}
-                                            className="block w-full text-left px-4 py-2 hover:bg-[#2271b1] hover:text-white transition-colors flex items-center gap-2"
-                                        >
-                                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.primary }}></span>
-                                            {preset.name}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
                         <div className="cursor-pointer hover:text-[#72aee6] font-medium flex items-center gap-2" onClick={() => setPage('dashboard')}>
                             Return to App Dashboard
                         </div>
@@ -293,42 +248,6 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
                                         )}
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
-                    ) : activeMenu === 'Themes' || activeMenu === 'Appearance' ? (
-                        /* THEMES / APPEARANCE VIEW */
-                        <div className="animate-fade-in p-6 bg-white border border-[#dcdcde] shadow-sm">
-                            <h2 className="text-lg font-semibold text-[#1d2327] mb-6">Manage Themes</h2>
-                            <p className="text-[#646970] mb-6">Select a theme to change the appearance of your site.</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                {THEME_PRESETS.map(preset => (
-                                    <div key={preset.id} className="bg-white border border-[#dcdcde] hover:border-[#2271b1] transition-all cursor-pointer group shadow-sm hover:shadow-md" onClick={() => handleThemeChange(preset.id)}>
-                                        {/* Preview Mockup */}
-                                        <div className="aspect-video bg-gray-100 border-b border-[#f0f0f1] relative overflow-hidden group-hover:opacity-90 transition-opacity">
-                                             <div className="absolute inset-0 flex items-center justify-center">
-                                                <div className="w-32 h-20 bg-white shadow-sm rounded flex flex-col overflow-hidden border border-gray-200">
-                                                    <div className="h-4 w-full" style={{background: preset.secondary}}></div>
-                                                    <div className="flex-1 bg-gray-50 relative">
-                                                         <div className="absolute top-2 left-2 w-10 h-2 rounded" style={{background: preset.primary}}></div>
-                                                         <div className="absolute top-6 left-2 w-20 h-1.5 rounded bg-gray-200"></div>
-                                                         <div className="absolute top-9 left-2 w-16 h-1.5 rounded bg-gray-200"></div>
-                                                    </div>
-                                                </div>
-                                             </div>
-                                             {/* Overlay for activation */}
-                                             <div className="absolute inset-0 bg-[#2271b1]/90 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                                                 <span className="text-white font-bold px-4 py-2 border-2 border-white rounded uppercase text-xs tracking-wider">Activate</span>
-                                             </div>
-                                        </div>
-                                        <div className="p-4 flex justify-between items-center">
-                                            <h3 className="font-semibold text-[#1d2327]">{preset.name}</h3>
-                                            <div className="flex gap-1">
-                                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: preset.primary}}></div>
-                                                <div className="w-3 h-3 rounded-full" style={{backgroundColor: preset.secondary}}></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
                             </div>
                         </div>
                     ) : activeMenu === 'Users' && userRole === 'admin' ? (

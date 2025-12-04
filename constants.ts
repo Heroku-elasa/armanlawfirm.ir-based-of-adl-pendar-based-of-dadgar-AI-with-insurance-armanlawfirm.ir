@@ -1,5 +1,6 @@
 
 
+
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -384,9 +385,9 @@ export const fa = {
         },
         location: {
             title: 'مراجعه حضوری',
-            address: 'رشت، بلوار شهید ضیابری، ساختمان ستاره‌شهر، طبقه ۵، واحد ۹',
+            address: 'تهران، خیابان ولیعصر، بالاتر از پارک ساعی، پلاک ۱۰۰',
             hours: 'شنبه تا پنجشنبه ۹:۰۰ تا ۱۸:۰۰، جمعه تعطیل',
-            mapAlt: 'نقشه گوگل مپس - رشت، گیلان'
+            mapAlt: 'نقشه گوگل مپس - تهران'
         },
         cta: {
             main: 'رزرو مشاوره آنلاین یا حضوری',
@@ -1021,7 +1022,7 @@ export const fa = {
         noResults: 'پیشنهادی یافت نشد'
     },
     footer: {
-        description: 'گروه حقوقی عدل پندار با وکلای پایه یک دادگستری، ارائه‌دهنده خدمات حقوقی تخصصی در رشت و سراسر گیلان. با بهره‌گیری از قدرت هوش مصنوعی، ما فرآیندهای پیچیده را ساده و سریع می‌سازیم.',
+        description: 'گروه حقوقی عدل پندار با وکلای پایه یک دادگستری، ارائه‌دهنده خدمات حقوقی تخصصی در تهران و سراسر کشور. با بهره‌گیری از قدرت هوش مصنوعی، ما فرآیندهای پیچیده را ساده و سریع می‌سازیم.',
         quickLinksTitle: 'دسترسی سریع',
         contactTitle: 'تماس با ما',
         copyright: '© ۱۴۰۳ عدل پندار. تمامی حقوق محفوظ است.',
@@ -1029,7 +1030,7 @@ export const fa = {
         poweredBy: 'قدرت گرفته از Google Gemini',
         viewOnGitHub: 'مشاهده در گیت‌هاب',
         email: 'info@adlpendar.ir',
-        address: 'رشت، بلوار شهید ضیابری، ساختمان ستاره‌شهر، طبقه ۵، واحد ۹',
+        address: 'تهران، خیابان ولیعصر، بالاتر از پارک ساعی، پلاک ۱۰۰',
         phone: '۰۹۰۲۷۳۷۰۲۶۰',
         quickLinks: [
             { text: 'خانه', type: 'page', value: 'home' },
@@ -1368,9 +1369,9 @@ export const en = {
         },
         location: {
             title: 'In-Person Visit',
-            address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
+            address: 'No. 100, Vali-e-Asr St, Above Saei Park, Tehran',
             hours: 'Saturday to Thursday 9:00 to 18:00, Friday Closed',
-            mapAlt: 'Google Maps - Rasht, Gilan'
+            mapAlt: 'Google Maps - Tehran'
         },
         cta: {
             main: 'Book Online or In-Person Consultation',
@@ -2013,7 +2014,7 @@ export const en = {
         noResults: 'No suggestions found'
     },
     footer: {
-        description: 'Adl Pendar Legal Group with specialized first-grade lawyers, providing expert legal services in Rasht and across Gilan. Leveraging AI power, we simplify and accelerate complex processes.',
+        description: 'Adl Pendar Legal Group with specialized first-grade lawyers, providing expert legal services in Tehran and across the country. Leveraging AI power, we simplify and accelerate complex processes.',
         quickLinksTitle: 'Quick Links',
         contactTitle: 'Contact Us',
         copyright: '© 2024 Adl Pendar. All rights reserved.',
@@ -2021,7 +2022,7 @@ export const en = {
         poweredBy: 'Powered by Google Gemini',
         viewOnGitHub: 'View on GitHub',
         email: 'info@adlpendar.ir',
-        address: 'Rasht, Shahid Ziabari Blvd, Setareh Shahr Building, Floor 5, Unit 9',
+        address: 'No. 100, Vali-e-Asr St, Above Saei Park, Tehran',
         phone: '09027370260',
         quickLinks: [
             { text: 'Home', type: 'page', value: 'home' },

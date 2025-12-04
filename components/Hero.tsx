@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useEffect, useRef } from 'react';
 import { useLanguage, PageKey } from '../types';
 import { PricingSection } from './PricingPage';
@@ -458,7 +459,7 @@ const HomePage: React.FC<HomePageProps> = ({ setPage, onOpenAIGuide, onOpenBooki
               <div className="bg-[#bef264]/10 border border-[#bef264]/30 rounded-3xl overflow-hidden flex flex-col md:flex-row">
                   <div className="w-full md:w-1/2 min-h-[300px] relative bg-gray-900 dark:bg-[#111827] flex items-center justify-center group overflow-hidden">
                         <iframe 
-                            src="https://maps.google.com/maps?q=35.779995,51.42057&hl=fa&z=16&output=embed"
+                            src="https://maps.google.com/maps?q=35.7327,51.4140&hl=fa&z=16&output=embed"
                             className="absolute inset-0 w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-500"
                             allowFullScreen
                             loading="lazy"
@@ -489,15 +490,15 @@ const HomePage: React.FC<HomePageProps> = ({ setPage, onOpenAIGuide, onOpenBooki
                           </div>
                       </div>
                       <div className="mt-8 flex flex-wrap gap-4">
-                           <a href="https://balad.ir/directions/driving?destination=51.420640700586006%2C35.779938840547146" target="_blank" rel="noopener noreferrer" className="flex-1 bg-blue-600/10 dark:bg-blue-600/20 border border-blue-500/30 dark:border-blue-500/50 text-blue-600 dark:text-blue-300 py-2 px-4 rounded-lg hover:bg-blue-600/20 dark:hover:bg-blue-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
+                           <a href="https://balad.ir/p/Q27zY2v3x1" target="_blank" rel="noopener noreferrer" className="flex-1 bg-blue-600/10 dark:bg-blue-600/20 border border-blue-500/30 dark:border-blue-500/50 text-blue-600 dark:text-blue-300 py-2 px-4 rounded-lg hover:bg-blue-600/20 dark:hover:bg-blue-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
                                 مسیریابی با بلد
                            </a>
-                           <a href="https://neshan.org/maps/places/_bv7MH0xidTa#c35.780-51.421-19z-0p" target="_blank" rel="noopener noreferrer" className="flex-1 bg-green-600/10 dark:bg-green-600/20 border border-green-500/30 dark:border-green-500/50 text-green-600 dark:text-green-300 py-2 px-4 rounded-lg hover:bg-green-600/20 dark:hover:bg-green-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
+                           <a href="https://neshan.org/maps/places/b5e3f2" target="_blank" rel="noopener noreferrer" className="flex-1 bg-green-600/10 dark:bg-green-600/20 border border-green-500/30 dark:border-green-500/50 text-green-600 dark:text-green-300 py-2 px-4 rounded-lg hover:bg-green-600/20 dark:hover:bg-green-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
                                 مسیریابی با نشان
                            </a>
-                           <a href="https://www.google.com/maps/search/?api=1&query=35.779995,51.42057" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 dark:border-red-500/50 text-red-600 dark:text-red-300 py-2 px-4 rounded-lg hover:bg-red-600/20 dark:hover:bg-red-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
+                           <a href="https://www.google.com/maps/search/?api=1&query=35.7327,51.4140" target="_blank" rel="noopener noreferrer" className="flex-1 bg-red-600/10 dark:bg-red-600/20 border border-red-500/30 dark:border-red-500/50 text-red-600 dark:text-red-300 py-2 px-4 rounded-lg hover:bg-red-600/20 dark:hover:bg-red-600/40 transition-colors text-center text-sm font-semibold flex items-center justify-center gap-2">
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                                 Google Maps
                            </a>
