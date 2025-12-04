@@ -14,6 +14,7 @@ interface SettingsModalProps {
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggleRole, currentRole, onOpenWPDashboard }) => {
     const { t } = useLanguage();
     const { 
+        theme, toggleTheme,
         colorScheme, setColorScheme, 
         customLogo, setCustomLogo,
         fastCacheEnabled, setFastCacheEnabled
@@ -64,6 +65,27 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
         alert("Cache cleared successfully.");
     };
 
+    const applyThemeTemplate = (template: 'default' | 'official' | 'registry') => {
+        let schemeId = '';
+        
+        if (template === 'registry') {
+            schemeId = 'registry';
+            if (theme === 'dark') toggleTheme();
+        } else if (template === 'official') {
+            schemeId = 'official';
+            if (theme === 'dark') toggleTheme();
+        } else {
+            schemeId = 'legal';
+            if (theme === 'light') toggleTheme();
+        }
+
+        const scheme = THEME_PRESETS.find(p => p.id === schemeId);
+        if (scheme) {
+            setColorScheme(scheme);
+            setInputColor(scheme.primary);
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -78,6 +100,48 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
                 
                 <div className="p-6 space-y-8 max-h-[80vh] overflow-y-auto">
                     
+                    {/* Theme Templates (New Section) */}
+                    <section>
+                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-4">Theme Templates</h3>
+                        <div className="grid grid-cols-3 gap-3">
+                            <button 
+                                onClick={() => applyThemeTemplate('default')}
+                                className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden group hover:border-brand-gold transition-colors"
+                            >
+                                <div className="h-14 bg-[#111827] flex items-center justify-center">
+                                    <div className="w-6 h-6 rounded-full border-2 border-[#bef264] bg-[#111827]"></div>
+                                </div>
+                                <div className="p-2 bg-gray-50 dark:bg-gray-800 text-center">
+                                    <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 block leading-tight">Modern Dark</span>
+                                </div>
+                            </button>
+                            <button 
+                                onClick={() => applyThemeTemplate('official')}
+                                className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden group hover:border-brand-gold transition-colors"
+                            >
+                                <div className="h-14 bg-gray-100 flex items-center justify-center">
+                                    <div className="w-6 h-6 rounded-full border-2 border-[#0891b2] bg-white"></div>
+                                </div>
+                                <div className="p-2 bg-gray-50 dark:bg-gray-800 text-center">
+                                    <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 block leading-tight">Official (SSAA)</span>
+                                </div>
+                            </button>
+                            <button 
+                                onClick={() => applyThemeTemplate('registry')}
+                                className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden group hover:border-brand-gold transition-colors"
+                            >
+                                <div className="h-14 bg-gray-50 flex items-center justify-center">
+                                    <div className="w-6 h-6 rounded-full border-2 border-[#00897b] bg-white"></div>
+                                </div>
+                                <div className="p-2 bg-gray-50 dark:bg-gray-800 text-center">
+                                    <span className="text-[10px] font-bold text-gray-700 dark:text-gray-300 block leading-tight">Registry (Sabt)</span>
+                                </div>
+                            </button>
+                        </div>
+                    </section>
+
+                    <hr className="border-gray-200 dark:border-gray-700" />
+
                     {/* Role & Dashboard Management */}
                     <section className="space-y-4">
                         <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-2">View Modes</h3>
@@ -118,7 +182,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
 
                     {/* Color Theme Section */}
                     <section>
-                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-4">Color Theme (4 Colors)</h3>
+                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-4">Color Palette</h3>
                         <div className="grid grid-cols-2 gap-3 mb-4">
                             {THEME_PRESETS.map(preset => (
                                 <button

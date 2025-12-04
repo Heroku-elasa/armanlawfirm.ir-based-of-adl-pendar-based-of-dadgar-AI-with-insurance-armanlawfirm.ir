@@ -1,6 +1,4 @@
 
-
-
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { GroundingChunk, StrategyTask, IntentRoute, DraftPreparationResult, ChatMessage, FilePart, LatLng, DailyTrend, GeneratedPost, VideoScript, PublishingStrategy, VideoTool, LegalCitation, CourtroomRebuttal, InstagramReel, InstagramStory, InstagramGrowthPlan, ResumeAnalysisResult, JobDetails, JobSearchSuggestion, JobApplication } from '../types';
 import { RESUME_ANALYSIS_CRITERIA } from '../constants';
@@ -21,41 +19,91 @@ const getAI = (): GoogleGenAI => {
     return aiInstance;
 };
 
+// --- ERROR HANDLING SYSTEM ---
+
+/**
+ * Custom Error class to carry additional context about API failures.
+ */
+export class AIServiceError extends Error {
+    public originalError: unknown;
+    public isRetryable: boolean;
+    public category: 'NETWORK' | 'AUTH' | 'QUOTA' | 'SAFETY' | 'SERVER' | 'CLIENT' | 'UNKNOWN';
+
+    constructor(message: string, originalError: unknown, category: 'NETWORK' | 'AUTH' | 'QUOTA' | 'SAFETY' | 'SERVER' | 'CLIENT' | 'UNKNOWN', isRetryable = false) {
+        super(message);
+        this.name = 'AIServiceError';
+        this.originalError = originalError;
+        this.category = category;
+        this.isRetryable = isRetryable;
+    }
+}
+
 // Centralized, robust error handler
-function throwEnhancedError(error: unknown, defaultMessage: string): never {
-    console.error("AI Service Error:", error);
+function throwEnhancedError(error: unknown, contextMessage: string): never {
+    // 1. Detailed Logging for Developers
+    console.error(`[AI Service Error] Context: ${contextMessage}`, {
+        message: (error as Error)?.message,
+        stack: (error as Error)?.stack,
+        raw: error,
+        timestamp: new Date().toISOString()
+    });
 
-    let messageToParse: string = defaultMessage;
+    let userMessage = contextMessage;
+    let category: AIServiceError['category'] = 'UNKNOWN';
+    let isRetryable = false;
 
-    if (error instanceof Error) {
-        messageToParse = error.message;
-    } else if (typeof error === 'object' && error !== null) {
-        messageToParse = JSON.stringify(error);
+    const errString = String(error).toLowerCase();
+    const errObj = error as any;
+
+    // 2. Error Categorization & User-Friendly Messages
+
+    // Network Errors
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+        userMessage = "Network connection failed. Please check your internet connection and try again.";
+        category = 'NETWORK';
+        isRetryable = true;
+    } 
+    // Quota / Rate Limits
+    else if (errString.includes('429') || errString.includes('quota') || errString.includes('resource_exhausted')) {
+        userMessage = "Service usage limit reached (Quota Exceeded). Please try again later or upgrade your plan.";
+        category = 'QUOTA';
+        isRetryable = false; // Usually requires waiting, immediate retry won't help
+    }
+    // Authentication
+    else if (errString.includes('403') || errString.includes('401') || errString.includes('api key') || errString.includes('auth')) {
+        userMessage = "Authentication failed. The API key may be invalid or expired.";
+        category = 'AUTH';
+    }
+    // Server Overload (503)
+    else if (errString.includes('503') || errString.includes('overloaded')) {
+        userMessage = "The AI model is currently overloaded. Please try again in a few moments.";
+        category = 'SERVER';
+        isRetryable = true;
+    }
+    // Server Internal Errors (500)
+    else if (errString.includes('500') || errString.includes('internal error')) {
+        userMessage = "An internal server error occurred at the AI provider. Please try again later.";
+        category = 'SERVER';
+        isRetryable = true;
+    }
+    // Safety & Content Policy
+    else if (errString.includes('safety') || errString.includes('blocked') || errString.includes('harmful') || errString.includes('finishreason')) {
+        userMessage = "The request was blocked by safety filters. Please try rephrasing your prompt to be more neutral.";
+        category = 'SAFETY';
+    }
+    // Bad Request (400)
+    else if (errString.includes('400') || errString.includes('invalid argument')) {
+        userMessage = "The request was invalid. Please check your input (e.g., ensure images are supported formats and text is not too long).";
+        category = 'CLIENT';
+    }
+    // Browser/Environment Issues
+    else if (errString.includes('permission_denied')) {
+        userMessage = "Permission denied. Please check your browser settings.";
+        category = 'CLIENT';
     }
 
-    const lowerCaseMessage = messageToParse.toLowerCase();
-
-    if (lowerCaseMessage.includes('api key') || lowerCaseMessage.includes('auth')) {
-        throw new Error('Invalid API Key. Please check your configuration.');
-    }
-    if (lowerCaseMessage.includes('permission_denied')) {
-        throw new Error('Permission Denied. Ensure the API is enabled for your project.');
-    }
-    if (lowerCaseMessage.includes('resource_exhausted') || lowerCaseMessage.includes('429')) {
-        if (lowerCaseMessage.includes('quota')) {
-            throw new Error('You have exceeded your API usage quota. (Quota Exceeded)');
-        } else {
-            throw new Error('The AI model is currently busy. Please try again shortly. (Rate Limit)');
-        }
-    }
-    if (lowerCaseMessage.includes('400') || lowerCaseMessage.includes('invalid argument')) {
-        throw new Error('There was a problem with the request. Please check your input. (Bad Request)');
-    }
-    if (lowerCaseMessage.includes('500') || lowerCaseMessage.includes('internal error')) {
-        throw new Error('The AI service encountered an internal error. Please try again later.');
-    }
-
-    throw new Error(messageToParse);
+    // 3. Throw Custom Error
+    throw new AIServiceError(userMessage, error, category, isRetryable);
 }
 
 // --- HELPER FOR BASE64 ---

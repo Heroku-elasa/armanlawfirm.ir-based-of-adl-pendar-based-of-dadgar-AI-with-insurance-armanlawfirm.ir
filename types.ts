@@ -15,6 +15,8 @@ export interface ColorScheme {
 
 export const THEME_PRESETS: ColorScheme[] = [
     { id: 'legal', name: 'Default Legal', primary: '#bef264', secondary: '#111827' }, // Lime-400, Gray-900
+    { id: 'official', name: 'Official (SSAA)', primary: '#0891b2', secondary: '#334155' }, // Cyan-600, Slate-700
+    { id: 'registry', name: 'Registry (Sabt)', primary: '#00897b', secondary: '#37474f' }, // Teal-600, BlueGrey-800
     { id: 'corporate', name: 'Corporate Trust', primary: '#60a5fa', secondary: '#1e3a8a' }, // Blue-400, Blue-900
     { id: 'justice', name: 'Crimson Justice', primary: '#fb7185', secondary: '#881337' }, // Rose-400, Rose-900
     { id: 'growth', name: 'Emerald Growth', primary: '#34d399', secondary: '#064e3b' }, // Emerald-400, Emerald-900
@@ -52,7 +54,7 @@ export const AppearanceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
     const [customLogo, setCustomLogo] = useState<string>(() => {
         // Default to provided specific logo if local storage is empty
-        return localStorage.getItem('dadgar-custom-logo') || "https://i.sstatic.net/xVUdgkWi.jpg";
+        return localStorage.getItem('dadgar-custom-logo') || "https://messages-prod.27c852f3500f38c1e7786e2c9ff9e48f.r2.cloudflarestorage.com/f0819c9a-22ad-4d4e-9a4b-d8c2ef893dd2/1764579575951-019ad922-8b89-702a-b810-c608609faa9e.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=c774f9d56a46165f86a9757e83c2bbc3%2F20251201%2Fauto%2Fs3%2Faws4_request&X-Amz-Date=20251201T085936Z&X-Amz-Expires=3600&X-Amz-Signature=2de49acd6a4c990786b04ad5454ba37dbbe609a28a39e68561559591ae5dbbc8&X-Amz-SignedHeaders=host&x-amz-checksum-mode=ENABLED&x-id=GetObject";
     });
 
     const [fastCacheEnabled, setFastCacheEnabled] = useState<boolean>(() => {

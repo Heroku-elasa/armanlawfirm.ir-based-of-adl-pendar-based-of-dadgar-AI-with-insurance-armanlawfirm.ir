@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLanguage, PageKey } from '../types';
+import { useLanguage, PageKey, useAppearance, THEME_PRESETS } from '../types';
 import SeoChecker from './SeoChecker';
 import { getSeoAudits, SeoAuditData } from '../services/dbService';
 
@@ -19,11 +19,13 @@ interface WordPressDashboardProps {
 
 const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRole }) => {
     const { t } = useLanguage();
+    const { setColorScheme, theme, toggleTheme } = useAppearance(); // Added theme hook
     const [activeMenu, setActiveMenu] = useState('Dashboard');
     const [draftTitle, setDraftTitle] = useState('');
     const [draftContent, setDraftContent] = useState('');
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isHelpOpen, setIsHelpOpen] = useState(false);
+    const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false); // Theme menu state
     
     // SEO History State
     const [auditHistory, setAuditHistory] = useState<SeoAuditData[]>([]);
@@ -74,6 +76,20 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
         if (window.confirm("Are you sure you want to delete this user?")) {
             setUsers(users.filter(u => u.id !== id));
         }
+    };
+
+    const handleThemeChange = (schemeId: string) => {
+        const scheme = THEME_PRESETS.find(p => p.id === schemeId);
+        if (scheme) {
+            setColorScheme(scheme);
+            // Auto-switch mode based on preset convention
+            if (schemeId === 'registry' || schemeId === 'official') {
+                if (theme === 'dark') toggleTheme();
+            } else if (schemeId === 'legal') {
+                if (theme === 'light') toggleTheme();
+            }
+        }
+        setIsThemeMenuOpen(false);
     };
 
     return (
@@ -156,6 +172,31 @@ const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRo
                         </div>
                     </div>
                     <div className="flex items-center space-x-4">
+                        {/* Theme Switcher */}
+                        <div className="relative">
+                            <button 
+                                onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
+                                className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6] focus:outline-none"
+                            >
+                                <span className="dashicons-art">🎨</span>
+                                <span>Appearance</span>
+                            </button>
+                            {isThemeMenuOpen && (
+                                <div className="absolute top-8 right-0 w-48 bg-[#1d2327] shadow-lg border border-[#2c3338] z-50">
+                                    {THEME_PRESETS.map((preset) => (
+                                        <button
+                                            key={preset.id}
+                                            onClick={() => handleThemeChange(preset.id)}
+                                            className="block w-full text-left px-4 py-2 hover:bg-[#2271b1] hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.primary }}></span>
+                                            {preset.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
                         <div className="cursor-pointer hover:text-[#72aee6] font-medium flex items-center gap-2" onClick={() => setPage('dashboard')}>
                             Return to App Dashboard
                         </div>

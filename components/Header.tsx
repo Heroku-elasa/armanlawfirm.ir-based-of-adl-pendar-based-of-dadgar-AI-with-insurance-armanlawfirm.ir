@@ -20,9 +20,11 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
   const { theme, toggleTheme, customLogo } = useAppearance();
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const [isCheckpointMenuOpen, setIsCheckpointMenuOpen] = useState(false);
+  const [isToolsMenuOpen, setIsToolsMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
   const checkpointMenuRef = useRef<HTMLDivElement>(null);
+  const toolsMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -31,6 +33,9 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
       }
       if (checkpointMenuRef.current && !checkpointMenuRef.current.contains(event.target as Node)) {
         setIsCheckpointMenuOpen(false);
+      }
+      if (toolsMenuRef.current && !toolsMenuRef.current.contains(event.target as Node)) {
+        setIsToolsMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -41,6 +46,7 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
       setPage(page);
       window.scrollTo(0, 0);
       setIsMobileMenuOpen(false);
+      setIsToolsMenuOpen(false);
   }
 
   const handleScrollTo = (id: string) => {
@@ -55,17 +61,47 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
     setIsMobileMenuOpen(false);
   };
 
-  const navLinks = [
+  // Grouped Tools Definition
+  const toolGroups = [
+    {
+      title: language === 'fa' ? 'خدمات حقوقی' : 'Legal Services',
+      items: [
+        { key: 'legal_drafter', text: t('header.aiAssistant') },
+        { key: 'case_strategist', text: t('header.caseStrategist') },
+        { key: 'lawyer_finder', text: t('header.lawyerFinder') },
+        { key: 'contract_analyzer', text: t('header.contractAnalyzer') },
+        { key: 'court_assistant', text: t('header.courtAssistant') },
+        { key: 'notary_finder', text: t('header.notaryFinder') },
+        { key: 'evidence_analyzer', text: t('header.evidenceAnalyzer') },
+      ]
+    },
+    {
+      title: language === 'fa' ? 'کسب و کار' : 'Business',
+      items: [
+        { key: 'corporate_services', text: t('header.corporateServices') },
+        { key: 'insurance_services', text: t('header.insuranceServices') },
+        { key: 'resume_analyzer', text: t('header.resumeAnalyzer') },
+        { key: 'job_assistant', text: t('header.jobAssistant') },
+      ]
+    },
+    {
+      title: language === 'fa' ? 'ابزارها' : 'Tools',
+      items: [
+        { key: 'content_hub', text: t('header.contentHub') },
+        { key: 'news_summarizer', text: t('header.newsSummarizer') },
+        { key: 'web_analyzer', text: t('header.webAnalyzer') },
+        { key: 'site_architect', text: t('header.siteArchitect') },
+        { key: 'image_generator', text: t('header.imageGenerator') },
+        { key: 'general_questions', text: t('header.generalQuestions') },
+      ]
+    }
+  ];
+
+  const mainLinks = [
     { key: 'home', text: t('header.home'), action: () => handlePageChange('home') },
     { key: 'dashboard', text: t('header.dashboard'), action: () => handlePageChange('dashboard') },
-    { key: 'wp_dashboard', text: t('header.cmsPanel'), action: () => handlePageChange('wp_dashboard') },
-    { key: 'services', text: t('header.services'), action: () => handleScrollTo('services') },
     { key: 'pricing', text: t('header.pricing'), action: () => handlePageChange('pricing') },
-    { key: 'legal_drafter', text: t('header.aiAssistant'), action: () => handlePageChange('legal_drafter') },
-    { key: 'court_assistant', text: t('header.courtAssistant'), action: () => handlePageChange('court_assistant') },
-    { key: 'lawyer_finder', text: t('header.lawyerFinder'), action: () => handlePageChange('lawyer_finder') },
-    { key: 'content_hub', text: t('header.contentHub'), action: () => handlePageChange('content_hub') },
-    { key: 'about', text: t('header.about'), action: () => handleScrollTo('about') },
+    { key: 'wp_dashboard', text: t('header.cmsPanel'), action: () => handlePageChange('wp_dashboard') },
     { key: 'contact', text: t('header.contact'), action: () => handleScrollTo('footer'), isPriority: true },
   ];
   
@@ -101,7 +137,7 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
     <header className="bg-white dark:bg-[#111827] sticky top-0 z-50 border-b border-gray-200 dark:border-gray-800 shadow-lg transition-colors duration-300">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
-          <div className="flex items-center lg:flex-1 overflow-hidden">
+          <div className="flex items-center lg:flex-1 overflow-visible">
             <a href="#" onClick={(e) => { e.preventDefault(); handlePageChange('home'); }} className="flex-shrink-0 flex items-center space-x-3 rtl:space-x-reverse group mr-4 rtl:ml-4">
               <img src={customLogo} alt="Arman Law Firm Logo" className="w-11 h-11 sm:w-14 sm:h-14 rounded-full object-cover border-2 border-brand-gold group-hover:scale-105 transition-transform" />
               <div className="flex flex-col">
@@ -110,10 +146,61 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
               </div>
             </a>
             
-            <nav className="hidden lg:flex items-center gap-1 xl:gap-3 rtl:space-x-reverse mx-2 flex-nowrap overflow-x-auto no-scrollbar">
-              {navLinks.map((link, idx) => (
+            <nav className="hidden lg:flex items-center gap-1 xl:gap-3 rtl:space-x-reverse mx-2 flex-nowrap">
+              {mainLinks.slice(0, 2).map((link) => (
                   <button 
-                    key={idx} 
+                    key={link.key} 
+                    onClick={link.action} 
+                    className={`px-2 xl:px-3 py-2 text-xs xl:text-sm font-medium transition-all whitespace-nowrap rounded-md text-gray-600 dark:text-gray-300 hover:text-brand-gold dark:hover:text-brand-gold hover:bg-gray-50 dark:hover:bg-white/5 ${currentPage === link.key ? 'text-brand-gold dark:text-brand-gold font-bold bg-gray-50 dark:bg-white/5' : ''}`}
+                  >
+                      {link.text}
+                  </button>
+              ))}
+
+              {/* Mega Menu / Services Dropdown */}
+              <div className="relative" ref={toolsMenuRef}>
+                  <button
+                      onClick={() => setIsToolsMenuOpen(!isToolsMenuOpen)}
+                      className={`px-2 xl:px-3 py-2 text-xs xl:text-sm font-medium transition-all whitespace-nowrap rounded-md flex items-center gap-1
+                      ${isToolsMenuOpen || toolGroups.some(g => g.items.some(i => i.key === currentPage))
+                          ? 'text-brand-gold dark:text-brand-gold font-bold bg-gray-50 dark:bg-white/5' 
+                          : 'text-gray-600 dark:text-gray-300 hover:text-brand-gold dark:hover:text-brand-gold hover:bg-gray-50 dark:hover:bg-white/5'}`}
+                  >
+                      {language === 'fa' ? 'خدمات' : 'Services'}
+                      <svg className={`w-4 h-4 transition-transform ${isToolsMenuOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" /></svg>
+                  </button>
+                  
+                  {isToolsMenuOpen && (
+                      <div className={`absolute top-full mt-2 w-[650px] bg-white dark:bg-[#1F1F1F] border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl z-50 ${language === 'fa' ? 'right-0' : 'left-0'} overflow-hidden animate-fade-in p-6`}>
+                          <div className="grid grid-cols-3 gap-6">
+                              {toolGroups.map((group, idx) => (
+                                  <div key={idx} className="space-y-3">
+                                      <h3 className="font-bold text-brand-gold text-sm border-b border-gray-100 dark:border-gray-700 pb-2 mb-2 flex items-center gap-2">
+                                          {group.title}
+                                      </h3>
+                                      <div className="flex flex-col space-y-1">
+                                          {group.items.map(link => (
+                                              <button
+                                                  key={link.key}
+                                                  onClick={() => handlePageChange(link.key as PageKey)}
+                                                  className={`text-right px-3 py-2 text-xs rounded transition-all hover:bg-gray-50 dark:hover:bg-gray-800 flex items-center gap-2
+                                                  ${currentPage === link.key ? 'bg-brand-gold/10 text-brand-gold font-bold' : 'text-gray-600 dark:text-gray-300'}`}
+                                              >
+                                                  <span className="w-1.5 h-1.5 rounded-full bg-brand-gold opacity-50"></span>
+                                                  {link.text}
+                                              </button>
+                                          ))}
+                                      </div>
+                                  </div>
+                              ))}
+                          </div>
+                      </div>
+                  )}
+              </div>
+
+              {mainLinks.slice(2).map((link) => (
+                  <button 
+                    key={link.key} 
                     onClick={link.action} 
                     className={`
                         px-2 xl:px-3 py-2 text-xs xl:text-sm font-medium transition-all whitespace-nowrap rounded-md
@@ -224,16 +311,47 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
       </div>
       
       {isMobileMenuOpen && (
-        <div className="lg:hidden bg-white dark:bg-[#1F1F1F] border-t border-gray-200 dark:border-gray-800 py-2 animate-fade-in">
-            {navLinks.map((link, idx) => (
+        <div className="lg:hidden bg-white dark:bg-[#1F1F1F] border-t border-gray-200 dark:border-gray-800 py-2 animate-fade-in max-h-[80vh] overflow-y-auto">
+            {/* Main Links First */}
+            {mainLinks.slice(0, 2).map((link) => (
                 <button 
-                    key={idx} 
-                    onClick={() => { link.action(); setIsMobileMenuOpen(false); }}
+                    key={link.key} 
+                    onClick={() => { link.action && link.action(); setIsMobileMenuOpen(false); }}
                     className={`block w-full text-right px-4 py-3 text-sm font-medium border-b border-gray-100 dark:border-gray-800 last:border-0 ${currentPage === link.key ? 'text-brand-gold bg-gray-50 dark:bg-white/5' : 'text-gray-600 dark:text-gray-300'}`}
                 >
                     {link.text}
                 </button>
             ))}
+
+            {/* Grouped Tools */}
+            <div className="bg-gray-50 dark:bg-white/5">
+                {toolGroups.map((group, idx) => (
+                    <div key={idx} className="border-b border-gray-100 dark:border-gray-800 py-2">
+                        <div className="px-4 py-2 text-xs font-bold text-gray-400 uppercase tracking-wider">{group.title}</div>
+                        {group.items.map(link => (
+                            <button 
+                                key={link.key}
+                                onClick={() => { handlePageChange(link.key as PageKey); setIsMobileMenuOpen(false); }}
+                                className={`block w-full text-right px-6 py-2 text-sm ${currentPage === link.key ? 'text-brand-gold font-bold' : 'text-gray-600 dark:text-gray-300'}`}
+                            >
+                                {link.text}
+                            </button>
+                        ))}
+                    </div>
+                ))}
+            </div>
+
+            {/* Remaining Links */}
+            {mainLinks.slice(2).map((link) => (
+                <button 
+                    key={link.key} 
+                    onClick={() => { link.action && link.action(); setIsMobileMenuOpen(false); }}
+                    className={`block w-full text-right px-4 py-3 text-sm font-medium border-b border-gray-100 dark:border-gray-800 last:border-0 ${currentPage === link.key ? 'text-brand-gold bg-gray-50 dark:bg-white/5' : 'text-gray-600 dark:text-gray-300'}`}
+                >
+                    {link.text}
+                </button>
+            ))}
+
             <button 
                 onClick={() => { onOpenDonation(); setIsMobileMenuOpen(false); }}
                 className="block w-full text-right px-4 py-3 text-sm font-bold text-red-500 border-b border-gray-100 dark:border-gray-800"
