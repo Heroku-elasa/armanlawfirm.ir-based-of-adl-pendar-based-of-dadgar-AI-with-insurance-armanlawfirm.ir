@@ -1,6 +1,4 @@
 
-
-
 export const REPORT_TYPES = [
     { value: 'petition' },
     { value: 'contract' },
@@ -298,7 +296,7 @@ export const fa = {
         fileFormats: 'دریافت فایل‌های خروجی:',
         discount: '۵۰٪ تخفیف',
         whyUs: {
-            title: 'چرا هوش مصنوعی دادگر؟',
+            title: 'چرا هوش مصنوعی آرمان؟',
             items: [
                 { title: 'نوشتن دادخواست با هوش مصنوعی', features: ['مطابق با آخرین تغییرات قضایی ۱۴۰۳', 'راهنمای گام‌به‌گام اختصاصی', 'جلوگیری از خطاهای رایج حقوقی'] },
                 { title: 'نوشتن لایحه با هوش مصنوعی', features: ['تحلیل خودکار پرونده شما', 'استناد به مواد قانونی مرتبط', 'قالب‌های دادگاه‌های مختلف'] },
@@ -385,7 +383,7 @@ export const fa = {
         },
         location: {
             title: 'مراجعه حضوری',
-            address: 'تهران، خیابان ولیعصر، بالاتر از پارک ساعی، پلاک ۱۰۰',
+            address: 'تهران، جردن، خیابان طاهری پلاک ۱۸',
             hours: 'شنبه تا پنجشنبه ۹:۰۰ تا ۱۸:۰۰، جمعه تعطیل',
             mapAlt: 'نقشه گوگل مپس - تهران'
         },
@@ -485,7 +483,7 @@ export const fa = {
         },
         aiSection: {
             title: 'پاسخ سوال خود را نیافتید؟',
-            subtitle: 'از هوش مصنوعی دادگر بپرسید تا بلافاصله راهنمایی شوید.',
+            subtitle: 'از هوش مصنوعی آرمان بپرسید تا بلافاصله راهنمایی شوید.',
             inputPlaceholder: 'سوال خود را اینجا بنویسید...',
             button: 'پرسش از هوش مصنوعی',
             thinking: 'در حال جستجوی پاسخ...'
@@ -511,6 +509,14 @@ export const fa = {
         buttonText: 'ایجاد پیش‌نویس',
         validationError: 'لطفا موضوع و شرح مختصر را تکمیل کنید.'
     },
+    reportTypes: {
+        petition: 'دادخواست',
+        contract: 'قرارداد',
+        statement: 'اظهارنامه',
+        power_of_attorney: 'وکالت‌نامه',
+        legal_warning: 'اخطار قانونی',
+        complaint: 'شکوائیه'
+    },
     reportPrompts: {
         petition: 'بر اساس موضوع "{topic}" و شرح "{description}"، یک دادخواست کامل و رسمی برای ارائه به دادگاه عمومی حقوقی در ایران تنظیم کن. تمام ارکان دادخواست از جمله خواهان، خوانده، خواسته، دلایل و منضمات و شرح دادخواست را به طور دقیق و با ادبیات حقوقی مناسب بنویس.',
         contract: 'یک پیش‌نویس قرارداد کامل و جامع با موضوع "{topic}" و بر اساس توضیحات "{description}" تهیه کن. تمام مواد ضروری قرارداد از جمله مشخصات طرفین، موضوع قرارداد، مدت، مبلغ، تعهدات طرفین، شرایط فسخ و مرجع حل اختلاف را در نظر بگیر.',
@@ -534,7 +540,7 @@ export const fa = {
         shareEmail: 'ارسال با ایمیل',
         shareWhatsApp: 'ارسال با واتساپ',
         sendToSupport: 'ارسال به پشتیبانی (واتساپ)',
-        docTitle: 'سند تولید شده توسط دادگر AI',
+        docTitle: 'سند تولید شده توسط آرمان AI',
         headerDate: 'تاریخ',
         headerCaseNo: 'شماره پرونده',
         caseNoPlaceholder: '________',
@@ -963,7 +969,7 @@ export const fa = {
                 id: '1',
                 title: 'هوش مصنوعی در وکالت: فرصت یا تهدید؟',
                 excerpt: 'بررسی تاثیرات هوش مصنوعی بر آینده شغلی وکلا و نحوه استفاده از ابزارهای مدرن در پیشبرد پرونده‌های حقوقی.',
-                content: '## هوش مصنوعی در وکالت\n\nورود هوش مصنوعی به دنیای حقوق، بحث‌های زیادی را برانگیخته است. بسیاری نگران جایگزینی وکلا با ربات‌ها هستند، اما واقعیت چیز دیگری است.\n\n### مزایای استفاده از AI\n\n1. **سرعت در تنظیم قراردادها:** ابزارهایی مانند دادگر AI می‌توانند پیش‌نویس‌های دقیقی را در چند ثانیه آماده کنند.\n2. **تحلیل داده‌های حجیم:** بررسی هزاران صفحه مدرک در زمان کوتاه.\n3. **کاهش خطای انسانی:** دقت بالا در محاسبات و بررسی تضاد قوانین.\n\n### نتیجه‌گیری\n\nهوش مصنوعی ابزاری برای توانمندسازی وکلاست، نه حذف آنها. وکلایی که از این تکنولوژی استفاده کنند، از رقبای خود پیشی خواهند گرفت.',
+                content: '## هوش مصنوعی در وکالت\n\nورود هوش مصنوعی به دنیای حقوق، بحث‌های زیادی را برانگیخته است. بسیاری نگران جایگزینی وکلا با ربات‌ها هستند، اما واقعیت چیز دیگری است.\n\n### مزایای استفاده از AI\n\n1. **سرعت در تنظیم قراردادها:** ابزارهایی مانند آرمان AI می‌توانند پیش‌نویس‌های دقیقی را در چند ثانیه آماده کنند.\n2. **تحلیل داده‌های حجیم:** بررسی هزاران صفحه مدرک در زمان کوتاه.\n3. **کاهش خطای انسانی:** دقت بالا در محاسبات و بررسی تضاد قوانین.\n\n### نتیجه‌گیری\n\nهوش مصنوعی ابزاری برای توانمندسازی وکلاست، نه حذف آنها. وکلایی که از این تکنولوژی استفاده کنند، از رقبای خود پیشی خواهند گرفت.',
                 image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
                 date: '۱۴۰۳/۰۲/۱۵',
                 author: 'تحریریه عدل پندار',
@@ -973,7 +979,7 @@ export const fa = {
                 id: '2',
                 title: 'نکات کلیدی در تنظیم قرارداد اجاره',
                 excerpt: 'آنچه باید موجران و مستاجران قبل از امضای قرارداد بدانند تا از مشکلات حقوقی آینده جلوگیری کنند.',
-                content: '## قرارداد اجاره\n\nتنظیم صحیح قرارداد اجاره می‌تواند از بسیاری از دعاوی حقوقی جلوگیری کند.\n\n### نکات مهم:\n\n* **مدت قرارداد:** حتما تاریخ شروع و پایان را دقیق ذکر کنید.\n* **مدت قرض‌الحسنه و اجاره‌بها:** نحوه پرداخت و شماره حساب را مشخص کنید.\n* **شرایط فسخ:** مواردی که طرفین حق فسخ دارند را شفاف بنویسید.\n* **تعمیرات:** مسئولیت تعمیرات اساسی و مصرفی را تفکیک کنید.\n\nاستفاده از دستیار هوشمند دادگر برای تنظیم قرارداد می‌تواند اطمینان بیشتری به شما بدهد.',
+                content: '## قرارداد اجاره\n\nتنظیم صحیح قرارداد اجاره می‌تواند از بسیاری از دعاوی حقوقی جلوگیری کند.\n\n### نکات مهم:\n\n* **مدت قرارداد:** حتما تاریخ شروع و پایان را دقیق ذکر کنید.\n* **مدت قرض‌الحسنه و اجاره‌بها:** نحوه پرداخت و شماره حساب را مشخص کنید.\n* **شرایط فسخ:** مواردی که طرفین حق فسخ دارند را شفاف بنویسید.\n* **تعمیرات:** مسئولیت تعمیرات اساسی و مصرفی را تفکیک کنید.\n\nاستفاده از دستیار هوشمند آرمان برای تنظیم قرارداد می‌تواند اطمینان بیشتری به شما بدهد.',
                 image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80',
                 date: '۱۴۰۳/۰۲/۱۰',
                 author: 'وکیل علی محمدی',
@@ -1008,8 +1014,8 @@ export const fa = {
         description: 'برای تحلیل‌های پیچیده، از مدل قدرتمندتر با زمان پردازش بیشتر استفاده می‌کند.'
     },
     chatbot: {
-        title: 'چت‌بات دادگر',
-        welcomeMessage: 'سلام! من دستیار هوشمند دادگر هستم. چطور می‌توانم به شما کمک کنم؟',
+        title: 'چت‌بات آرمان',
+        welcomeMessage: 'سلام! من دستیار هوشمند آرمان هستم. چطور می‌توانم به شما کمک کنم؟',
         placeholder: 'پیام خود را بنویسید...',
         initialSuggestions: {
             s1: 'خدمات شما چیست؟',
@@ -1022,7 +1028,7 @@ export const fa = {
         noResults: 'پیشنهادی یافت نشد'
     },
     footer: {
-        description: 'گروه حقوقی عدل پندار با وکلای پایه یک دادگستری، ارائه‌دهنده خدمات حقوقی تخصصی در تهران و سراسر کشور. با بهره‌گیری از قدرت هوش مصنوعی، ما فرآیندهای پیچیده را ساده و سریع می‌سازیم.',
+        description: 'گروه حقوقی عدل پندار با وکلای پایه یک دادگستری، ارائه‌دهنده خدمات حقوقی تخصصی در رشت و سراسر گیلان. با بهره‌گیری از قدرت هوش مصنوعی، ما فرآیندهای پیچیده را ساده و سریع می‌سازیم.',
         quickLinksTitle: 'دسترسی سریع',
         contactTitle: 'تماس با ما',
         copyright: '© ۱۴۰۳ عدل پندار. تمامی حقوق محفوظ است.',
@@ -1030,8 +1036,8 @@ export const fa = {
         poweredBy: 'قدرت گرفته از Google Gemini',
         viewOnGitHub: 'مشاهده در گیت‌هاب',
         email: 'info@adlpendar.ir',
-        address: 'تهران، خیابان ولیعصر، بالاتر از پارک ساعی، پلاک ۱۰۰',
-        phone: '۰۹۰۲۷۳۷۰۲۶۰',
+        address: 'تهران، جردن، خیابان طاهری پلاک ۱۸',
+        phone: '۰۲۱-۲۲۰۴۱۶۵۵ | ۰۹۱۲........',
         quickLinks: [
             { text: 'خانه', type: 'page', value: 'home' },
             { text: 'خدمات ما', type: 'scroll', value: 'services' },
@@ -1282,7 +1288,7 @@ export const en = {
         fileFormats: 'Receive output files:',
         discount: '50% OFF',
         whyUs: {
-            title: 'Why Dadgar AI?',
+            title: 'Why Arman AI?',
             items: [
                 { title: 'AI Petition Drafting', features: ['Updated with 2024 laws', 'Step-by-step guide', 'Avoid common errors'] },
                 { title: 'AI Bill Drafting', features: ['Auto case analysis', 'Legal citations', 'Various court templates'] },
@@ -1369,7 +1375,7 @@ export const en = {
         },
         location: {
             title: 'In-Person Visit',
-            address: 'No. 100, Vali-e-Asr St, Above Saei Park, Tehran',
+            address: 'No. 18, Taheri St, Jordan, Tehran',
             hours: 'Saturday to Thursday 9:00 to 18:00, Friday Closed',
             mapAlt: 'Google Maps - Tehran'
         },
@@ -1469,7 +1475,7 @@ export const en = {
         },
         aiSection: {
             title: 'Did not find your answer?',
-            subtitle: 'Ask Dadgar AI directly for immediate assistance.',
+            subtitle: 'Ask Arman AI directly for immediate assistance.',
             inputPlaceholder: 'Type your question here...',
             button: 'Ask AI',
             thinking: 'Searching for answer...'
@@ -1526,7 +1532,7 @@ export const en = {
         shareEmail: 'Share via Email',
         shareWhatsApp: 'Share via WhatsApp',
         sendToSupport: 'Send to Support (WhatsApp)',
-        docTitle: 'Document Generated by Dadgar AI',
+        docTitle: 'Document Generated by Arman AI',
         headerDate: 'Date',
         headerCaseNo: 'Case No.',
         caseNoPlaceholder: '________',
@@ -1955,7 +1961,7 @@ export const en = {
                 id: '1',
                 title: 'AI in Law: Opportunity or Threat?',
                 excerpt: 'Examining the impact of AI on the future of legal careers and how to use modern tools to advance cases.',
-                content: '## AI in Law\n\nThe entry of artificial intelligence into the legal world has sparked much debate. Many worry about robots replacing lawyers, but the reality is different.\n\n### Advantages of AI\n\n1. **Speed in drafting contracts:** Tools like Dadgar AI can prepare accurate drafts in seconds.\n2. **Big Data Analysis:** Reviewing thousands of document pages in a short time.\n3. **Reducing Human Error:** High accuracy in calculations and checking conflict of laws.\n\n### Conclusion\n\nAI is a tool to empower lawyers, not replace them. Lawyers who use this technology will outperform their competitors.',
+                content: '## AI in Law\n\nThe entry of artificial intelligence into the legal world has sparked much debate. Many worry about robots replacing lawyers, but the reality is different.\n\n### Advantages of AI\n\n1. **Speed in drafting contracts:** Tools like Arman AI can prepare accurate drafts in seconds.\n2. **Big Data Analysis:** Reviewing thousands of document pages in a short time.\n3. **Reducing Human Error:** High accuracy in calculations and checking conflict of laws.\n\n### Conclusion\n\nAI is a tool to empower lawyers, not replace them. Lawyers who use this technology will outperform their competitors.',
                 image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?auto=format&fit=crop&w=800&q=80',
                 date: '2024/05/04',
                 author: 'Adl Pendar Editorial',
@@ -1965,7 +1971,7 @@ export const en = {
                 id: '2',
                 title: 'Key Tips for Drafting Lease Agreements',
                 excerpt: 'What landlords and tenants need to know before signing a contract to avoid future legal issues.',
-                content: '## Lease Agreements\n\nDrafting a lease agreement correctly can prevent many legal disputes.\n\n### Important Tips:\n\n* **Duration:** Specify the start and end dates precisely.\n* **Rent & Deposit:** Clarify payment methods and account numbers.\n* **Termination Conditions:** Clearly state when parties have the right to terminate.\n* **Repairs:** Distinguish between major and minor repair responsibilities.\n\nUsing Dadgar AI smart assistant to draft contracts can give you more confidence.',
+                content: '## Lease Agreements\n\nDrafting a lease agreement correctly can prevent many legal disputes.\n\n### Important Tips:\n\n* **Duration:** Specify the start and end dates precisely.\n* **Rent & Deposit:** Clarify payment methods and account numbers.\n* **Termination Conditions:** Clearly state when parties have the right to terminate.\n* **Repairs:** Distinguish between major and minor repair responsibilities.\n\nUsing Arman AI smart assistant to draft contracts can give you more confidence.',
                 image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=800&q=80',
                 date: '2024/04/29',
                 author: 'Lawyer Ali Mohammadi',
@@ -2000,8 +2006,8 @@ export const en = {
         description: 'Uses a more powerful model with longer processing time for complex analysis.'
     },
     chatbot: {
-        title: 'Dadgar Chatbot',
-        welcomeMessage: 'Hello! I am Dadgar AI assistant. How can I help you?',
+        title: 'Arman Chatbot',
+        welcomeMessage: 'Hello! I am Arman AI assistant. How can I help you?',
         placeholder: 'Type your message...',
         initialSuggestions: {
             s1: 'What are your services?',

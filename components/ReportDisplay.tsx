@@ -1,4 +1,6 @@
 
+
+
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { marked } from 'marked';
 import { useLanguage } from '../types';
@@ -224,7 +226,7 @@ const DocumentDisplay: React.FC<DocumentDisplayProps> = ({ generatedDocument, is
     <div class="document-header">
         <div class="document-logo">
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" fill="%23002279"/><path d="M32 12V20M32 20H18C16.8954 20 16 20.8954 16 22V24C16 25.1046 16.8954 26 18 26H32M32 20H46C47.1046 20 48 20.8954 48 22V24C48 25.1046 47.1046 26 46 26H32M18 26L22 48M46 26L42 48M14 52H50" stroke="%23D3B574" stroke-width="2.5"/></svg>
-            <span>دادگر AI</span>
+            <span>آرمان AI</span>
         </div>
         <div class="document-header-info">
             <p><strong>${t('reportDisplay.headerDate')}:</strong> ${currentDate}</p>
@@ -359,7 +361,7 @@ const DocumentDisplay: React.FC<DocumentDisplayProps> = ({ generatedDocument, is
             <div className="document-header animate-fade-in">
                 <div className="document-logo">
                     <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" fill="#002279"/><path d="M32 12V20M32 20H18C16.8954 20 16 20.8954 16 22V24C16 25.1046 16.8954 26 18 26H32M32 20H46C47.1046 20 48 20.8954 48 22V24C48 25.1046 47.1046 26 46 26H32M18 26L22 48M46 26L42 48M14 52H50" stroke="#374151" stroke-width="2.5"/></svg>
-                    <span className="font-bold">دادگر AI</span>
+                    <span className="font-bold">آرمان AI</span>
                 </div>
                 <div className="document-header-info">
                     <p><strong>{t('reportDisplay.headerDate')}:</strong> {currentDate}</p>

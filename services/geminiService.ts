@@ -1,4 +1,6 @@
 
+
+
 import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { GroundingChunk, StrategyTask, IntentRoute, DraftPreparationResult, ChatMessage, FilePart, LatLng, DailyTrend, GeneratedPost, VideoScript, PublishingStrategy, VideoTool, LegalCitation, CourtroomRebuttal, InstagramReel, InstagramStory, InstagramGrowthPlan, ResumeAnalysisResult, JobDetails, JobSearchSuggestion, JobApplication } from '../types';
 import { RESUME_ANALYSIS_CRITERIA } from '../constants';
@@ -203,7 +205,7 @@ export async function analyzeSiteStructure(prompt: string, useThinkingMode: bool
 }
 
 export async function askGroundedQuestion(query: string): Promise<SearchResult> {
-    const prompt = `You are a helpful legal assistant for Dadgar AI. Answer the following legal or general question for an Iranian user accurately and concisely. Use Google Search to verify facts and provide up-to-date information. If specialized advice is needed, recommend a lawyer. Question: "${query}"`;
+    const prompt = `You are a helpful legal assistant for Arman AI. Answer the following legal or general question for an Iranian user accurately and concisely. Use Google Search to verify facts and provide up-to-date information. If specialized advice is needed, recommend a lawyer. Question: "${query}"`;
     return performSearch(prompt, false);
 }
 
@@ -381,7 +383,7 @@ export interface ChatResponse {
 
 export async function generateChatResponse(history: ChatMessage[]): Promise<ChatResponse> {
     const ai = getAI();
-    const systemInstruction = `You are 'Dadgar AI', a friendly and professional AI legal assistant for a notary public office in Iran. Your goal is to help users navigate legal topics and understand the services offered.
+    const systemInstruction = `You are 'Arman AI', a friendly and professional AI legal assistant for a notary public office in Iran. Your goal is to help users navigate legal topics and understand the services offered.
 - Keep your responses concise, clear, and easy to understand for a non-lawyer.
 - When asked about a service, briefly explain it and suggest which tool in the app (like 'AI Drafter' or 'Lawyer Finder') could help.
 - After every response, you MUST provide three relevant, short, follow-up questions or actions the user might want to take next.

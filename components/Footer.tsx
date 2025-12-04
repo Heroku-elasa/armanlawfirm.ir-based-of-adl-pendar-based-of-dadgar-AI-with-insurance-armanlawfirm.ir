@@ -17,8 +17,6 @@ const SiteFooter: React.FC<SiteFooterProps> = ({ setPage }) => {
             setPage(link.value as PageKey | 'home');
             window.scrollTo(0, 0);
         } else {
-            // If it's a scroll link, ensure we are on home first, then scroll
-            // Ideally this logic should be centralized, but for footer simplicity:
             if (document.getElementById(link.value)) {
                 document.getElementById(link.value)?.scrollIntoView({ behavior: 'smooth' });
             } else {
@@ -72,24 +70,17 @@ const SiteFooter: React.FC<SiteFooterProps> = ({ setPage }) => {
                     <div className="space-y-4">
                         <h2 className="text-lg font-bold text-gray-900 dark:text-white border-b border-brand-gold/50 inline-block pb-2">{t('footer.contactTitle')}</h2>
                         <ul className="space-y-4 text-sm">
-                            <li className="flex items-start">
-                                <div className="w-8 h-8 rounded bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-brand-gold mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📧</div>
-                                <div className="mt-1">
-                                    <span className="block text-xs text-gray-500 mb-1">پست الکترونیک</span>
-                                    <a href={`mailto:${t('footer.email')}`} className="hover:text-gray-900 dark:hover:text-white transition-colors font-inter text-base">{t('footer.email')}</a>
-                                </div>
-                            </li>
+                            {/* Address */}
                             <li className="flex items-start">
                                 <div className="w-8 h-8 rounded bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-brand-gold mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📍</div>
                                 <div className="mt-1">
-                                    <span className="block text-xs text-gray-500 mb-1">آدرس دفتر</span>
                                     <span>{t('footer.address')}</span>
                                 </div>
                             </li>
+                            {/* Phone */}
                              <li className="flex items-start">
                                 <div className="w-8 h-8 rounded bg-gray-200 dark:bg-gray-800 flex items-center justify-center text-brand-gold mr-3 rtl:ml-3 rtl:mr-0 flex-shrink-0">📞</div>
                                 <div className="mt-1">
-                                    <span className="block text-xs text-gray-500 mb-1">شماره تماس (مشاوره و غیراداری)</span>
                                     <span className="font-inter dir-ltr text-lg">{t('footer.phone')}</span>
                                 </div>
                             </li>
