@@ -81,6 +81,140 @@ function decode(base64: string): Uint8Array {
     return bytes;
 }
 
+// --- MULTI-PROVIDER FALLBACK SYSTEM ---
+
+interface AIProvider {
+    name: string;
+    call: (prompt: string, maxTokens: number, temperature: number) => Promise<string>;
+}
+
+// @ts-ignore - process is defined in the build environment
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY || '';
+// @ts-ignore
+const CLOUDFLARE_API_TOKEN = process.env.CLOUDFLARE_API_TOKEN || '';
+// @ts-ignore
+const CLOUDFLARE_ACCOUNT_ID = process.env.CLOUDFLARE_ACCOUNT_ID || '';
+// @ts-ignore
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
+
+const geminiProvider: AIProvider = {
+    name: 'Gemini',
+    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
+        const ai = getAI();
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: [{ parts: [{ text: prompt }] }],
+            config: { maxOutputTokens: maxTokens, temperature: temperature }
+        });
+        return response.text || '';
+    }
+};
+
+const openRouterProvider: AIProvider = {
+    name: 'OpenRouter',
+    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
+        if (!OPENROUTER_API_KEY) throw new Error('OpenRouter API key not configured');
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                'HTTP-Referer': 'https://armanlawfirm.ir'
+            },
+            body: JSON.stringify({
+                model: 'google/gemini-2.0-flash-001',
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: maxTokens,
+                temperature: temperature
+            })
+        });
+        if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
+        const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+        return data.choices?.[0]?.message?.content || '';
+    }
+};
+
+const cloudflareProvider: AIProvider = {
+    name: 'Cloudflare',
+    call: async (prompt: string, maxTokens: number, _temperature: number): Promise<string> => {
+        if (!CLOUDFLARE_API_TOKEN || !CLOUDFLARE_ACCOUNT_ID) throw new Error('Cloudflare credentials not configured');
+        const response = await fetch(
+            `https://api.cloudflare.com/client/v4/accounts/${CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/meta/llama-3.2-3b-instruct`,
+            {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${CLOUDFLARE_API_TOKEN}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: [{ role: 'user', content: prompt }],
+                    max_tokens: maxTokens
+                })
+            }
+        );
+        if (!response.ok) throw new Error(`Cloudflare error: ${response.status}`);
+        const data = await response.json() as { result?: { response?: string } };
+        return data.result?.response || '';
+    }
+};
+
+const openAIProvider: AIProvider = {
+    name: 'OpenAI',
+    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
+        if (!OPENAI_API_KEY) throw new Error('OpenAI API key not configured');
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENAI_API_KEY}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4o-mini',
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: maxTokens,
+                temperature: temperature
+            })
+        });
+        if (!response.ok) throw new Error(`OpenAI error: ${response.status}`);
+        const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+        return data.choices?.[0]?.message?.content || '';
+    }
+};
+
+const allProviders: AIProvider[] = [geminiProvider, openRouterProvider, cloudflareProvider, openAIProvider];
+
+export async function callWithFallback(
+    prompt: string,
+    maxTokens: number = 1000,
+    temperature: number = 0.5
+): Promise<string> {
+    for (const provider of allProviders) {
+        try {
+            console.log(`[AI] Trying ${provider.name}...`);
+            const result = await provider.call(prompt, maxTokens, temperature);
+            if (result) {
+                console.log(`[AI] Success with ${provider.name}`);
+                return result;
+            }
+        } catch (error) {
+            console.error(`[AI] ${provider.name} failed:`, error instanceof Error ? error.message : error);
+            await new Promise(r => setTimeout(r, 500)); // Wait before next attempt
+        }
+    }
+    throw new Error('تمام سرویس‌های هوش مصنوعی در دسترس نیستند. لطفاً بعداً تلاش کنید. (All AI services unavailable)');
+}
+
+export async function callWithFallbackJSON<T>(
+    prompt: string,
+    maxTokens: number = 1000,
+    temperature: number = 0.3
+): Promise<T> {
+    const jsonPrompt = `${prompt}\n\nIMPORTANT: Respond ONLY with valid JSON. No markdown, no explanation, just JSON.`;
+    const result = await callWithFallback(jsonPrompt, maxTokens, temperature);
+    const cleanJson = result.replace(/^```json\s*|```$/g, '').trim();
+    return JSON.parse(cleanJson);
+}
+
 // --- CORE GENERATION FUNCTIONS ---
 
 export async function* generateReportStream(prompt: string): AsyncGenerator<string, void, undefined> {
