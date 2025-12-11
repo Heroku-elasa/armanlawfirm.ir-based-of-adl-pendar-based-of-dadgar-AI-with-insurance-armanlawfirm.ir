@@ -1,0 +1,56 @@
+# ============================================================
+# RENDER.COM DEPLOYMENT CONFIGURATION
+# ============================================================
+# This file is ONLY for Render.com backend deployment
+# For Cloudflare Pages (frontend), see: wrangler.toml
+# ============================================================
+#
+# Render Blueprint Specification
+# https://render.com/docs/blueprint-spec
+#
+# This deploys the EXPRESS SERVER backend that handles:
+# - API endpoints (/api/*)
+# - Database connections (PostgreSQL/Neon)
+# - User authentication (sessions)
+# - File uploads
+#
+# ============================================================
+
+services:
+  - type: web
+    name: armanlawfirm-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "20"
+      # These secrets must be set manually in Render Dashboard:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: SESSION_SECRET
+        sync: false
+
+# ============================================================
+# DEPLOYMENT INSTRUCTIONS FOR RENDER:
+# ============================================================
+# 1. Go to render.com and create account
+# 2. Click "New" > "Blueprint"
+# 3. Connect your GitHub repository
+# 4. Render will detect this render.yaml file
+# 5. Set environment variables in Dashboard:
+#    - GEMINI_API_KEY: Your Google AI API key
+#    - DATABASE_URL: Your PostgreSQL connection string
+#    - SESSION_SECRET: Random string for sessions
+# 6. Click "Apply" to deploy
+#
+# Your API will be available at:
+# https://armanlawfirm-api.onrender.com
+# ============================================================

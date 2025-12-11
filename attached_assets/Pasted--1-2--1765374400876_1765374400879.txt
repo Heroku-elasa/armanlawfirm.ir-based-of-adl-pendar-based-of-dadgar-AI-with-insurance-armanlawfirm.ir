@@ -1,0 +1,171 @@
+فهمیدم! می‌خواهید:
+1. **پاسخ جالب‌تر** با لینک مستقیم واتساپ
+2. **یک بار نشان داده شود** (نه در هر پاسخ)
+3. **پیشنهاد بخش‌های سایت** با لینک مستقیم
+
+بگذارید کد را اصلاح کنم:
+
+```html
+<!-- چت‌بات هوشمند آرمان - نسخه نهایی بهبود یافته -->
+<div id="arman-chatbot" class="chatbot-container">
+    <div class="chatbot-header">
+        <div>
+            <h3>🤖 دستیار آرمان</h3>
+            <p><span class="status-dot"></span> آنلاین</p>
+        </div>
+        <button id="close-chatbot">×</button>
+    </div>
+    <div class="chatbot-body" id="chatbot-messages">
+        <div class="bot-msg">
+            سلام! 👋 من ربات واتساپی موسسه حقوقی آرمان هستم.<br><br>
+            
+            💡 <strong>بهترین راه برای صحبت با من:</strong><br>
+            از طریق واتساپ پیام بدهید - متن یا صوت، هر طور راحت‌ترید!<br><br>
+            
+            <a href="https://wa.me/447424366129?text=سلام،+یک+سوال+حقوقی+دارم" 
+               style="display:inline-block;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);color:white;padding:12px 20px;border-radius:25px;text-decoration:none;margin:8px 0;font-weight:bold"
+               target="_blank">
+               📱 باز کردن واتساپ
+            </a><br><br>
+            
+            یا اینجا سوال بپرسید، من کمک می‌کنم! 😊
+        </div>
+    </div>
+    <div class="chatbot-footer">
+        <input type="text" id="chatbot-input" placeholder="سوال خود را بنویسید..." />
+        <button id="send-btn">ارسال</button>
+    </div>
+</div>
+<button id="chatbot-toggle">💬 <span>AI</span></button>
+
+<style>
+.chatbot-container{position:fixed;bottom:100px;right:30px;width:380px;height:600px;background:#1a1a2e;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:none;flex-direction:column;z-index:999;overflow:hidden}.chatbot-container.active{display:flex}.chatbot-header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;display:flex;justify-content:space-between;align-items:center}.chatbot-header h3{margin:0;font-size:16px}.chatbot-header p{margin:0;font-size:12px;display:flex;align-items:center;gap:6px}.status-dot{width:8px;height:8px;background:#0f0;border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}#close-chatbot{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:28px;cursor:pointer;width:32px;height:32px;border-radius:8px}#close-chatbot:hover{background:rgba(255,255,255,.3)}.chatbot-body{flex:1;padding:20px;overflow-y:auto;background:#16213e;direction:rtl}.chatbot-body::-webkit-scrollbar{width:6px}.chatbot-body::-webkit-scrollbar-thumb{background:#667eea;border-radius:3px}.bot-msg,.user-msg{margin-bottom:16px;padding:12px 16px;border-radius:12px;max-width:85%;line-height:1.6}.bot-msg{background:#2d2d44;color:#fff;margin-right:auto}.user-msg{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;margin-left:auto}.chatbot-footer{padding:20px;background:#1a1a2e;display:flex;gap:10px}#chatbot-input{flex:1;padding:12px 16px;border:2px solid #2d2d44;border-radius:25px;background:#16213e;color:#fff;font-size:14px;direction:rtl}#chatbot-input:focus{outline:none;border-color:#667eea}#send-btn{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:12px 24px;border-radius:25px;cursor:pointer}#send-btn:hover:not(:disabled){opacity:.9}#send-btn:disabled{opacity:.5}#chatbot-toggle{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(102,126,234,.4);font-size:24px;z-index:998}#chatbot-toggle span{position:absolute;top:-5px;right:-5px;background:#f44;color:#fff;width:24px;height:24px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}@media (max-width:480px){.chatbot-container{width:100%;height:100%;bottom:0;right:0;border-radius:0}}.service-link{display:inline-block;background:#667eea;color:white;padding:8px 12px;border-radius:15px;text-decoration:none;margin:4px;font-size:13px}.service-link:hover{opacity:.8}
+</style>
+
+<script>
+(function(){
+    const API='https://runtime.codewords.ai/run/arman_law_whatsapp_assistant_1d28125c/web_chat';
+    const KEY='cwk-74cc87c229e063e8a2ed53bc81fc8bfddb0d0987536034a4bdabd7f663875b9f';
+    let sid=localStorage.getItem('arman_sid')||('web_'+Date.now());
+    localStorage.setItem('arman_sid',sid);
+    
+    const chat=document.getElementById('arman-chatbot');
+    const toggle=document.getElementById('chatbot-toggle');
+    const close=document.getElementById('close-chatbot');
+    const input=document.getElementById('chatbot-input');
+    const send=document.getElementById('send-btn');
+    const msgs=document.getElementById('chatbot-messages');
+    
+    let messageCount=parseInt(localStorage.getItem('arman_msg_count')||'0');
+    
+    toggle.onclick=()=>{chat.classList.add('active');input.focus()};
+    close.onclick=()=>chat.classList.remove('active');
+    
+    function add(txt,user){
+        const d=document.createElement('div');
+        d.className=user?'user-msg':'bot-msg';
+        d.innerHTML=txt.replace(/\n/g,'<br>');
+        msgs.appendChild(d);
+        msgs.scrollTop=msgs.scrollHeight;
+    }
+    
+    function addServices(){
+        const services=`
+            <div style="margin-top:12px;padding-top:12px;border-top:1px solid #444">
+                📋 <strong>خدمات ما:</strong><br>
+                <a href="https://armanlawfirm.ir/#services" class="service-link" target="_blank">🔹 مشاوره حقوقی</a>
+                <a href="https://armanlawfirm.ir/#ai-services" class="service-link" target="_blank">🔹 تنظیم دادخواست</a>
+                <a href="https://armanlawfirm.ir/#ai-services" class="service-link" target="_blank">🔹 تدوین لایحه</a>
+                <a href="https://armanlawfirm.ir/#contact" class="service-link" target="_blank">🔹 رزرو مشاوره</a>
+            </div>
+        `;
+        return services;
+    }
+    
+    async function sendMsg(){
+        const msg=input.value.trim();
+        if(!msg)return;
+        
+        add(msg,true);
+        input.value='';
+        add('در حال تایپ...',false);
+        send.disabled=true;
+        messageCount++;
+        localStorage.setItem('arman_msg_count',messageCount);
+        
+        try{
+            const r=await fetch(API,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Authorization':'Bearer '+KEY},
+                body:JSON.stringify({message:msg,session_id:sid})
+            });
+            
+            msgs.lastChild.remove();
+            
+            if(!r.ok){
+                const err=await r.json().catch(()=>({detail:'خطای شبکه'}));
+                throw new Error(err.detail||'خطا');
+            }
+            
+            const data=await r.json();
+            let response=data.response;
+            
+            // فقط در اولین پیام، راهنمایی واتساپ و خدمات را اضافه کن
+            if(messageCount===1){
+                response+=addServices();
+            }
+            
+            add(response,false);
+        }catch(e){
+            add('خطا. تماس: 09027370260 یا <a href="https://wa.me/447424366129" target="_blank" style="color:#25D366">واتساپ</a>',false);
+        }finally{
+            send.disabled=false;
+        }
+    }
+    
+    send.onclick=sendMsg;
+    input.onkeypress=e=>{if(e.key==='Enter')sendMsg()};
+})();
+</script>
+<!-- پایان چت‌بات -->
+```
+
+---
+
+## ✨ **بهبودهای انجام شده:**
+
+✅ **پیام خوش‌آمدگویی جذاب:** توضیح می‌دهد که ربات واتساپی است  
+✅ **دکمه واتساپ قابل کلیک:** با کلیک، واتساپ باز می‌شود و پیام از پیش نوشته شده  
+✅ **پیشنهاد خدمات:** لینک به بخش‌های مختلف سایت شما  
+✅ **فقط یک بار:** راهنمایی واتساپ فقط در اولین پیام  
+✅ **قابلیت متن و صوت:** در پیام ذکر شده  
+
+---
+
+## 📱 **تجربه کاربر:**
+
+**اولین بار که چت را باز می‌کند:**
+```
+سلام! 👋 من ربات واتساپی موسسه حقوقی آرمان هستم.
+
+💡 بهترین راه برای صحبت با من:
+از طریق واتساپ پیام بدهید - متن یا صوت، هر طور راحت‌ترید!
+
+[📱 باز کردن واتساپ] ← دکمه قابل کلیک
+
+یا اینجا سوال بپرسید، من کمک می‌کنم! 😊
+```
+
+**وقتی سوال می‌پرسد:**
+```
+[پاسخ هوش مصنوعی]
+
+📋 خدمات ما:  ← فقط در اولین پیام
+[🔹 مشاوره حقوقی] [🔹 تنظیم دادخواست] [🔹 تدوین لایحه] [🔹 رزرو مشاوره]
+```
+
+---
+
+**این کد را در Replit قبل از `</body>` بگذارید و تست کنید!** 🚀
+
+تجربه کاربر حالا خیلی بهتر است و کاربران به راحتی به واتساپ هدایت می‌شوند! 💬✨
