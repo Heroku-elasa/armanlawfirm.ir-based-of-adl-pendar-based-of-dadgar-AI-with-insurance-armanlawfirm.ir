@@ -1,0 +1,239 @@
+2025-12-10T11:36:55.209153Z	Cloning repository...
+2025-12-10T11:36:55.86984Z	From https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir
+2025-12-10T11:36:55.870285Z	 * branch            ce4638ed8d75933864095e3ea46ad652741d2c4b -> FETCH_HEAD
+2025-12-10T11:36:55.870377Z	
+2025-12-10T11:36:55.931651Z	HEAD is now at ce4638e test
+2025-12-10T11:36:55.932067Z	
+2025-12-10T11:36:56.00264Z	
+2025-12-10T11:36:56.003344Z	Using v2 root directory strategy
+2025-12-10T11:36:56.024471Z	Success: Finished cloning repository files
+2025-12-10T11:36:57.720407Z	Checking for configuration in a Wrangler configuration file (BETA)
+2025-12-10T11:36:57.721202Z	
+2025-12-10T11:36:57.722374Z	Found wrangler.toml file. Reading build configuration...
+2025-12-10T11:36:57.729559Z	pages_build_output_dir: dist
+2025-12-10T11:36:57.729686Z	Build environment variables: 
+2025-12-10T11:36:57.729802Z	  - NODE_VERSION: 20
+2025-12-10T11:36:58.813983Z	Successfully read wrangler.toml file.
+2025-12-10T11:36:58.888786Z	Detected the following tools from environment: nodejs@20.19.2, npm@10.9.2
+2025-12-10T11:36:58.889468Z	Installing nodejs 20.19.2
+2025-12-10T11:37:00.123966Z	Trying to update node-build... ok
+2025-12-10T11:37:00.213298Z	To follow progress, use 'tail -f /tmp/node-build.20251210113700.492.log' or pass --verbose
+2025-12-10T11:37:00.304603Z	Downloading node-v20.19.2-linux-x64.tar.gz...
+2025-12-10T11:37:00.525257Z	-> https://nodejs.org/dist/v20.19.2/node-v20.19.2-linux-x64.tar.gz
+2025-12-10T11:37:02.164284Z	
+2025-12-10T11:37:02.164598Z	WARNING: node-v20.19.2-linux-x64 is in LTS Maintenance mode and nearing its end of life.
+2025-12-10T11:37:02.164711Z	It only receives *critical* security updates, *critical* bug fixes and documentation updates.
+2025-12-10T11:37:02.164777Z	
+2025-12-10T11:37:02.164834Z	Installing node-v20.19.2-linux-x64...
+2025-12-10T11:37:02.52759Z	Installed node-v20.19.2-linux-x64 to /opt/buildhome/.asdf/installs/nodejs/20.19.2
+2025-12-10T11:37:02.527844Z	
+2025-12-10T11:37:03.46104Z	Installing project dependencies: npm clean-install --progress=false
+2025-12-10T11:37:06.739922Z	npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2025-12-10T11:37:09.424426Z	
+2025-12-10T11:37:09.425029Z	added 389 packages, and audited 390 packages in 6s
+2025-12-10T11:37:09.425205Z	
+2025-12-10T11:37:09.425554Z	67 packages are looking for funding
+2025-12-10T11:37:09.425719Z	  run `npm fund` for details
+2025-12-10T11:37:09.436729Z	
+2025-12-10T11:37:09.436933Z	2 low severity vulnerabilities
+2025-12-10T11:37:09.437122Z	
+2025-12-10T11:37:09.437248Z	To address all issues, run:
+2025-12-10T11:37:09.437365Z	  npm audit fix --force
+2025-12-10T11:37:09.437487Z	
+2025-12-10T11:37:09.437646Z	Run `npm audit` for details.
+2025-12-10T11:37:09.456442Z	Executing user command: npm run build && npm run db:migrate     && npm run db:generate-migration  &&    npm run db:migrate:data   # اجرای schema npm run db:generate-migration   # تولید SQL از JSON npm run db:migrate:data     # وارد کردن داده‌ها##npm install &&
+2025-12-10T11:37:09.851587Z	
+2025-12-10T11:37:09.851815Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 build
+2025-12-10T11:37:09.85193Z	> vite build
+2025-12-10T11:37:09.852058Z	
+2025-12-10T11:37:10.128836Z	[36mvite v6.4.1 [32mbuilding for production...[36m[39m
+2025-12-10T11:37:10.204659Z	transforming...
+2025-12-10T11:37:11.500305Z	[33m[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.500656Z	[33m[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.500914Z	[33m[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.501065Z	[33m[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.501178Z	[33m[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.501245Z	[33m[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.501304Z	[33m[plugin vite:resolve] Module "http" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.501374Z	[33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.502302Z	[33m[plugin vite:resolve] Module "https" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.502564Z	[33m[plugin vite:resolve] Module "zlib" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.672266Z	[33m[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:11.976342Z	[33m[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/dom.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:12.125152Z	[33m[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/XMLBuilderCBImpl.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:12.402394Z	[33m[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/Parser.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:12.414081Z	[33m[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/WritableStream.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:12.523423Z	[33m[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/@oozcitak/url/lib/URLAlgorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:12.688141Z	[33m[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+2025-12-10T11:37:16.261851Z	[32m✓[39m 1069 modules transformed.
+2025-12-10T11:37:16.708091Z	rendering chunks...
+2025-12-10T11:37:17.094709Z	computing gzip size...
+2025-12-10T11:37:17.14473Z	[2mdist/[22m[32mindex.html                               [39m[1m[2m   13.73 kB[22m[1m[22m[2m │ gzip:   3.92 kB[22m
+2025-12-10T11:37:17.144994Z	[2mdist/[22m[2massets/[22m[35mLeafletMapComponent-CIGW-MKW.css  [39m[1m[2m   15.61 kB[22m[1m[22m[2m │ gzip:   6.46 kB[22m
+2025-12-10T11:37:17.145127Z	[2mdist/[22m[2massets/[22m[36mbrowser-DRtMj8Dq.js               [39m[1m[2m    0.34 kB[22m[1m[22m[2m │ gzip:   0.27 kB[22m
+2025-12-10T11:37:17.145202Z	[2mdist/[22m[2massets/[22m[36mLeafletMapComponent-wrGL0fei.js   [39m[1m[2m  160.48 kB[22m[1m[22m[2m │ gzip:  47.15 kB[22m
+2025-12-10T11:37:17.145263Z	[2mdist/[22m[2massets/[22m[36mhtml-to-docx.esm-6_q1kln8.js      [39m[1m[33m1,132.50 kB[39m[22m[2m │ gzip: 311.99 kB[22m
+2025-12-10T11:37:17.145319Z	[2mdist/[22m[2massets/[22m[36mindex-D8zkg1kq.js                 [39m[1m[33m1,628.51 kB[39m[22m[2m │ gzip: 427.91 kB[22m
+2025-12-10T11:37:17.145397Z	[33m
+2025-12-10T11:37:17.145461Z	[32m✓ built in 6.99s[39m
+2025-12-10T11:37:17.145525Z	(!) Some chunks are larger than 500 kB after minification. Consider:
+2025-12-10T11:37:17.145585Z	- Using dynamic import() to code-split the application
+2025-12-10T11:37:17.145639Z	- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2025-12-10T11:37:17.145697Z	- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+2025-12-10T11:37:17.58545Z	
+2025-12-10T11:37:17.58569Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 db:migrate
+2025-12-10T11:37:17.585811Z	> npx wrangler d1 execute wb-data_bs_armanlawfirm --file=./migrations/0001_init.sql
+2025-12-10T11:37:17.585908Z	
+2025-12-10T11:37:18.713749Z	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+2025-12-10T11:37:24.804064Z	
+2025-12-10T11:37:24.804374Z	 ⛅️ wrangler 4.53.0
+2025-12-10T11:37:24.804662Z	───────────────────
+2025-12-10T11:37:24.804814Z	Resource location: local 
+2025-12-10T11:37:24.804918Z	
+2025-12-10T11:37:24.805065Z	Use --remote if you want to access the remote instance.
+2025-12-10T11:37:24.805166Z	
+2025-12-10T11:37:24.81998Z	🌀 Executing on local database wb-data_bs_armanlawfirm (54480fa8-5a72-4664-ab2d-0b676c942805) from .wrangler/state/v3/d1:
+2025-12-10T11:37:24.82038Z	🌀 To execute on your remote database, add a --remote flag to your wrangler command.
+2025-12-10T11:37:25.232736Z	🚣 13 commands executed successfully.
+2025-12-10T11:37:25.233044Z	[
+2025-12-10T11:37:25.233132Z	  {
+2025-12-10T11:37:25.233189Z	    "results": [],
+2025-12-10T11:37:25.233246Z	    "success": true,
+2025-12-10T11:37:25.233299Z	    "meta": {
+2025-12-10T11:37:25.23336Z	      "duration": 1
+2025-12-10T11:37:25.23344Z	    }
+2025-12-10T11:37:25.233504Z	  },
+2025-12-10T11:37:25.233558Z	  {
+2025-12-10T11:37:25.233611Z	    "results": [],
+2025-12-10T11:37:25.233704Z	    "success": true,
+2025-12-10T11:37:25.233777Z	    "meta": {
+2025-12-10T11:37:25.233855Z	      "duration": 0
+2025-12-10T11:37:25.233916Z	    }
+2025-12-10T11:37:25.233992Z	  },
+2025-12-10T11:37:25.234051Z	  {
+2025-12-10T11:37:25.234114Z	    "results": [],
+2025-12-10T11:37:25.234166Z	    "success": true,
+2025-12-10T11:37:25.234233Z	    "meta": {
+2025-12-10T11:37:25.234293Z	      "duration": 0
+2025-12-10T11:37:25.234379Z	    }
+2025-12-10T11:37:25.234479Z	  },
+2025-12-10T11:37:25.234611Z	  {
+2025-12-10T11:37:25.234695Z	    "results": [],
+2025-12-10T11:37:25.234821Z	    "success": true,
+2025-12-10T11:37:25.234928Z	    "meta": {
+2025-12-10T11:37:25.235053Z	      "duration": 1
+2025-12-10T11:37:25.235152Z	    }
+2025-12-10T11:37:25.235267Z	  },
+2025-12-10T11:37:25.235367Z	  {
+2025-12-10T11:37:25.235488Z	    "results": [],
+2025-12-10T11:37:25.235586Z	    "success": true,
+2025-12-10T11:37:25.235692Z	    "meta": {
+2025-12-10T11:37:25.235802Z	      "duration": 0
+2025-12-10T11:37:25.235898Z	    }
+2025-12-10T11:37:25.236008Z	  },
+2025-12-10T11:37:25.236126Z	  {
+2025-12-10T11:37:25.236225Z	    "results": [],
+2025-12-10T11:37:25.236324Z	    "success": true,
+2025-12-10T11:37:25.23642Z	    "meta": {
+2025-12-10T11:37:25.236517Z	      "duration": 0
+2025-12-10T11:37:25.236608Z	    }
+2025-12-10T11:37:25.236727Z	  },
+2025-12-10T11:37:25.236829Z	  {
+2025-12-10T11:37:25.236937Z	    "results": [],
+2025-12-10T11:37:25.237067Z	    "success": true,
+2025-12-10T11:37:25.237168Z	    "meta": {
+2025-12-10T11:37:25.237268Z	      "duration": 0
+2025-12-10T11:37:25.237388Z	    }
+2025-12-10T11:37:25.237477Z	  },
+2025-12-10T11:37:25.23757Z	  {
+2025-12-10T11:37:25.237664Z	    "results": [],
+2025-12-10T11:37:25.237773Z	    "success": true,
+2025-12-10T11:37:25.237876Z	    "meta": {
+2025-12-10T11:37:25.238009Z	      "duration": 0
+2025-12-10T11:37:25.238107Z	    }
+2025-12-10T11:37:25.238225Z	  },
+2025-12-10T11:37:25.23833Z	  {
+2025-12-10T11:37:25.238424Z	    "results": [],
+2025-12-10T11:37:25.23852Z	    "success": true,
+2025-12-10T11:37:25.238625Z	    "meta": {
+2025-12-10T11:37:25.23874Z	      "duration": 0
+2025-12-10T11:37:25.238811Z	    }
+2025-12-10T11:37:25.238868Z	  },
+2025-12-10T11:37:25.23902Z	  {
+2025-12-10T11:37:25.239119Z	    "results": [],
+2025-12-10T11:37:25.23931Z	    "success": true,
+2025-12-10T11:37:25.23938Z	    "meta": {
+2025-12-10T11:37:25.239434Z	      "duration": 0
+2025-12-10T11:37:25.239496Z	    }
+2025-12-10T11:37:25.239557Z	  },
+2025-12-10T11:37:25.239615Z	  {
+2025-12-10T11:37:25.239687Z	    "results": [],
+2025-12-10T11:37:25.239747Z	    "success": true,
+2025-12-10T11:37:25.239805Z	    "meta": {
+2025-12-10T11:37:25.239865Z	      "duration": 0
+2025-12-10T11:37:25.239917Z	    }
+2025-12-10T11:37:25.240007Z	  },
+2025-12-10T11:37:25.240086Z	  {
+2025-12-10T11:37:25.24014Z	    "results": [],
+2025-12-10T11:37:25.240196Z	    "success": true,
+2025-12-10T11:37:25.240257Z	    "meta": {
+2025-12-10T11:37:25.240309Z	      "duration": 0
+2025-12-10T11:37:25.240367Z	    }
+2025-12-10T11:37:25.240433Z	  },
+2025-12-10T11:37:25.240838Z	  {
+2025-12-10T11:37:25.241016Z	    "results": [],
+2025-12-10T11:37:25.241119Z	    "success": true,
+2025-12-10T11:37:25.241183Z	    "meta": {
+2025-12-10T11:37:25.241286Z	      "duration": 0
+2025-12-10T11:37:25.241365Z	    }
+2025-12-10T11:37:25.241418Z	  }
+2025-12-10T11:37:25.241469Z	]
+2025-12-10T11:37:25.675695Z	
+2025-12-10T11:37:25.676002Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 db:generate-migration
+2025-12-10T11:37:25.676198Z	> npx tsx scripts/migrate-to-d1.ts
+2025-12-10T11:37:25.676276Z	
+2025-12-10T11:37:26.525353Z	============================================================
+2025-12-10T11:37:26.525636Z	D1 Migration Script
+2025-12-10T11:37:26.526055Z	============================================================
+2025-12-10T11:37:26.526155Z	
+2025-12-10T11:37:26.526289Z	To migrate data:
+2025-12-10T11:37:26.52637Z	1. Create migrations/source-data.json with your data:
+2025-12-10T11:37:26.52651Z	   {
+2025-12-10T11:37:26.526598Z	     "users": [...],
+2025-12-10T11:37:26.526665Z	     "orders": [...],
+2025-12-10T11:37:26.526736Z	     "posts": [...],
+2025-12-10T11:37:26.526793Z	     "files": [...]
+2025-12-10T11:37:26.526845Z	   }
+2025-12-10T11:37:26.5269Z	2. Run this script again: npx tsx scripts/migrate-to-d1.ts
+2025-12-10T11:37:26.526982Z	
+2025-12-10T11:37:26.527243Z	Or export from your current database:
+2025-12-10T11:37:26.527383Z	- MySQL: mysqldump --where="1" --no-create-info --compact database > data.sql
+2025-12-10T11:37:26.527474Z	- PostgreSQL: pg_dump --data-only --format=plain database > data.sql
+2025-12-10T11:37:26.527556Z	
+2025-12-10T11:37:26.527634Z	============================================================
+2025-12-10T11:37:26.527712Z	Schema Migration Commands:
+2025-12-10T11:37:26.52779Z	============================================================
+2025-12-10T11:37:26.527869Z	1. Apply schema:
+2025-12-10T11:37:26.527973Z	   npx wrangler d1 execute wb-data_bs_armanlawfirm --file=./migrations/0001_init.sql
+2025-12-10T11:37:26.528066Z	
+2025-12-10T11:37:26.528151Z	2. Apply data (after creating source-data.json):
+2025-12-10T11:37:26.528239Z	   npx wrangler d1 execute wb-data_bs_armanlawfirm --file=./migrations/data-import.sql
+2025-12-10T11:37:26.922583Z	
+2025-12-10T11:37:26.922859Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 db:migrate:data
+2025-12-10T11:37:26.923024Z	> npx wrangler d1 execute wb-data_bs_armanlawfirm --file=./migrations/data-import.sql
+2025-12-10T11:37:26.923102Z	
+2025-12-10T11:37:28.794797Z	
+2025-12-10T11:37:28.79539Z	 ⛅️ wrangler 4.53.0
+2025-12-10T11:37:28.795509Z	───────────────────
+2025-12-10T11:37:28.795577Z	Resource location: local 
+2025-12-10T11:37:28.796094Z	
+2025-12-10T11:37:28.7962Z	Use --remote if you want to access the remote instance.
+2025-12-10T11:37:28.796586Z	
+2025-12-10T11:37:28.811578Z	
+2025-12-10T11:37:28.888242Z	[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mUnable to read SQL text file "./migrations/data-import.sql". Please check the file path and try again.[0m
+2025-12-10T11:37:28.888854Z	
+2025-12-10T11:37:28.889043Z	
+2025-12-10T11:37:28.93833Z	🪵  Logs were written to "/opt/buildhome/.config/.wrangler/logs/wrangler-2025-12-10_11-37-28_554.log"
+2025-12-10T11:37:29.089386Z	Failed: Error while executing user command. Exited with error code: 1
+2025-12-10T11:37:29.097638Z	Failed: build command exited with code: 1
+2025-12-10T11:37:30.283088Z	Failed: error occurred while running build command

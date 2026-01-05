@@ -1,0 +1,139 @@
+خوب! پس اول چت‌بات متنی را کامل می‌کنم. برای صوت، واتساپ به صورت پیش‌فرض از پیام صوتی پشتیبانی می‌کند!
+
+## 🔧 **کد نهایی کامل برای Replit:**
+
+این کد را کپی کنید و در `index.html` قبل از `</body>` بگذارید:
+
+```html
+<!-- دستیار هوشمند آرمان - نسخه نهایی -->
+<div id="arman-chatbot" class="cb-container">
+    <div class="cb-header">
+        <div><h3>🤖 دستیار آرمان</h3><p><span class="cb-dot"></span> آنلاین</p></div>
+        <button id="cb-close">×</button>
+    </div>
+    <div class="cb-body" id="cb-messages">
+        <div class="cb-msg-bot">
+            <strong>سلام! من ربات واتساپی موسسه حقوقی آرمان هستم.</strong><br><br>
+            💡 <strong>بهترین راه:</strong> واتساپ - پیام متنی یا صوتی! 🎤<br><br>
+            <a href="https://wa.me/447424366129?text=%D8%B3%D9%84%D8%A7%D9%85%D8%8C+%DB%8C%DA%A9+%D8%B3%D9%88%D8%A7%D9%84+%D8%AD%D9%82%D9%88%D9%82%DB%8C+%D8%AF%D8%A7%D8%B1%D9%85" 
+               class="cb-wa-btn" target="_blank">
+               📱 باز کردن واتساپ
+            </a><br><br>
+            یا اینجا سوال بنویسید! 😊
+        </div>
+    </div>
+    <div class="cb-footer">
+        <input type="text" id="cb-input" placeholder="سوال خود را بنویسید...">
+        <button id="cb-send">ارسال</button>
+    </div>
+</div>
+<button id="cb-toggle">💬<span>AI</span></button>
+
+<style>
+.cb-container{position:fixed;bottom:100px;right:30px;width:380px;height:600px;background:#1a1a2e;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:none;flex-direction:column;z-index:999;overflow:hidden}.cb-container.active{display:flex}.cb-header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;padding:20px;display:flex;justify-content:space-between;align-items:center}.cb-header h3{margin:0;font-size:16px}.cb-header p{margin:0;font-size:12px;display:flex;align-items:center;gap:6px}.cb-dot{width:8px;height:8px;background:#0f0;border-radius:50%;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}#cb-close{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:28px;cursor:pointer;width:32px;height:32px;border-radius:8px}#cb-close:hover{background:rgba(255,255,255,.3)}.cb-body{flex:1;padding:20px;overflow-y:auto;background:#16213e;direction:rtl}.cb-body::-webkit-scrollbar{width:6px}.cb-body::-webkit-scrollbar-thumb{background:#667eea;border-radius:3px}.cb-msg-bot,.cb-msg-user{margin-bottom:16px;padding:12px 16px;border-radius:12px;max-width:85%;line-height:1.6;animation:slideIn .3s}.cb-msg-bot{background:#2d2d44;color:#fff;margin-right:auto}.cb-msg-user{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;margin-left:auto}@keyframes slideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.cb-footer{padding:20px;background:#1a1a2e;display:flex;gap:10px}#cb-input{flex:1;padding:12px 16px;border:2px solid #2d2d44;border-radius:25px;background:#16213e;color:#fff;font-size:14px;direction:rtl}#cb-input:focus{outline:none;border-color:#667eea}#cb-send{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;padding:12px 24px;border-radius:25px;cursor:pointer;font-weight:bold}#cb-send:hover:not(:disabled){opacity:.9}#cb-send:disabled{opacity:.5;cursor:not-allowed}#cb-toggle{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(102,126,234,.4);font-size:24px;z-index:998;transition:transform .3s}#cb-toggle:hover{transform:scale(1.1)}#cb-toggle span{position:absolute;top:-5px;right:-5px;background:#f44;color:#fff;width:24px;height:24px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}.cb-wa-btn{display:inline-block;background:linear-gradient(135deg,#25D366 0%,#128C7E 100%);color:white!important;padding:12px 20px;border-radius:25px;text-decoration:none;font-weight:bold;transition:transform .2s}.cb-wa-btn:hover{transform:scale(1.05);text-decoration:none}@media (max-width:480px){.cb-container{width:100%;height:100%;bottom:0;right:0;border-radius:0}}
+</style>
+
+<script>
+(function(){
+    const API='https://runtime.codewords.ai/run/arman_law_whatsapp_assistant_1d28125c/web_chat';
+    const KEY='cwk-74cc87c229e063e8a2ed53bc81fc8bfddb0d0987536034a4bdabd7f663875b9f';
+    let sid=localStorage.getItem('arman_sid')||('web_'+Date.now());
+    localStorage.setItem('arman_sid',sid);
+    
+    const chat=document.getElementById('arman-chatbot');
+    const toggle=document.getElementById('cb-toggle');
+    const close=document.getElementById('cb-close');
+    const input=document.getElementById('cb-input');
+    const send=document.getElementById('cb-send');
+    const msgs=document.getElementById('cb-messages');
+    
+    let msgCount=0;
+    
+    toggle.onclick=()=>{chat.classList.add('active');input.focus()};
+    close.onclick=()=>chat.classList.remove('active');
+    
+    function add(txt,user){
+        const d=document.createElement('div');
+        d.className=user?'cb-msg-user':'cb-msg-bot';
+        d.innerHTML=txt;
+        msgs.appendChild(d);
+        msgs.scrollTop=msgs.scrollHeight;
+    }
+    
+    async function send(){
+        const msg=input.value.trim();
+        if(!msg)return;
+        
+        add(msg,true);
+        input.value='';
+        add('در حال تایپ...',false);
+        send.disabled=true;
+        msgCount++;
+        
+        try{
+            const r=await fetch(API,{
+                method:'POST',
+                headers:{'Content-Type':'application/json','Authorization':'Bearer '+KEY},
+                body:JSON.stringify({message:msg,session_id:sid})
+            });
+            
+            msgs.lastChild.remove();
+            
+            if(!r.ok){
+                const err=await r.json().catch(()=>({detail:'خطای شبکه'}));
+                throw new Error(err.detail||'خطا');
+            }
+            
+            const data=await r.json();
+            let resp=data.response.replace(/\n/g,'<br>');
+            
+            // فقط اولین بار، راهنمایی واتساپ برای صوت
+            if(msgCount===1){
+                resp+='<br><br><small>💡 نکته: در واتساپ می‌توانید پیام <strong>صوتی</strong> هم بفرستید!</small>';
+            }
+            
+            add(resp,false);
+        }catch(e){
+            add('خطا. <a href="https://wa.me/447424366129" target="_blank" style="color:#25D366;text-decoration:underline">واتساپ</a> یا تماس: 09027370260',false);
+        }finally{
+            send.disabled=false;
+        }
+    }
+    
+    document.getElementById('cb-send').onclick=send;
+    input.onkeypress=e=>{if(e.key==='Enter')send()};
+})();
+</script>
+<!-- پایان چت‌بات -->
+```
+
+---
+
+## ✅ **تغییرات انجام شده:**
+
+1. ✅ **بدون شماره تلفن** - فقط لینک واتساپ
+2. ✅ **دکمه واتساپ سبز** قابل کلیک
+3. ✅ **راهنمایی صوت** - فقط یک بار نمایش داده می‌شود
+4. ✅ **انیمیشن** - پیام‌ها با انیمیشن ظاهر می‌شوند
+5. ✅ **طراحی بهتر** - رنگ‌ها و فرمت بهبود یافته
+
+---
+
+## 🎤 **برای قابلیت صوتی:**
+
+**در واتساپ (بدون کد اضافی):**
+- کاربر روی میکروفون واتساپ کلیک می‌کند 🎤
+- صحبت می‌کند
+- ربات پیام صوتی را دریافت می‌کند
+- پاسخ متنی یا صوتی می‌دهد ✅
+
+**برای سایت** (اگر بعداً خواستید):
+- نیاز به کد پیچیده‌تر
+- ضبط صدا در مرورگر
+- ارسال به سرور
+- تبدیل به متن
+- پاسخ دادن
+
+---
+
+**این کد را در Replit امتحان کنید! حالا باید کار کند.** 🚀

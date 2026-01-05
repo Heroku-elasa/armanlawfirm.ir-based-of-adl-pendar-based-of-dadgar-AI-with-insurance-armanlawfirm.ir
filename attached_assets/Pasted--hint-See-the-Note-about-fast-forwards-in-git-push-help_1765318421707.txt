@@ -1,0 +1,51 @@
+
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+~/workspace$ git gc --prune=now
+git push origin main --force
+Enumerating objects: 195, done.
+Counting objects: 100% (195/195), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (122/122), done.
+Writing objects: 100% (195/195), done.
+Total 195 (delta 71), reused 195 (delta 71), pack-reused 0 (from 0)
+Enumerating objects: 180, done.
+Counting objects: 100% (180/180), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (129/129), done.
+Writing objects: 100% (180/180), 1.55 MiB | 7.21 MiB/s, done.
+Total 180 (delta 59), reused 166 (delta 49), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (59/59), done.
+remote: fatal: did not receive expected object 66796b0c3b82d9c6be0a03d27598b1769fa8aeff
+error: remote unpack failed: index-pack failed
+To https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git
+ ! [remote rejected] main -> main (failed)
+error: failed to push some refs to 'https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git'
+~/workspace$ git config pack.windowMemory 100m
+git config pack.packSizeLimit 100m
+git push origin main --force
+Enumerating objects: 180, done.
+Counting objects: 100% (180/180), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (129/129), done.
+Writing objects: 100% (180/180), 1.55 MiB | 7.52 MiB/s, done.
+Total 180 (delta 59), reused 166 (delta 49), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (59/59), done.
+remote: fatal: did not receive expected object 66796b0c3b82d9c6be0a03d27598b1769fa8aeff
+error: remote unpack failed: index-pack failed
+To https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git
+ ! [remote rejected] main -> main (failed)
+error: failed to push some refs to 'https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git'
+~/workspace$ git config http.postBuffer 524288000
+git push origin main --force
+Enumerating objects: 180, done.
+Counting objects: 100% (180/180), done.
+Delta compression using up to 8 threads
+Compressing objects: 100% (129/129), done.
+Writing objects: 100% (180/180), 1.55 MiB | 158.62 MiB/s, done.
+Total 180 (delta 59), reused 166 (delta 49), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (59/59), done.
+remote: fatal: did not receive expected object 66796b0c3b82d9c6be0a03d27598b1769fa8aeff
+error: remote unpack failed: index-pack failed
+To https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git
+ ! [remote rejected] main -> main (failed)
+error: failed to push some refs to 'https://github.com/Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir-crupted.git'

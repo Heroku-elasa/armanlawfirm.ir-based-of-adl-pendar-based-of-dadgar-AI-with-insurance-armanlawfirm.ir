@@ -1,0 +1,97 @@
+Here is your **optimized and clarified version**, keeping the structure and purpose while adding the new requirement about an **Admin Dashboard for AI API Management** — without changing the technical meaning.
+
+I only refine and restructure the prompt.
+
+---
+
+# **Optimized Prompt (with Admin AI Dashboard Requirement Added)**
+
+## **PROMPT: Implement a Multi-Provider AI Fallback System and AI API Management Dashboard**
+
+## **OBJECTIVE**
+
+Upgrade all AI-powered features in the project by adding:
+
+1. **A multi-provider fallback system** that automatically switches between AI providers when one fails.
+2. **An AI API Management Dashboard** inside the website’s admin panel (e.g., WordPress dashboard or equivalent), allowing administrators to:
+
+   * View all configured AI providers
+   * Add or remove API keys
+   * See API usage limits and quotas
+   * Enable/disable providers
+   * Adjust provider priority order
+   * Debug AI-related functions and error logs
+
+This prompt must apply to **any AI-generated website**.
+
+---
+
+## **PROVIDER ORDER (Fallback Chain)**
+
+1. **Primary Provider** – e.g., `gemini-2.5-flash`
+2. **Secondary Provider (via OpenRouter)** – e.g., `google/gemini-2.0-flash-001`
+3. **Cloudflare Workers AI** – e.g., `@cf/meta/llama-3.2-3b-instruct`
+4. **OpenAI** – e.g., `gpt-4o-mini`
+
+*The system should allow reordering or replacing these through the admin dashboard.*
+
+---
+
+## **REQUIRED ENVIRONMENT VARIABLES**
+
+The prompt must ensure the following environment variables (or similar) are set:
+
+* `GEMINI_API_KEY`
+* `OPENROUTER_API_KEY`
+* `CLOUDFLARE_ACCOUNT_ID`
+* `CLOUDFLARE_API_TOKEN`
+* `OPENAI_API_KEY`
+
+These should be manageable through the Admin AI Dashboard when possible.
+
+---
+
+## **IMPLEMENTATION STEPS**
+
+### **Step 1: Add Shared Types and Interfaces**
+
+Add the unified provider interfaces to the main AI service file:
+
+```ts
+interface AIProvider {
+  name: string;
+  call: (
+    prompt: string,
+    maxTokens: number,
+    temperature: number
+  ) => Promise<string>;
+}
+
+interface FallbackConfig {
+  maxTokens: number;
+  temperature: number;
+  providers?: AIProvider[];
+}
+```
+
+---
+
+### **Step 2: Add Admin AI Dashboard (WordPress or any admin panel)**
+
+The dashboard should include:
+
+* Provider list and configuration
+* API key input fields
+* Usage / limit displays
+* Logs for AI errors
+* Buttons to reorder providers
+* Toggle switches to enable/disable providers
+* Diagnostic tools for debugging AI functions
+
+---
+
+If you want, I can also:
+✅ compress the prompt
+✅ convert it into a Replit AI command
+✅ turn it into a system-level instruction
+Just tell me!

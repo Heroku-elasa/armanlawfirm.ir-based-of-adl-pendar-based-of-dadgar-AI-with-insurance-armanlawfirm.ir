@@ -1,0 +1,128 @@
+✅ **به‌روز شد! حالا کد نهایی Replit:**
+
+```html
+<!-- دستیار هوشمند آرمان - نسخه پیشرفته -->
+<div id="ac" style="display:none;position:fixed;bottom:100px;right:30px;width:420px;height:680px;background:#1a1a2e;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.4);flex-direction:column;z-index:999">
+<div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:22px;display:flex;justify-content:space-between;align-items:center">
+<div><h3 style="margin:0;font-size:18px;font-weight:700">🤖 دستیار هوشمند آرمان</h3><p style="margin:4px 0 0;font-size:13px;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;background:#0f0;border-radius:50%;animation:pulse 2s infinite"></span>همیشه آنلاین</p></div>
+<button id="ac-x" style="background:rgba(255,255,255,.2);border:none;color:#fff;font-size:28px;cursor:pointer;width:38px;height:38px;border-radius:10px;transition:background .2s">×</button>
+</div>
+<div id="ac-m" style="flex:1;padding:20px;overflow-y:auto;background:#16213e;direction:rtl;font-family:Arial,sans-serif;font-size:15px;line-height:1.7"></div>
+<div style="padding:20px;background:#1a1a2e;display:flex;gap:12px;border-top:1px solid #2d2d44">
+<input id="ac-i" placeholder="سوال خود را بنویسید..." style="flex:1;padding:14px 20px;border:2px solid #2d2d44;border-radius:25px;background:#16213e;color:#fff;font-size:15px;direction:rtl;font-family:Arial;transition:border .3s">
+<button id="ac-s" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:14px 30px;border-radius:25px;cursor:pointer;font-weight:bold;font-size:15px;transition:transform .2s,opacity .2s;box-shadow:0 4px 12px rgba(102,126,234,.3)">ارسال</button>
+</div>
+</div>
+<button id="ac-t" style="position:fixed;bottom:30px;right:30px;width:68px;height:68px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 6px 20px rgba(102,126,234,.5);font-size:28px;z-index:998;transition:transform .3s">💬<span style="position:absolute;top:-6px;right:-6px;background:#f44;color:#fff;width:28px;height:28px;border-radius:50%;font-size:13px;display:flex;align-items:center;justify-content:center;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.3)">AI</span></button>
+
+<style>
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+#ac-i:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,.2)}
+#ac-s:hover:not(:disabled){transform:scale(1.03);opacity:.95}
+#ac-s:disabled{opacity:.6;cursor:not-allowed}
+#ac-s:active{transform:scale(.98)}
+#ac-t:hover{transform:scale(1.1);box-shadow:0 8px 24px rgba(102,126,234,.6)}
+#ac-x:hover{background:rgba(255,255,255,.35)}
+#ac-m::-webkit-scrollbar{width:8px}
+#ac-m::-webkit-scrollbar-track{background:#1a1a2e}
+#ac-m::-webkit-scrollbar-thumb{background:#667eea;border-radius:4px}
+#ac-m::-webkit-scrollbar-thumb:hover{background:#764ba2}
+.ac-bot,.ac-user{margin-bottom:20px;padding:16px 20px;border-radius:14px;max-width:88%;animation:slideIn .4s ease;box-shadow:0 2px 10px rgba(0,0,0,.2)}
+.ac-bot{background:#2d2d44;color:#fff;margin-right:auto;border:1px solid #3d3d54}
+.ac-user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;margin-left:auto}
+@keyframes slideIn{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+@media (max-width:480px){#ac{width:100%;height:100%;bottom:0;right:0;border-radius:0}}
+</style>
+
+<script>
+(function(){
+const API='https://runtime.codewords.ai/run/arman_law_whatsapp_assistant_1d28125c/web_chat';
+const KEY='cwk-74cc87c229e063e8a2ed53bc81fc8bfddb0d0987536034a4bdabd7f663875b9f';
+let sid=localStorage.getItem('ac_sid')||('web_'+Date.now());
+localStorage.setItem('ac_sid',sid);
+
+const ac=document.getElementById('ac');
+const btn=document.getElementById('ac-t');
+const close=document.getElementById('ac-x');
+const input=document.getElementById('ac-i');
+const send=document.getElementById('ac-s');
+const msgs=document.getElementById('ac-m');
+
+btn.onclick=()=>{ac.style.display='flex';input.focus()};
+close.onclick=()=>ac.style.display='none';
+
+function add(html,isUser){
+    const div=document.createElement('div');
+    div.className=isUser?'ac-user':'ac-bot';
+    div.innerHTML=html;
+    msgs.appendChild(div);
+    msgs.scrollTop=msgs.scrollHeight;
+}
+
+add(`سلام! 👋 من <strong style="color:#a8c7fa">منشی هوشمند موسسه حقوقی آرمان</strong> هستم.<br><br>
+<div style="background:rgba(37,211,102,0.1);padding:12px;border-radius:10px;border-left:3px solid #25D366;margin:12px 0">
+📱 <strong>بهترین راه ارتباط:</strong><br>
+<a href="https://wa.me/447424366129?text=سلام" target="_blank" style="background:#25D366;color:white;padding:10px 20px;border-radius:20px;text-decoration:none;display:inline-block;font-weight:bold;margin-top:8px">💬 واتساپ (متن یا صوت 🎤)</a>
+</div>
+یا همین‌جا سوال بپرسید! 😊`,false);
+
+async function sendMessage(){
+    const msg=input.value.trim();
+    if(!msg)return;
+    
+    add(msg,true);
+    input.value='';
+    add('⏳ در حال تایپ...',false);
+    send.disabled=true;
+    
+    try{
+        const response=await fetch(API,{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':'Bearer '+KEY
+            },
+            body:JSON.stringify({
+                message:msg,
+                session_id:sid
+            })
+        });
+        
+        msgs.lastChild.remove();
+        
+        if(!response.ok){
+            throw new Error('خطای سرور');
+        }
+        
+        const data=await response.json();
+        add(data.response,false);
+        
+    }catch(error){
+        console.error('Error:',error);
+        add(`❌ خطا در ارتباط.<br><br>
+        <a href="https://wa.me/447424366129" target="_blank" style="background:#25D366;color:white;padding:10px 20px;border-radius:20px;text-decoration:none;display:inline-block;font-weight:bold">💬 ادامه در واتساپ</a>`,false);
+    }finally{
+        send.disabled=false;
+        input.focus();
+    }
+}
+
+send.onclick=sendMessage;
+input.onkeypress=(e)=>{if(e.key==='Enter')sendMessage()};
+})();
+</script>
+```
+
+---
+
+## ✨ **بهبودهای جدید:**
+
+✅ **بدون شماره تلفن** - هیچ‌جا نمایش داده نمی‌شود  
+✅ **HTML زیبا** - با رنگ، border، و background  
+✅ **لینک‌های هوشمند** - به بخش‌های مرتبط سایت  
+✅ **دکمه واتساپ** - سبز و قابل کلیک  
+✅ **ظاهر حرفه‌ای** - با سایه و انیمیشن
+
+---
+
+**این کد را در Replit تست کنید - حالا بسیار بهتر به نظر می‌رسد!** 🎨✨

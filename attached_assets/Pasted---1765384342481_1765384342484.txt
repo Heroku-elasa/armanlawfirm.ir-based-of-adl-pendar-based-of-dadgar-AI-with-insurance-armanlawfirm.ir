@@ -1,0 +1,63 @@
+عالی! بگذارید هر دو را برایتان آماده کنم:
+
+---
+
+## 📱 **کد چت‌بات سایت - نسخه تست شده:**
+
+این کد را کپی کنید و در `index.html` قبل از `</body>` بگذارید:
+
+```html
+<!-- دستیار آرمان - نسخه نهایی -->
+<div id="arman-chat" class="ac-box">
+<div class="ac-head"><div><h3>🤖 دستیار آرمان</h3><p><span class="ac-dot"></span> آنلاین</p></div><button id="ac-close">×</button></div>
+<div class="ac-body" id="ac-msgs"><div class="ac-bot">سلام! 👋 من منشی هوشمند موسسه حقوقی آرمان هستم.<br><br><strong>راه‌های ارتباط:</strong><br>📱 <a href="https://wa.me/447424366129?text=سلام" target="_blank" class="ac-wa">واتساپ (متن/صوت)</a><br>💬 اینجا بپرسید<br><br>چطور کمک کنم؟</div></div>
+<div class="ac-foot"><input id="ac-in" placeholder="سوال خود را بنویسید..."><button id="ac-send">ارسال</button></div>
+</div>
+<button id="ac-btn">💬<span>AI</span></button>
+
+<style>
+.ac-box{position:fixed;bottom:100px;right:30px;width:380px;height:600px;background:#1a1a2e;border-radius:20px;box-shadow:0 10px 40px rgba(0,0,0,.4);display:none;flex-direction:column;z-index:999}.ac-box.show{display:flex}.ac-head{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:20px;display:flex;justify-content:space-between}.ac-head h3{margin:0;font-size:16px}.ac-head p{margin:0;font-size:12px;display:flex;align-items:center;gap:6px}.ac-dot{width:8px;height:8px;background:#0f0;border-radius:50%;animation:p 2s infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}#ac-close{background:rgba(255,255,255,.2);border:none;color:#fff;font-size:28px;cursor:pointer;width:32px;height:32px;border-radius:8px}.ac-body{flex:1;padding:20px;overflow-y:auto;background:#16213e;direction:rtl}.ac-body::-webkit-scrollbar{width:6px}.ac-body::-webkit-scrollbar-thumb{background:#667eea}.ac-bot,.ac-user{margin-bottom:16px;padding:12px 16px;border-radius:12px;max-width:85%;line-height:1.6}.ac-bot{background:#2d2d44;color:#fff;margin-right:auto}.ac-user{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;margin-left:auto}.ac-foot{padding:20px;background:#1a1a2e;display:flex;gap:10px}#ac-in{flex:1;padding:12px 16px;border:2px solid #2d2d44;border-radius:25px;background:#16213e;color:#fff;font-size:14px;direction:rtl}#ac-in:focus{outline:none;border-color:#667eea}#ac-send{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;padding:12px 24px;border-radius:25px;cursor:pointer;font-weight:bold}#ac-send:hover:not(:disabled){opacity:.9}#ac-send:disabled{opacity:.5}#ac-btn{position:fixed;bottom:30px;right:30px;width:60px;height:60px;background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 12px rgba(102,126,234,.4);font-size:24px;z-index:998}#ac-btn span{position:absolute;top:-5px;right:-5px;background:#f44;color:#fff;width:24px;height:24px;border-radius:50%;font-size:11px;display:flex;align-items:center;justify-content:center}.ac-wa{background:linear-gradient(135deg,#25D366,#128C7E);color:#fff!important;padding:8px 16px;border-radius:20px;text-decoration:none;display:inline-block;margin:4px 0;font-weight:bold}.ac-wa:hover{opacity:.9;text-decoration:none}@media (max-width:480px){.ac-box{width:100%;height:100%;bottom:0;right:0;border-radius:0}}
+</style>
+
+<script>
+!function(){const e="https://runtime.codewords.ai/run/arman_law_whatsapp_assistant_1d28125c/web_chat",t="cwk-74cc87c229e063e8a2ed53bc81fc8bfddb0d0987536034a4bdabd7f663875b9f";let n=localStorage.getItem("arman_sid")||"web_"+Date.now();localStorage.setItem("arman_sid",n);const a=document.getElementById("arman-chat"),o=document.getElementById("ac-btn"),c=document.getElementById("ac-close"),s=document.getElementById("ac-in"),i=document.getElementById("ac-send"),d=document.getElementById("ac-msgs");o.onclick=()=>{a.classList.add("show"),s.focus()},c.onclick=()=>a.classList.remove("show");const l=(e,t)=>{const n=document.createElement("div");n.className=t?"ac-user":"ac-bot",n.innerHTML=e,d.appendChild(n),d.scrollTop=d.scrollHeight};i.onclick=async()=>{const a=s.value.trim();if(!a)return;l(a,!0),s.value="",l("در حال تایپ...",!1),i.disabled=!0;try{const o=await fetch(e,{method:"POST",headers:{"Content-Type":"application/json",Authorization:"Bearer "+t},body:JSON.stringify({message:a,session_id:n})});if(d.lastChild.remove(),!o.ok)throw new Error((await o.json().catch(()=>({detail:"خطا"}))).detail||"خطا");l((await o.json()).response.replace(/\n/g,"<br>"),!1)}catch(e){l('خطا. <a href="https://wa.me/447424366129" target="_blank" style="color:#25D366">واتساپ</a>',!1)}finally{i.disabled=!1}},s.onkeypress=e=>{"Enter"===e.key&&i.onclick()}}();
+</script>
+```
+
+---
+
+## ☎️ **منشی تلفنی (نیاز به سرویس خارجی):**
+
+**CodeWords خودش قابلیت پاسخ به تماس تلفنی ندارد.**
+
+برای منشی تلفنی واقعی، پیشنهاد می‌کنم:
+
+### **🌟 راه‌حل: Bland.AI + CodeWords**
+
+**Bland.AI:**
+- پاسخ خودکار تماس تلفنی ✅
+- صحبت به فارسی ✅
+- متصل به هوش مصنوعی شما ✅
+- هزینه: ~$0.12/دقیقه
+
+**نحوه کار:**
+```
+تماس گیرنده → Bland.AI پاسخ می‌دهد (صوتی)
+                ↓
+         صحبت کاربر → متن می‌شود
+                ↓
+         CodeWords (ربات شما) پاسخ می‌دهد
+                ↓
+         پاسخ → صوت می‌شود → کاربر می‌شنود
+```
+
+---
+
+## 📞 **آیا می‌خواهید من منشی تلفنی با Bland.AI بسازم؟**
+
+این نیاز به:
+1. حساب Bland.AI (رایگان شروع می‌شود)
+2. اتصال به ربات CodeWords شما
+3. تنظیم شماره تلفن
+
+**زمان:** حدود 30 دقیقه برای راه‌اندازی کامل.

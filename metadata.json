@@ -1,0 +1,9 @@
+{
+  "name": "saved hstory of armanlawfirm.ir based of adl-pendar based of dadgar AI with insurance armanlawfirm.ir",
+  "description": "An AI-powered assistant for legal and insurance professionals in Iran. Draft documents, analyze contracts, find professionals, and get strategic insights.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone",
+    "geolocation"
+  ]
+}

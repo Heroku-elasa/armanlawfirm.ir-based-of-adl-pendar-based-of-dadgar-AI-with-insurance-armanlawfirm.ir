@@ -1,0 +1,1345 @@
+<!-- HTML -->
+<html lang="fa"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index,follow">
+    <meta name="googlebot" content="index">
+    <meta name="google-play-app" content="app-id=com.dadsun.applicant">
+    <link rel="preload" as="font" href="/fonts/materialdesignicons-webfont.woff2?v=5.9.55" type="font/woff2" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/iranyekanwebregularfanum.woff" type="font/woff" crossorigin="anonymous">
+    <link rel="preload" as="font" href="/fonts/iranyekanwebboldfanum.woff" type="font/woff" crossorigin="anonymous">
+
+    <link rel="icon" type="image/svg" sizes="16x16" href="/assets/images/favicons/16.svg">
+    <link rel="icon" type="image/svg" sizes="24x24" href="/assets/images/favicons/24.svg">
+    <link rel="icon" type="image/svg" sizes="36x36" href="/assets/images/favicons/36.svg">
+    <link rel="icon" type="image/svg" sizes="48x48" href="/assets/images/favicons/48.svg">
+    <link rel="icon" type="image/svg" sizes="64x64" href="/assets/images/favicons/64.svg">
+    <link rel="icon" type="image/svg" sizes="72x72" href="/assets/images/favicons/72.svg">
+    <link rel="apple-touch-icon" type="image/gif" href="/apple-touch-icon.png">
+    <link rel="apple-touch-icon" type="image/gif" href="/apple-touch-icon-precomposed.png">
+        <title>وکیل پایه یک دادگستری، متخصص و با تجربه</title>
+    <meta data-hid="description" name="description" content="دادسان DADSUN اولین استارتاپ حقوقی ایران که خدمات درخواست وکیل، تنظیم یا بررسی قرارداد، مشاوره حقوقی و امور ثبت شرکت و برند را در تمامی کشور خدمت ارائه می دهد.">
+    <meta data-hid="keywords" name="keywords" content="وکیل، وکیل پایه یک، وکیل دادگستری، وکیل پایه یک دادگستری، وکالت، موکل، وکالت در توکیل، دادگاه، دادگستری، کانون وکلا، وکیل خوب، وکیل متخصص">
+    <meta data-hid="og:title" name="og:title" content="وکیل پایه یک دادگستری، متخصص و با تجربه">
+    <meta data-hid="og:description" name="og:description" content="دادسان DADSUN اولین استارتاپ حقوقی ایران که خدمات درخواست وکیل، تنظیم یا بررسی قرارداد، مشاوره حقوقی و امور ثبت شرکت و برند را در تمامی کشور خدمت ارائه می دهد.">
+    <meta property="og:image" content="https://dadsun.app/apple-touch-icon.png">
+    <meta content="5A02636E9F6D6274526C14EEDA7F1821" rel="verify" name="jetseo-site-verification">
+    <link rel="canonical" href="https://dadsun.app" id="canonical">
+    <link href="/css/landing.css?id=74c403667a1213a4d926" rel="stylesheet" media="screen and (min-width: 960px)">
+    <link href="/css/landingMobile.css?id=324fd5a931497d4fefba" rel="stylesheet" media="screen and (max-width: 959px)">
+    </head>
+
+<body class="bg-custom1">
+
+<!-- This example requires Tailwind CSS v2.0+ -->
+<nav class="bg-white shadow-header relative  ">
+    <div class="mx-auto  w-full md:w-11/12">
+        <div class="flex items-center justify-between h-16">
+            <div class="flex-1 flex items-center h-full  px-4 md:px-0 py-1 ">
+                <div class="hidden md:flex">
+                    <a href="/" class="flex">
+                        <img class="ml-9" alt="logo" src="/assets/images/logos/logo.svg">
+                    </a>
+                    <div class="flex items-center  h-full ">
+                        <a href="/demand" class="g__btn-large hover:bg-gray-300 mr-6 rounded-md text-sm font-medium ">
+                            معرفی وکیل
+                        </a>
+
+                        <a href="/lawyers" class="g__btn-large hover:bg-gray-300 mr-6 rounded-md text-sm font-medium">جستجوی
+                            وکیل</a>
+
+                        <a href="/benefits" class="g__btn-large hover:bg-gray-300 mr-6 rounded-md text-sm font-medium">مزایای دادسان</a>
+
+                        <a href="/contact_us" class="g__btn-large hover:bg-gray-300 mr-6 rounded-md text-sm font-medium"> تماس با ما</a>
+                    </div>
+                </div>
+                <div class="md:hidden flex ">
+                    <i class="mdi mdi-menu text-2xl ml-4" onclick="openNav()"></i>
+                    <a href="/" class="flex">
+                        <img height="27" class="ml-9" alt="logo" src="/assets/images/logos/logo.svg">
+                    </a>
+                    <div id="mySidenav" class="sidenav">
+                        <div class="content flex flex-col py-7">
+                            <a href="/demand" class="hover:bg-gray-300 px-5 py-2 text-lg leading-9 mb-6">
+                                معرفی وکیل
+                            </a>
+
+                            <a href="/lawyers" class="hover:bg-gray-300 px-5 py-2 text-lg leading-9 mb-6">جستجوی وکیل</a>
+
+                            <a href="/benefits" class="hover:bg-gray-300  px-5 py-2 text-lg leading-9 mb-6">مزایای دادسان</a>
+
+                            <a href="/contact_us" class="hover:bg-gray-300  px-5 py-2 text-lg leading-9 mb-6">تماس با ما</a>
+
+                            <a href="/about_us" class="hover:bg-gray-300  px-5 py-2 text-lg leading-9 mb-6">درباره دادسان</a>
+
+                            <a href="/register" class="hover:bg-gray-300  px-5 py-2 text-lg leading-9 mb-6">ثبت‌نام</a>
+
+                            <a href="/login" class="hover:bg-gray-300  px-5 py-2 text-lg leading-9 mb-6">ورود</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center pl-2 md:pl-0 ">
+                <a href="/register" class="bg-primary-300 hover:bg-opacity-80 rounded py-2 px-3 md:px-4 ml-2 text-white text-sm font-bold md:ml-3">
+                    ثبت‌نام
+                </a>
+                <a href="/login" class="bg-transparent rounded py-2 px-3 md:px-4 hover:bg-primary-100 text-primary-300 text-sm font-bold">
+                    ورود
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+
+    function openNav() {
+        document.getElementById("mySidenav").classList.toggle("open-sidenav");
+        document.body.classList.toggle("modal-open");
+    }
+
+    (function () {
+        let path = location.pathname.split("/")[1]
+        if (path && ['demand', 'lawyers', 'benefits', 'contact_us'].includes(path)) {
+            document.querySelector('a[href^="/' + path + '"]').classList.add('active-header-btn')
+            if (document.querySelector('.sidenav a[href^="/' + path + '"]'))
+                document.querySelector('.sidenav a[href^="/' + path + '"]').classList.add('active-header-btn')
+        }
+    })()
+
+</script>
+
+
+    <div id="landing" class="overflow-hidden"><div id="header" class="kw__header  text-white rounded-0"><div class="opacity-50 text-xl md:text-2xl text-center font-extrabold">
+         انتخاب وکیل کار سختی نیست
+    </div> <h1 class="text-2xl leading-extra md:text-4xl font-extrabold text-center text-white mt-2 md:mt-5 ">
+                            کار
+                        <span class="text-newSecondary">دادسان</span>
+            پیشنهاد وکیل مناسبه
+        </h1>
+    در صورت نیاز از طریق پیام رسان واتس اپ به شماره 09304687518 با ما در ارتباط باشید
+    
+        <div class="kw__header_city-card w-full md:w-3/12 mt-8"><div class="kw__header_city-card-content "><div class="mb-3">از چه شهری به شما وکیل معرفی شود؟</div> <div class="bg-white  border rounded relative "><div tabindex="0" class="flex justify-between items-center px-4 focus:outline-none " style="height: 42px;"><div class="w-full text-sm text-black select-none"><div>
+                انتخاب کنید
+            </div></div> <ol class="g__select text-black hidden"><li class="">
+                تهران
+            </li><li class="">
+                مرکزی
+            </li><li class="">
+                گیلان
+            </li><li class="">
+                مازندران
+            </li><li class="">
+                آذربایجان شرقی
+            </li><li class="">
+                آذربایجان غربی
+            </li><li class="">
+                کرمانشاه
+            </li><li class="">
+                خوزستان
+            </li><li class="">
+                فارس
+            </li><li class="">
+                کرمان
+            </li><li class="">
+                خراسان رضوی
+            </li><li class="">
+                اصفهان
+            </li><li class="">
+                سیستان و بلوچستان
+            </li><li class="">
+                کردستان
+            </li><li class="">
+                همدان
+            </li><li class="">
+                چهارمحال بختیاری
+            </li><li class="">
+                لرستان
+            </li><li class="">
+                ایلام
+            </li><li class="">
+                کهگیلویه و بویراحمد
+            </li><li class="">
+                بوشهر
+            </li><li class="">
+                زنجان
+            </li><li class="">
+                سمنان
+            </li><li class="">
+                یزد
+            </li><li class="">
+                هرمزگان
+            </li><li class="">
+                اردبیل
+            </li><li class="">
+                قم
+            </li><li class="">
+                قزوین
+            </li><li class="">
+                گلستان
+            </li><li class="">
+                خراسان شمالی
+            </li><li class="">
+                خراسان جنوبی
+            </li><li class="">
+                البرز
+            </li></ol> <i class="mdi mdi-menu-down leading-none text-2xl text-black"></i> <div class=""></div></div></div> <!----> <a href="/demand" class="g__btn-large w-full px-2 bg-primary-300 hover:bg-opacity-80 text-white text-sm font-bold mt-5">
+                     معرفی وکیل متخصص
+                </a></div></div> <div class="flex text-sm md:text-base items-center mt-6 md:mt-11"><a href="https://dadsun.app/demand">
+                مشاوره حضوری
+            </a> <i class="mdi mdi-circle kw__header-icon "></i> <a href="https://dadsun.app/demand">
+                مشاوره غیر حضوری
+            </a> <i class="mdi mdi-circle kw__header-icon "></i> <a href="https://dadsun.app/demand">
+                وکالت
+            </a></div></div> <h2 class="text-heading text-165 md:text-250 mt-8 md:mt-16 font-extrabold text-center">
+    🥊مزایای استفاده از
+    <span class="text-newSecondary">
+            دادسان
+    </span></h2> <div class="text-white text-gray-500 text-xl font-medium text-center mt-2 mb-6 md:mb-16">
+    هر آنچه برای انتخاب مناسب‌ترین وکیل‌تان نیاز دارید را کنار هم جمع کرده‌ایم
+</div> <div class="w-full md:w-11/12 lg:w-10/12 xl:w-8/12 mx-auto md:pb-10  "><div class="flex landing__benefits md:justify-center px-4 md:px-0 "><div class="g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="comparison" src="/assets/images/benefits/comparison.svg"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                مشاهده، مقایسه و انتخاب وکلا
+            </h3></div> <div class="g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="specialty" src="/assets/images/benefits/specialty.svg"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                پاسخگویی و پشتیبانی قوی
+            </h3></div> <div class="g__card landing__benefits__card ml-4 md:ml-0 flex flex-col justify-center items-center p-6 md:p-10"><img alt="experts" src="/assets/images/benefits/experts.svg" loading="lazy"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                وکلای متخصص و متعهد
+            </h3></div> <div class="md:hidden g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="speed" src="/assets/images/benefits/speed.svg" loading="lazy"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                معرفی سریع وکیل
+            </h3></div> <div class="md:hidden g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="security" src="/assets/images/benefits/security.svg" loading="lazy"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                پیام‌رسان امن
+            </h3></div></div> <div class="hidden md:flex justify-center mt-10"><div class="g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="speed" src="/assets/images/benefits/speed.svg" loading="lazy"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                معرفی سریع وکیل
+            </h3></div> <div class="g__card landing__benefits__card ml-4 md:ml-10 flex flex-col justify-center items-center p-6 md:p-10"><img alt="security" src="/assets/images/benefits/security.svg" loading="lazy"> <h3 class="text-xl font-extrabold mt-5 md:mt-8">
+                پیام‌رسان امن
+            </h3></div> <a href="/benefits" class="border border-dashed rounded landing__benefits__card text-primary-300 flex justify-center items-end p-6 md:p-10 "><div class="flex items-center"><div class="text-lg font-extrabold ">چرا از دادسان استفاده کنم؟</div> <i class="mdi mdi-arrow-left mr-4 text-2xl"></i></div></a></div> <a href="/benefits" class="md:hidden border border-dashed rounded text-primary-300 flex justify-center items-end mx-10 my-7 p-5"><div class="flex items-center"><div class="text-lg font-extrabold ">چرا از دادسان استفاده کنم؟</div> <i class="mdi mdi-arrow-left mr-4 text-2xl"></i></div></a></div> <div class="landing__city px-4 py-10 md:py-16 mt-10 "><div class="grid grid-cols-3 md:grid-cols-11 "><div class="md:col-start-3 col-span-full text-heading text-165 md:text-250 font-extrabold mb-10 md:mb-14">
+            📌 شهر‌های محبوب کاربران
+        </div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg md:col-start-3"><a href="https://dadsun.app/lawyers/%DA%AF%DB%8C%D9%84%D8%A7%D9%86/%D8%B1%D8%B4%D8%AA/all" class="underline hover:text-black">
+                وکیل رشت
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D8%AE%D9%88%D8%B2%D8%B3%D8%AA%D8%A7%D9%86/%D8%A7%D9%87%D9%88%D8%A7%D8%B2/all" class="underline hover:text-black">
+                وکیل اهواز
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D9%81%D8%A7%D8%B1%D8%B3/%D8%B4%DB%8C%D8%B1%D8%A7%D8%B2/all" class="underline hover:text-black">
+                وکیل شیراز
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D9%82%D9%85/%D9%82%D9%85/all" class="underline hover:text-black">
+                وکیل قم
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86/all" class="underline hover:text-black">
+                وکیل اصفهان
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D8%A2%D8%B0%D8%B1%D8%A8%D8%A7%DB%8C%D8%AC%D8%A7%D9%86-%D8%B4%D8%B1%D9%82%DB%8C/%D8%AA%D8%A8%D8%B1%DB%8C%D8%B2/all" class="underline hover:text-black">
+                وکیل تبریز
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87/%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87/all" class="underline hover:text-black">
+                وکیل کرمانشاه
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg md:col-start-3"><a href="https://dadsun.app/lawyers/%D8%AE%D8%B1%D8%A7%D8%B3%D8%A7%D9%86-%D8%B1%D8%B6%D9%88%DB%8C/%D9%85%D8%B4%D9%87%D8%AF/all" class="underline hover:text-black">
+                وکیل مشهد
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D8%A7%D9%84%D8%A8%D8%B1%D8%B2/%DA%A9%D8%B1%D8%AC/all" class="underline hover:text-black">
+                وکیل کرج
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/all" class="underline hover:text-black">
+                وکیل تهران
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D9%85%D8%A7%D8%B2%D9%86%D8%AF%D8%B1%D8%A7%D9%86/%D8%B3%D8%A7%D8%B1%DB%8C/all" class="underline hover:text-black">
+                وکیل ساری
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="https://dadsun.app/lawyers/%D9%87%D9%85%D8%AF%D8%A7%D9%86/%D9%87%D9%85%D8%AF%D8%A7%D9%86/all" class="underline hover:text-black">
+                وکیل همدان
+            </a></div> <div class="mb-6 md:mb-12 text-secondary font-bold text-lg"><a href="/lawyers" class="underline hover:text-black">
+                ۳۹۶ + شهر دیگر
+            </a></div></div></div> <div id="startAnimation" class="text-heading text-165 md:text-250  md:text-250 mb-10 mt-8 md:mt-16 font-extrabold text-center"><span class="text-newSecondary">
+         🎉دادسان
+    </span>
+    با شما و در خدمت شماست
+</div> <div class="w-full md:w-10/12 mx-auto py-12 md:flex"><div class="flex  landing__statistic-card"><div class="bg-white mr-4 md:mr-0 py-10 border flex-1 border-dashed flex flex-col justify-center items-center border-red-500 "><div class="text-4xl font-bold mb-1">1092</div> <div class="font-bold">روز ﮐﻨﺎر ﺷﻤﺎ ﺑﻮده‌اﯾﻢ</div></div> <div class="bg-white py-10 border flex-1 mx-4 md:mx-10 border-dashed flex flex-col justify-center items-center border-red-500"><div class="text-4xl font-bold mb-1">3160</div> <div class="font-bold">مشکل حقوقی حل شده</div></div></div> <div class="py-10 landing__statistic-card-margin bg-white flex-1 border-2 border-dashed flex flex-col justify-center items-center border-red-500 "><div class="text-275 font-bold mb-1">92 %</div> <div class="text-2xl font-bold">درصد رضایت</div></div> <div class="flex landing__statistic-card"><div class="bg-white py-10 border flex-1 mx-4 md:mx-10 border-dashed flex flex-col justify-center items-center border-red-500 "><div class="text-4xl font-bold mb-1">405</div> <div class="font-bold">ﺷﻬﺮ ﺗﺤﺖ ﭘﻮﺷﺶ</div></div> <div class="bg-white ml-4 md:ml-0 py-10 border flex-1 border-dashed flex flex-col justify-center items-center border-red-500 "><div class="text-4xl font-bold mb-1">1521</div> <div class="font-bold">وﮐﯿﻞ پایه یک فعال</div></div></div></div> <div class="flex flex-col items-center"><div class="text-heading text-165 md:text-250  md:text-250 my-8 md:my-16 font-extrabold text-center"><span class="text-newSecondary">🤔دادسان</span>
+                چگونه کار می‌کند؟
+            </div> <!----></div> <div class="text-heading text-165 md:text-250 font-extrabold text-center mt-8 md:mt-16">
+    ⭐️
+    <span class="text-newSecondary">
+            دادسان
+    </span>
+    از نگاه کاربران
+</div> <div class="text-white text-gray-500 text-xl font-medium text-center mt-2 mb-8">
+    در هنگام انتخاب وکیل می‌توانید نظر سایر افراد را در مورد امتیاز و عملکردشان بخوانید
+</div> <div class="relative"><div class="kw__comments horizontal_scrolling"><button class="kw__slider-next hidden" style="--xPosition: 12px;"><i class="mdi mdi-chevron-left text-xl"></i></button> <button class="kw__slider-prev " style="--xPosition: 13px;"><i class="mdi mdi-chevron-right text-xl"></i></button> <div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    خیلی وقت بود که همسرم اذیتم میکرد و خیلی تلاش کردم تا شرایط به حالت خوبی برگرده اما بعد از این که نا امید شدم دادسان بهم کمک کرد تو فرایند ساده و کوتاهی بتونم طلاق و مهریه ام رو بگیرم
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm"> کاربر م.ح</div> <div class="text-xs">
+                            تیرماه 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل سپیده حبیبی پور
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                     تو بیزینس اولم یکی از فاندرها رفت و یه شرکت دیگه مشابه تاسیس کرد. اما برای استارتاپ جدیدم از دادسان وکیل برای قرار داد گرفتم و بهم گفت میشه قرارداد عدم رقابت نوشت که این مشکل پیش نیاد
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر س.ش</div> <div class="text-xs">
+                            اردیبهشت‌ماه 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            قرارداد
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل محمد مهاجری
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    ملکی که اجاره داده بودم با مستاجر به اختلاف خورده بودیم و نیاز داشتم در اسرع وقت حکم تخلیه بگیرم. با کمک جلسه مشاوره با وکیل مجرب دادسان تونستم جواب سوالم رو بگیرم و برای حکم تخلیه اقدام کنم و موفق هم شدم (مدتش تموم شد و مستاجر شروع به اذیت کرد و خونه رو تخلیه نمیکرد / یکی از وکلای متخصص حوزه ملکی)
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر ع.خ</div> <div class="text-xs">
+                            تیرماه 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            مشاوره حضوری
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل علیرضا برجی
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    هنگام جابهجایی بار ایست بازرسی جلوم رو گرفت و بعد از گشتن بارِ مشتری گویا مقداری مواد مخدر در بار پیدا شده بود اول فکر میکردن برای من است و بازداشت شدم. به کمک وکیل متخصص مواد مخدر توانستم ثابت کنم که مواد برای من نیست و تبرئه شدم. (اما نگران هزینه بودم با کمک دادسان تونستم هم با وکیل متخصص این حوزه ارتباط برقرار کنم و هم هزینه مقرون به صرفهای پرداخت کنم)
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر ف.ر</div> <div class="text-xs">
+                            خردادماه 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل رضا بجکار
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    من اسمم تو شناسنامه با اسمی که صدام میکردن فرق داشت. و خیلی تو دانشگاه و محیط کار اذیت میشدم. فکر میکردم تغییر اسم کار سختی باشه اما با کمک دادسان اسمم رو عوض کردم و این چالش رو حل کردم.
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر ی.ا</div> <div class="text-xs">
+                            فروردین 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل منا محمدی سام
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    من با استفاده از سامانه دادسان تونستم حضانت دخترم رو از شوهر سابقم بگیرم و دخترم رو کنار خودم نگه دارم.
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر س.د</div> <div class="text-xs">
+                            خرداد 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل علیرضا برجی
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    وکیلی که دادسان بهم معرفی کرد تونست چک من رو نقد کنه و جلوی اینکه ورشکسته بشم و مجبور بشم مغازهم رو ببندم رو بگیره.
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر م.ر</div> <div class="text-xs">
+                            اردیبهشت 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل سپیده حبیبی پور
+                در دادسان
+            </div></div><div class=" kw__comments__card slider-card ml-9 "><div class=" p-8 md:px-10 md:pt-10 md:pb-6"><img alt="icon" src="/assets/images/quote.svg"> <div class="my-6 text-lg">
+                    دادسان وکیلی با هزینه ی مناسب برای ثبت شرکت بهم معرفی کرد که واقعا راضی بودم هم هزینشون مناسب بود هم سریع کارم رو انجام دادن
+                </div> <div class="flex"><i class="mdi mdi-account-circle-outline text-primary-200 text-xl ml-3"></i> <div><div class="text-sm">کاربر ع.ط</div> <div class="text-xs">
+                            تیرماه 1400
+                            <i class="mdi mdi-circle text-xsDot mx-2"></i>
+                            وکالت
+                        </div></div></div></div> <div class=" kw__comments__card-footer flex items-center p-6 text-sm text-primary-300"><i class="mdi mdi-check-circle leading-zero text-primary ml-2 text-xl"></i>
+                انجام شده توسط
+                وکیل سمیه رستمی
+                در دادسان
+            </div></div></div></div> <div class="text-heading text-165 md:text-200 my-8 md:my-16 font-extrabold text-center">
+    📄 مطالب پر بازدید اخیر
+</div> <div class="p-4 md:p-0 grid md:grid-cols-12 mb-8 md:mb-16"><div class="md:col-span-5 md:col-start-2 md:pl-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D8%B1%D8%A7%D9%87%D9%87%D8%A7%DB%8C-%D8%AC%D9%84%D9%88%DA%AF%DB%8C%D8%B1%DB%8C-%D8%A7%D8%B2-%D9%85%D8%B2%D8%A7%DB%8C%D8%AF%D9%87-%D9%85%D9%84%DA%A9-%D9%85%D9%88%D8%B1%D9%88%D8%AB%DB%8C" class="underline text-lg font-bold mr-2">راههای جلوگیری از مزایده ملک موروثی</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۳/۲۲
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                نحوه مزایده ملک موروثی چگونه است؟ هزینه مزایده ملک موروثی چقدر است؟ متن آگهی مزایده ملک موروثی به چه صورت است؟ راههای جلوگیری از مزایده ملک موروثی چیست؟ بهترین وکیل تهران در ارث
+            </div></div> <div class="md:col-span-5 md:pr-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D9%BE%DB%8C%D8%B4-%D9%82%D8%B3%D8%B7-%D9%85%D9%87%D8%B1%DB%8C%D9%87" class="underline text-lg font-bold mr-2">پیش قسط مهریه</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۳/۱۸
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                پیش قسط مهریه چیست؟ پیش قسط مهریه سال 1400 چقدر است؟ بهترین وکیل تقسیط مهریه چه کسی است؟ هزینه بهترین وکیل مهریه چه میزان است؟ پیش قسط مهریه 1401 چه مقدار است؟ بهترین وکیل مهریه تهران
+            </div></div> <div class="md:col-span-5 md:col-start-2 md:pl-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D8%A7%D8%B9%D8%AA%D8%B1%D8%A7%D8%B6-%D8%A8%D9%87-%D8%AD%DA%A9%D9%85-%D8%B7%D9%84%D8%A7%D9%82" class="underline text-lg font-bold mr-2">اعتراض به حکم طلاق</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۳/۱۷
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                اعتراض به حکم طلاق غیابی چگونه است؟ بهترین وکیل اعتراض به حکم طلاق کیست؟  نمونه لایحه اعتراض به حکم طلاق چگونه نوشته می شود؟آیا  اعتراض به حکم طلاق توافقی ممکن است؟
+            </div></div> <div class="md:col-span-5 md:pr-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D8%A7%D9%86%D8%AA%D9%82%D8%A7%D9%84-%D8%A7%D9%85%D9%88%D8%A7%D9%84-%D9%82%D8%A8%D9%84-%D8%A7%D8%B2-%D8%AF%D8%A7%D8%AF%D8%AE%D9%88%D8%A7%D8%B3%D8%AA-%D8%B7%D9%84%D8%A7%D9%82" class="underline text-lg font-bold mr-2">انتقال اموال قبل از دادخواست طلاق</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۳/۱۱
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                گاهی فرد برای فرار از بدهی، اموال خود را دیگری انتقال می دهد. انتقال اموال قبل از دادخواست طلاق، نمونه بارز این اتفاق است. اگر انتقال اموال قبل از دادخواست طلاق صورت گیرد، برای گرفتن مهریه چه باید کرد؟
+            </div></div> <div class="md:col-span-5 md:col-start-2 md:pl-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D9%88%DA%A9%D8%A7%D9%84%D8%AA-%D8%AA%D8%A7%D9%85-%D8%A7%D9%84%D8%A7%D8%AE%D8%AA%DB%8C%D8%A7%D8%B1-%D9%85%D9%84%DA%A9" class="underline text-lg font-bold mr-2">وکالت تام الاختیار ملک</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۳/۰۸
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                وکیل املاک وظیفه دارد از حقوق موکلش در زمینه های مالی و دعاوی دفاع کند. با دادن وکالت تام الاختیار ملک به وکیل املاک، از مشکلات احتمالی جلوگیری کرده و درصورت وارد شدن ضرر، آن را جبران کنید.
+            </div></div> <div class="md:col-span-5 md:pr-16"><div class="flex items-baseline"><div class="flex md:max-w-md  items-baseline"><i class="mdi mdi-square-rounded text-newSecondary opacity-50"></i> <a href="https://dadsun.app/kw/%D8%A7%D8%B9%D8%AA%D8%B1%D8%A7%D8%B6-%D8%A8%D9%87-%DA%AF%D9%88%D8%A7%D9%87%DB%8C-%D8%A7%D9%86%D8%AD%D8%B5%D8%A7%D8%B1-%D9%88%D8%B1%D8%A7%D8%AB%D8%AA" class="underline text-lg font-bold mr-2">اعتراض به گواهی انحصار وراثت</a> <i class="mdi mdi-circle text-xsDot mx-2"></i></div> <div class="text-bw-800 text-xs whitespace-nowrap">
+                    ۱۴۰۰/۰۲/۲۶
+                </div> <!----></div> <div class="text-sm text-secondary leading-10 mt-2">
+                گواهی انحصار وراثت یک مدرک قانونی است که تعداد ورثه متوفی و میزان سهم الارث را مشخص می کند. اعتراض به گواهی انحصار وراثت چگونه صورت می گیرد؟
+            </div></div></div> <div class="text-heading text-165 md:text-250 font-extrabold text-center mt-8 md:mt-16">
+    💼 وکلای برتر
+    <span class="text-newSecondary">
+                    دادسان
+            </span></div> <div class="text-white text-gray-500 text-xl font-medium text-center mt-2 mb-8">
+    در هر زمینه‌ای بخواهید در دادسان وکیل داریم
+</div> <div class="relative"><div class="kw__lawyers horizontal_scrolling "><button class="kw__slider-next hidden" style="--xPosition: 12px;"><i class="mdi mdi-chevron-left text-xl"></i></button> <button class="kw__slider-prev " style="--xPosition: 13px;"><i class="mdi mdi-chevron-right text-xl"></i></button> <a href="/l/16bt1z" class="kw__lawyers-card ml-9 font-bold"><div class="bg-white  p-6 rounded-tr-md rounded-tl-md"><div class="flex items-center g__fit-width"><hr class="bg-black w-1.5 h-auto ml-3"> <div class="w-full flex text-sm font-bold bg-custom1 rounded-3xl"><img alt="سپیده حبیبی پور کوچک سرایی" src="/assets/images/topLawyers/shp.svg" class="rounded-3xl" style="height: 66px; width: 66px;"> <div class="p-3  rounded-tl-xl rounded-bl-xl relative left-0.5"><i class="mdi mdi-shield-check leading-zero text-xl text-primary-200"></i> <div class="text-xs text-gray-500 font-extrabold">وکیل پایه یک دادگستری</div></div></div></div> <div class="text-lg mt-3 mb-2">سپیده حبیبی پور کوچک سرایی</div> <div class="text-sm text-secondary mb-5 leading-loose font-normal">متخصص در دعاوی خانوادگی و وصول مطالبات</div></div> <div class="p-5 md:p-7 grid md:grid-cols-2 rounded-br-md rounded-bl-md"><div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-briefcase-outline text-primary-200 text-sm ml-2"></i>
+                        سابقه وکالت
+                    </div> <div class="text-sm">
+                        4
+                        سال
+                    </div></div> <div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-star-outline text-primary-200 text-sm ml-2"></i>
+                        امتیاز وکیل
+                    </div> <div class="text-sm">4.5
+                        از ۵ (از مجموع
+                        50
+                        نظر)
+                    </div></div> <div class="mb-4 md:mb-0"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-map-marker-outline text-primary-200 text-sm ml-2"></i>
+                        شهر
+                    </div> <div class="text-sm">تهران</div></div> <div><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-shield-check-outline text-primary-200 text-sm ml-2"></i>
+                        تعداد خدمات
+                    </div> <div class="text-sm">140
+                        ﺧﺪﻣﺖ اﻧﺠﺎم‌ﺷﺪه در دادﺳﺎن
+                    </div></div></div></a><a href="/l/Monamohammadisam" class="kw__lawyers-card ml-9 font-bold"><div class="bg-white  p-6 rounded-tr-md rounded-tl-md"><div class="flex items-center g__fit-width"><hr class="bg-black w-1.5 h-auto ml-3"> <div class="w-full flex text-sm font-bold bg-custom1 rounded-3xl"><img alt="منا محمدی سام" src="/assets/images/topLawyers/mms.svg" class="rounded-3xl" style="height: 66px; width: 66px;"> <div class="p-3  rounded-tl-xl rounded-bl-xl relative left-0.5"><i class="mdi mdi-shield-check leading-zero text-xl text-primary-200"></i> <div class="text-xs text-gray-500 font-extrabold">وکیل پایه یک دادگستری</div></div></div></div> <div class="text-lg mt-3 mb-2">منا محمدی سام</div> <div class="text-sm text-secondary mb-5 leading-loose font-normal">متخصص در تصادفات و دعاوی مربوط به بیمه</div></div> <div class="p-5 md:p-7 grid md:grid-cols-2 rounded-br-md rounded-bl-md"><div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-briefcase-outline text-primary-200 text-sm ml-2"></i>
+                        سابقه وکالت
+                    </div> <div class="text-sm">
+                        10
+                        سال
+                    </div></div> <div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-star-outline text-primary-200 text-sm ml-2"></i>
+                        امتیاز وکیل
+                    </div> <div class="text-sm">4.3
+                        از ۵ (از مجموع
+                        70
+                        نظر)
+                    </div></div> <div class="mb-4 md:mb-0"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-map-marker-outline text-primary-200 text-sm ml-2"></i>
+                        شهر
+                    </div> <div class="text-sm">تهران</div></div> <div><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-shield-check-outline text-primary-200 text-sm ml-2"></i>
+                        تعداد خدمات
+                    </div> <div class="text-sm">210
+                        ﺧﺪﻣﺖ اﻧﺠﺎم‌ﺷﺪه در دادﺳﺎن
+                    </div></div></div></a><a href="/l/Alirezaborji" class="kw__lawyers-card ml-9 font-bold"><div class="bg-white  p-6 rounded-tr-md rounded-tl-md"><div class="flex items-center g__fit-width"><hr class="bg-black w-1.5 h-auto ml-3"> <div class="w-full flex text-sm font-bold bg-custom1 rounded-3xl"><img alt="علیرضا برجی" src="/assets/images/topLawyers/ab.svg" class="rounded-3xl" style="height: 66px; width: 66px;"> <div class="p-3  rounded-tl-xl rounded-bl-xl relative left-0.5"><i class="mdi mdi-shield-check leading-zero text-xl text-primary-200"></i> <div class="text-xs text-gray-500 font-extrabold">وکیل پایه یک دادگستری</div></div></div></div> <div class="text-lg mt-3 mb-2">علیرضا برجی</div> <div class="text-sm text-secondary mb-5 leading-loose font-normal">متخصص در امور کیفری و ملکی و دیوان عدالت</div></div> <div class="p-5 md:p-7 grid md:grid-cols-2 rounded-br-md rounded-bl-md"><div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-briefcase-outline text-primary-200 text-sm ml-2"></i>
+                        سابقه وکالت
+                    </div> <div class="text-sm">
+                        17
+                        سال
+                    </div></div> <div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-star-outline text-primary-200 text-sm ml-2"></i>
+                        امتیاز وکیل
+                    </div> <div class="text-sm">4.3
+                        از ۵ (از مجموع
+                        12
+                        نظر)
+                    </div></div> <div class="mb-4 md:mb-0"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-map-marker-outline text-primary-200 text-sm ml-2"></i>
+                        شهر
+                    </div> <div class="text-sm">تهران</div></div> <div><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-shield-check-outline text-primary-200 text-sm ml-2"></i>
+                        تعداد خدمات
+                    </div> <div class="text-sm">80
+                        ﺧﺪﻣﺖ اﻧﺠﺎم‌ﺷﺪه در دادﺳﺎن
+                    </div></div></div></a><a href="/l/ufk92r" class="kw__lawyers-card ml-9 font-bold"><div class="bg-white  p-6 rounded-tr-md rounded-tl-md"><div class="flex items-center g__fit-width"><hr class="bg-black w-1.5 h-auto ml-3"> <div class="w-full flex text-sm font-bold bg-custom1 rounded-3xl"><img alt="سمیه رستمی" src="/assets/images/topLawyers/sr.svg" class="rounded-3xl" style="height: 66px; width: 66px;"> <div class="p-3  rounded-tl-xl rounded-bl-xl relative left-0.5"><i class="mdi mdi-shield-check leading-zero text-xl text-primary-200"></i> <div class="text-xs text-gray-500 font-extrabold">وکیل پایه یک دادگستری</div></div></div></div> <div class="text-lg mt-3 mb-2">سمیه رستمی</div> <div class="text-sm text-secondary mb-5 leading-loose font-normal">متخصص در امور ثبت شرکت‌ها و برند و طرح و اختراع</div></div> <div class="p-5 md:p-7 grid md:grid-cols-2 rounded-br-md rounded-bl-md"><div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-briefcase-outline text-primary-200 text-sm ml-2"></i>
+                        سابقه وکالت
+                    </div> <div class="text-sm">
+                        15
+                        سال
+                    </div></div> <div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-star-outline text-primary-200 text-sm ml-2"></i>
+                        امتیاز وکیل
+                    </div> <div class="text-sm">5
+                        از ۵ (از مجموع
+                        6
+                        نظر)
+                    </div></div> <div class="mb-4 md:mb-0"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-map-marker-outline text-primary-200 text-sm ml-2"></i>
+                        شهر
+                    </div> <div class="text-sm">تهران</div></div> <div><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-shield-check-outline text-primary-200 text-sm ml-2"></i>
+                        تعداد خدمات
+                    </div> <div class="text-sm">50
+                        ﺧﺪﻣﺖ اﻧﺠﺎم‌ﺷﺪه در دادﺳﺎن
+                    </div></div></div></a><a href="/l/f8kw57" class="kw__lawyers-card ml-9 font-bold"><div class="bg-white  p-6 rounded-tr-md rounded-tl-md"><div class="flex items-center g__fit-width"><hr class="bg-black w-1.5 h-auto ml-3"> <div class="w-full flex text-sm font-bold bg-custom1 rounded-3xl"><img alt="دکتر محمد مهاجری" src="/assets/images/topLawyers/mm.svg" class="rounded-3xl" style="height: 66px; width: 66px;"> <div class="p-3  rounded-tl-xl rounded-bl-xl relative left-0.5"><i class="mdi mdi-shield-check leading-zero text-xl text-primary-200"></i> <div class="text-xs text-gray-500 font-extrabold">وکیل پایه یک دادگستری</div></div></div></div> <div class="text-lg mt-3 mb-2">دکتر محمد مهاجری</div> <div class="text-sm text-secondary mb-5 leading-loose font-normal">متخصص امور حقوقی شرکت‌های تجاری، دانش بنیان و استارتاپ‌ها</div></div> <div class="p-5 md:p-7 grid md:grid-cols-2 rounded-br-md rounded-bl-md"><div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-briefcase-outline text-primary-200 text-sm ml-2"></i>
+                        سابقه وکالت
+                    </div> <div class="text-sm">
+                        4
+                        سال
+                    </div></div> <div class="mb-4"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-star-outline text-primary-200 text-sm ml-2"></i>
+                        امتیاز وکیل
+                    </div> <div class="text-sm">4.3
+                        از ۵ (از مجموع
+                        15
+                        نظر)
+                    </div></div> <div class="mb-4 md:mb-0"><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-map-marker-outline text-primary-200 text-sm ml-2"></i>
+                        شهر
+                    </div> <div class="text-sm">تهران</div></div> <div><div class="flex items-center text-bw-800 text-xs "><i class="mdi mdi-shield-check-outline text-primary-200 text-sm ml-2"></i>
+                        تعداد خدمات
+                    </div> <div class="text-sm">60
+                        ﺧﺪﻣﺖ اﻧﺠﺎم‌ﺷﺪه در دادﺳﺎن
+                    </div></div></div></a></div></div> <div class="my-16"><div class="text-heading text-165 md:text-250 font-extrabold text-center">
+                📱اپلیکیشن
+                <span class="text-newSecondary">دادسان</span></div> <div class="text-white text-gray-500 text-xl font-medium text-center mt-2 mb-8">
+                به راحتی درخواست خود را ثبت کنید، رزومه و قیمت پیشنهادی وکلای متخصص را دریافت کنید
+            </div> <div class="flex flex-col md:flex-row justify-center "><img alt="mobile" src="/assets/images/mobile.svg" loading="lazy" class="md:ml-16"> <div class="md:mx-16"><div class="flex items-center my-5 md:mb-5 md:mt-0"><i class="mdi mdi-square-rounded text-newSecondary ml-4 "></i> <div class="text-xl md:text-lg font-bold">نسخه Android</div></div> <a href="https://cafebazaar.ir/app/com.dadsun.applicant/" target="_blank" rel="nofollow"><img alt="bazarButton" src="/assets/images/bazarButton.svg" loading="lazy" class="mx-auto"></a> <a href="https://play.google.com/store/apps/details?id=com.dadsun.applicant" target="_blank" rel="nofollow"><img alt="PlayStore" src="/assets/images/PlayStore.svg" loading="lazy" class="mt-5 mx-auto"></a></div> <!----></div></div></div>
+
+
+<hr class="g__divider">
+
+<footer class="w-full md:w-11/12 mx-auto">
+            <div class="footer-info flex flex-col md:flex-row mt-10 md:mt-16 mb-8 md:mb-10 ">
+            <div class="flex footer-info-card order-3 md:order-1">
+                <div class="g__card p-4 md:p-6 flex flex-1 flex-col justify-center items-center">
+                    <img alt="privacy" src="/assets/images/benefits/privacy.svg" loading="lazy">
+                    <div class="text-sm font-extrabold mt-3 md:mt-5">
+                        اطلاعات محرمانه
+                    </div>
+                </div>
+                <div class="g__card p-4 md:p-6 mr-3 md:mx-6 flex flex-1 flex-col justify-center items-center ">
+                    <img alt="Advantages" src="/assets/images/benefits/advantages.svg" loading="lazy">
+                    <div class="text-sm font-extrabold mt-3 md:mt-5">
+                        تضمین برگزاری جلسه
+                    </div>
+                </div>
+            </div>
+
+            <div class="g__card p-4 md:p-6 flex-1 flex flex-col my-3 md:my-0 justify-center items-center order-2">
+                <img alt="support" src="/assets/images/benefits/support.svg" loading="lazy">
+                <div class="text-sm font-extrabold mt-3 md:mt-5">
+                    پاسخگویی و پشتیبانی قوی
+                </div>
+            </div>
+
+            <div class="flex footer-info-card order-1 md:order-3">
+                <div class="g__card p-4 md:p-6 flex-1 ml-3 md:mx-6 flex  flex-col justify-center items-center ">
+                    <img alt="expert" src="/assets/images/benefits/experts.svg" loading="lazy">
+                    <div class="text-sm font-extrabold mt-3 md:mt-5">
+                        وکلای متخصص و متعهد
+                    </div>
+                </div>
+                <div class="g__card p-4 md:p-6 flex-1 flex flex-col justify-center items-center">
+                    <img alt="choose" src="/assets/images/benefits/choose.svg" loading="lazy">
+                    <div class="text-sm font-extrabold mt-3 md:mt-5">
+                        همیشه حق انتخاب دارید
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr class="g__divider">
+    <div class="p-4 md:p-0">
+
+
+        <div class="footer grid md:grid-cols-2 md:gap-10 font-bold">
+            <div>
+                <div class="flex text-newSecondary mb-5">
+                    <i class="mdi mdi-square-rounded ml-2 opacity-50"></i>
+                    بیشترین خدمات دادسان در چه شهرهایی بوده ‌است؟
+                </div>
+                <div class="grid grid-cols-3 md:grid-cols-5 ">
+                    <a href="https://dadsun.app/lawyers/%DA%AF%DB%8C%D9%84%D8%A7%D9%86/%D8%B1%D8%B4%D8%AA/all" class="text-sm text-gray-500 mb-5">
+                        وکیل رشت
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%AE%D9%88%D8%B2%D8%B3%D8%AA%D8%A7%D9%86/%D8%A7%D9%87%D9%88%D8%A7%D8%B2/all" class="text-sm text-gray-500 mb-5">
+                        وکیل اهواز
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D9%81%D8%A7%D8%B1%D8%B3/%D8%B4%DB%8C%D8%B1%D8%A7%D8%B2/all" class="text-sm text-gray-500 mb-5">
+                        وکیل شیراز
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D9%82%D9%85/%D9%82%D9%85/all" class="text-sm text-gray-500 mb-5">
+                        وکیل قم
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86/%D8%A7%D8%B5%D9%81%D9%87%D8%A7%D9%86/all" class="text-sm text-gray-500 mb-5">
+                        وکیل اصفهان
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%A2%D8%B0%D8%B1%D8%A8%D8%A7%DB%8C%D8%AC%D8%A7%D9%86-%D8%B4%D8%B1%D9%82%DB%8C/%D8%AA%D8%A8%D8%B1%DB%8C%D8%B2/all" class="text-sm text-gray-500 mb-5">
+                        وکیل تبریز
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87/%DA%A9%D8%B1%D9%85%D8%A7%D9%86%D8%B4%D8%A7%D9%87/all" class="text-sm text-gray-500 mb-5">
+                        وکیل کرمانشاه
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%AE%D8%B1%D8%A7%D8%B3%D8%A7%D9%86-%D8%B1%D8%B6%D9%88%DB%8C/%D9%85%D8%B4%D9%87%D8%AF/all" class="text-sm text-gray-500 mb-5">
+                        وکیل مشهد
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%A7%D9%84%D8%A8%D8%B1%D8%B2/%DA%A9%D8%B1%D8%AC/all" class="text-sm text-gray-500 mb-5">
+                        وکیل کرج
+                    </a>
+                    <a href="https://dadsun.app/lawyers/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/%D8%AA%D9%87%D8%B1%D8%A7%D9%86/all" class="text-sm text-gray-500 mb-5">
+                        وکیل تهران
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:pr-16">
+                <div class="flex text-newSecondary mb-5">
+                    <i class="mdi mdi-square-rounded ml-2 opacity-50"></i>
+                    یافتن وکیل
+                </div>
+                <div class="grid grid-cols-3 md:grid-cols-4 ">
+                    <a href="/lawyers" class="text-sm text-gray-500 mb-5">
+                        لیست وکلا
+                    </a>
+                    <a href="/demand" class="text-sm text-gray-500 mb-5">
+                        معرفی وکیل
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex text-newSecondary mb-5">
+                    <i class="mdi mdi-square-rounded ml-2 opacity-50"></i>
+                    دادسان
+                </div>
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <a href="/privacy" class="text-sm text-gray-500 mb-5">
+                        حریم شخصی
+                    </a>
+                    <a href="/" class="text-sm text-gray-500 mb-5">
+                        فرصت‌های شغلی
+                    </a>
+                    
+                    
+                    
+                    <a href="/benefits" class="text-sm text-gray-500 mb-5">
+                        مزایا دادسان
+                    </a>
+                    <a href="/contact_us" class="text-sm text-gray-500 mb-5">
+                        تماس با ما
+                    </a>
+                </div>
+                <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+                    <a href="/pricing" class="text-sm text-gray-500 mb-5">
+                        هزینه خدمات
+                    </a>
+                    <a href="/contact_us" class="text-sm text-gray-500 mb-5">
+                        گزارش خطا
+                    </a>
+                    <a href="/about_us" class="text-sm text-gray-500 mb-5">
+                        درباره ما
+                    </a>
+                    <a href="/blogs" class="text-sm text-gray-500 mb-5">
+                        بلاگ
+                    </a>
+                </div>
+            </div>
+
+            <div class="md:pr-16">
+                <div class="flex text-newSecondary mb-5">
+                    <i class="mdi mdi-square-rounded ml-2 opacity-50"></i>
+                    ثبت‌نام
+                </div>
+                <div class="grid grid-cols-3 lg:grid-cols-5 ">
+                    <a href="/login" class="text-sm text-gray-500 mb-5">
+                        ورود کابران
+                    </a>
+                    <a href="/terms/applicant" class="text-sm text-gray-500 mb-5">
+                        قوانین کاربران
+                    </a>
+                    <a href="/register" class="text-sm text-gray-500 mb-5">
+                        ثبت‌نام کاربر
+                    </a>
+                </div>
+                <div class="grid grid-cols-3 lg:grid-cols-5 ">
+                    <a href="/login" class="text-sm text-gray-500 mb-5">
+                        ورود وکلا
+                    </a>
+                    <a href="/terms/lawyer" class="text-sm text-gray-500 mb-5">
+                        قوانین وکلا
+                    </a>
+                    <a href="/register" class="text-sm text-gray-500 mb-5">
+                        ثبت‌نام وکیل
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+        <hr class="g__divider">
+
+        <div class="footer grid md:grid-cols-2 md:gap-10">
+            <div>
+                <div class="flex items-center ">
+                    <img height="28" alt="logo" src="/assets/images/logos/logo.svg">
+                    <hr style="height: 24px" class="g__divider mx-4">
+                    <div class="text-sm">انتخاب هوشمندانه وکیل</div>
+                </div>
+                <div class="text-secondary xl:leading-loose mt-4">«دادسان» یک موسسه حقوقی نیست بلکه یک سامانه اینترنتی
+                    است
+                    که به
+                    کمک فناوری های نوین و با رعایت کلیه ضوابط و
+                    شئونات وکالت، ارتباط بین متقاضیان خدمات حقوقی با وکلای متخصص در آن حوزه را برقرار می کند تا متقاضیان
+                    به
+                    راحتی با مقایسه رزومه و پیشنهادات ارسالی وکلا، وکیل مناسب خود را انتخاب کنند. علاوه بر آن »دادسان«
+                    با
+                    ارایه
+                    سرویس هایی چون پرداخت امن، هماهنگی جلسه، پیام رسان حقوقی و… به وکلا و متقاضیان در داشتن ارتباطی
+                    آسان‌تر
+                    و
+                    سریع‌تر یاری می رساند.
+                </div>
+            </div>
+
+            <div class="md:pr-16">
+                <div class="flex text-newSecondary mb-5 mt-5 md:mt-0">
+                    <i class="mdi mdi-square-rounded ml-2 opacity-50"></i>
+                    راه‌های ارتباطی
+                </div>
+                <div class="text-sm flex items-center">
+                    دادسان در شبکه‌های اجتماعی
+                    <a href="https://instagram.com/dadsun" rel="nofollow" target="_blank" class="mr-4">
+                        <img loading="lazy" alt="instagram" src="/assets/images/instagram.svg">
+                    </a>
+                    <a href="https://t.me/dadsun" rel="nofollow" target="_blank" class="mx-3">
+                        <img loading="lazy" alt="telegram" src="/assets/images/telegram.svg">
+                    </a>
+                    <a href="https://linkedin.com/company/dadsun" rel="nofollow" target="_blank">
+                        <img loading="lazy" alt="linkedin" src="/assets/images/linkedin.svg">
+                    </a>
+                </div>
+
+                <div class="text-sm flex items-center my-5">
+                    <i class="mdi mdi-email-outline text-xl ml-3 text-primary-300"></i>
+                    info@dadsun.app
+                </div>
+                <div class="text-sm flex items-center my-5">
+                    <i class="mdi mdi-phone-outline text-xl ml-3 text-primary-300"></i>
+                    تلفن تماس:
+                    <span class="mx-2">021-88676910</span>
+                    <span>09304687518</span>
+                </div>
+                <div class="text-sm flex items-center my-5">
+                    <i class="mdi mdi-map-marker-outline text-xl ml-3 text-primary-300"></i>
+                    خیابان ولیعصر بالاتر از سه راه توانیر نبش کوچه شفق ساختمان 2361 طبقه چهارم واحد 15
+                </div>
+            </div>
+        </div>
+                    <div class="flex justify-center flex-wrap g__fit-width mx-auto bg-primary-light p-5">
+                <a target="_blank" class="flex" href="http://ircreative.isti.ir/pub.php" rel="nofollow">
+                    <img loading="lazy" alt="khalagh" class="footer-logo" src="/assets/images/khalagh.svg">
+                </a>
+                <a target="_blank" href="https://dadsun.app/anjoman.pdf" class="flex">
+                    <img loading="lazy" alt="anjoomanSenfi" class="footer-logo " src="/assets/images/anjoomanSenfi.svg">
+                </a>
+                <img id="jxlzjzpenbqeapfujzpewlao" onclick="window.open(&quot;https://logo.samandehi.ir/Verify.aspx?id=172574&amp;p=rfthjyoeuiwkdshwjyoeaods&quot;, &quot;Popup&quot;,&quot;toolbar=no, scrollbars=no, location=no, statusbar=no, menubar=no, resizable=0, width=450, height=630, top=30&quot;)" alt="logo-samandehi" loading="lazy" class="footer-logo cursor-pointer" src="https://logo.samandehi.ir/logo.aspx?id=172574&amp;p=nbpdyndtodrfujynyndtshwl">
+                <a target="_blank" rel="nofollow" class="flex" href="https://pub.daneshbonyan.ir/">
+                    <img loading="lazy" alt="daneshBonyan" src="/assets/images/daneshBonyan.svg">
+                </a>
+                <a target="_blank" class="flex" href="https://trustseal.enamad.ir/?id=168150&amp;Code=NNDewVcusfmSZjs6NXzL">
+                    <img id="NNDewVcusfmSZjs6NXzL" loading="lazy" alt="enemad" class="footer-logo" src="https://Trustseal.eNamad.ir/logo.aspx?id=168150&amp;Code=NNDewVcusfmSZjs6NXzL">
+                </a>
+            </div>
+                <div class="mx-auto g__fit-width text-sm my-5 text-secondary text-center">
+            تمامی حقوق این سایت به شرکت آینده سازان هوشمند دادسان تعلق دارد 1400-1396
+        </div>
+    </div>
+</footer>
+
+
+<script src="/js/axios.min.js?id=e63531350b726384f625" defer=""></script>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="https://dadsun.app/js/vue.min.js" defer=""></script>
+    <script type="module" src="https://dadsun.app/js/landing.min.js" defer=""></script>
+
+
+
+
+
+
+
+</body></html>
+
+/* CSS */
+html { tab-size: 4; line-height: 1.15; text-size-adjust: 100%; }
+body { margin: 0px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
+[v-cloak] { display: none; }
+.open-sidenav { width: 202px !important; }
+body.modal-open { overflow: hidden; }
+.mdi-phone-outline::before { content: "󰷰"; }
+hr { height: 0px; color: inherit; }
+button, input { font-family: inherit; font-size: 100%; line-height: 1.15; margin: 0px; }
+button { text-transform: none; appearance: button; }
+h1, h2, h3, hr { margin: 0px; }
+button { background-color: transparent; background-image: none; }
+ol { margin: 0px; padding: 0px; list-style: none; }
+html { font-family: IranYekanRegular, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; line-height: 1.5; }
+body { font-family: inherit; line-height: inherit; }
+*, ::after, ::before { box-sizing: border-box; border: 0px solid; }
+hr { border-top-width: 1px; }
+img { border-style: solid; }
+input::placeholder { color: rgb(156, 163, 175); }
+button { cursor: pointer; }
+h1, h2, h3 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+button, input { padding: 0px; line-height: inherit; color: inherit; }
+img { display: block; vertical-align: middle; max-width: 100%; height: auto; }
+*, ::after, ::before { --tw-border-opacity: 1; border-color: rgba(229,231,235,var(--tw-border-opacity)); }
+[type="text"] { appearance: none; background-color: rgb(255, 255, 255); border-color: rgb(107, 114, 128); border-width: 1px; border-radius: 0px; padding: 0.5rem 0.75rem; font-size: 1rem; line-height: 1.5rem; }
+[type="text"]:focus { outline: transparent solid 2px; outline-offset: 2px; --tw-ring-inset: var(--tw-empty,); --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: #2563eb; --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 transparent); border-color: rgb(37, 99, 235); }
+input::placeholder { color: rgb(107, 114, 128); opacity: 1; }
+h1 { font-size: 2.25rem; line-height: 2.5rem; }
+h1, h2 { font-weight: 800; }
+h2, h3 { font-size: 1.5rem; line-height: 2rem; }
+h3 { font-weight: 700; }
+.relative { position: relative; }
+.left-0\.5 { left: 0.125rem; }
+.order-1 { order: 1; }
+.order-2 { order: 2; }
+.order-3 { order: 3; }
+.col-span-full { grid-column: 1 / -1; }
+.mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+.mx-3 { margin-left: 0.75rem; margin-right: 0.75rem; }
+.mx-4 { margin-left: 1rem; margin-right: 1rem; }
+.mx-10 { margin-left: 2.5rem; margin-right: 2.5rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-3 { margin-top: 0.75rem; margin-bottom: 0.75rem; }
+.my-5 { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+.my-6 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.my-7 { margin-top: 1.75rem; margin-bottom: 1.75rem; }
+.my-8 { margin-top: 2rem; margin-bottom: 2rem; }
+.my-16 { margin-top: 4rem; margin-bottom: 4rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-10 { margin-top: 2.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+.mr-3 { margin-right: 0.75rem; }
+.mr-4 { margin-right: 1rem; }
+.mr-6 { margin-right: 1.5rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 1.25rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+.ml-2 { margin-left: 0.5rem; }
+.ml-3 { margin-left: 0.75rem; }
+.ml-4 { margin-left: 1rem; }
+.ml-9 { margin-left: 2.25rem; }
+.flex { display: flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+.h-16 { height: 4rem; }
+.h-auto { height: auto; }
+.h-full { height: 100%; }
+.w-1\.5 { width: 0.375rem; }
+.w-full { width: 100%; }
+.flex-1 { flex: 1 1 0%; }
+.select-none { user-select: none; }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0px, 1fr)); }
+.flex-col { flex-direction: column; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.overflow-hidden { overflow: hidden; }
+.whitespace-nowrap { white-space: nowrap; }
+.rounded { border-radius: 0.25rem; }
+.rounded-md { border-radius: 0.375rem; }
+.rounded-3xl { border-radius: 1.5rem; }
+.rounded-tl-md { border-top-left-radius: 0.375rem; }
+.rounded-tl-xl { border-top-left-radius: 0.75rem; }
+.rounded-tr-md { border-top-right-radius: 0.375rem; }
+.rounded-br-md { border-bottom-right-radius: 0.375rem; }
+.rounded-bl-md { border-bottom-left-radius: 0.375rem; }
+.rounded-bl-xl { border-bottom-left-radius: 0.75rem; }
+.border-0 { border-width: 0px; }
+.border-2 { border-width: 2px; }
+.border { border-width: 1px; }
+.border-dashed { border-style: dashed; }
+.border-red-500 { --tw-border-opacity: 1; border-color: rgba(239,68,68,var(--tw-border-opacity)); }
+.bg-transparent { background-color: transparent; }
+.bg-black { --tw-bg-opacity: 1; background-color: rgba(0,0,0,var(--tw-bg-opacity)); }
+.bg-white { --tw-bg-opacity: 1; background-color: rgba(255,255,255,var(--tw-bg-opacity)); }
+.bg-primary-300 { --tw-bg-opacity: 1; background-color: rgba(0,152,143,var(--tw-bg-opacity)); }
+.bg-custom1 { --tw-bg-opacity: 1; background-color: rgba(250,250,255,var(--tw-bg-opacity)); }
+.hover\:bg-gray-300:hover { --tw-bg-opacity: 1; background-color: rgba(209,213,219,var(--tw-bg-opacity)); }
+.hover\:bg-primary-100:hover { --tw-bg-opacity: 1; background-color: rgba(212,238,236,var(--tw-bg-opacity)); }
+.hover\:bg-opacity-80:hover { --tw-bg-opacity: 0.8; }
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+.py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-7 { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+.py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.pl-2 { padding-left: 0.5rem; }
+.text-center { text-align: center; }
+.text-165 { font-size: 1.65rem; }
+.text-275 { font-size: 2.75rem; }
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-lg { font-size: 1.125rem; }
+.text-lg, .text-xl { line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-xsDot { font-size: 4px; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.leading-9 { line-height: 2.25rem; }
+.leading-10 { line-height: 2.5rem; }
+.leading-none { line-height: 1; }
+.leading-loose { line-height: 2; }
+.leading-zero { line-height: 0; }
+.leading-extra { line-height: 3.125rem; }
+.text-black { --tw-text-opacity: 1; color: rgba(0,0,0,var(--tw-text-opacity)); }
+.text-white { --tw-text-opacity: 1; color: rgba(255,255,255,var(--tw-text-opacity)); }
+.text-gray-500 { --tw-text-opacity: 1; color: rgba(107,114,128,var(--tw-text-opacity)); }
+.text-secondary { --tw-text-opacity: 1; color: rgba(66,66,66,var(--tw-text-opacity)); }
+.text-newSecondary { --tw-text-opacity: 1; color: rgba(254,77,32,var(--tw-text-opacity)); }
+.text-heading { --tw-text-opacity: 1; color: rgba(68,21,81,var(--tw-text-opacity)); }
+.text-primary-200 { --tw-text-opacity: 1; color: rgba(89,190,183,var(--tw-text-opacity)); }
+.text-primary-300 { --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); }
+.text-bw-800 { --tw-text-opacity: 1; color: rgba(111,111,111,var(--tw-text-opacity)); }
+.hover\:text-black:hover { --tw-text-opacity: 1; color: rgba(0,0,0,var(--tw-text-opacity)); }
+.underline { text-decoration: underline; }
+.opacity-50 { opacity: 0.5; }
+*, ::after, ::before { --tw-shadow: 0 0 transparent; }
+.shadow-header { --tw-shadow: -3px 3px 6px rgba(0,0,0,0.08); box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow); }
+.focus\:outline-none:focus { outline: transparent solid 2px; outline-offset: 2px; }
+*, ::after, ::before { --tw-ring-inset: var(--tw-empty,); --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: rgba(59,130,246,0.5); --tw-ring-offset-shadow: 0 0 transparent; --tw-ring-shadow: 0 0 transparent; }
+.slider-card { height: 476px; width: 500px; flex: 0 0 auto; }
+@media only screen and (max-width: 1263px) {
+  .slider-card { height: 464px; width: 343px; }
+}
+.horizontal_scrolling { overflow: scroll hidden; width: 100vw; display: flex; direction: ltr; scrollbar-width: none; }
+.horizontal_scrolling::-webkit-scrollbar { display: none; }
+.footer { padding: 40px 100px 20px 0px; }
+@media only screen and (max-width: 1263px) {
+  .footer { padding: 40px 0px 0px; }
+}
+.g__select { z-index: 1; position: absolute; color: rgb(0, 0, 0); right: 0px; width: 100%; background-color: rgb(255, 255, 255); padding: 12px 0px; background-position: left 0.5rem center; max-height: 300px; overflow-y: auto; }
+.g__select-selection [type="text"]:focus { outline: none; --tw-ring-shadow: unset; }
+.g__select__open-top { top: 46px; }
+.g__select li { height: 48px; padding: 0px 16px; display: flex; align-items: center; }
+.g__select li:hover { background: rgb(246, 246, 246); }
+.g__select-active { --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); background-color: rgba(0, 152, 143, 0.1); }
+.g__divider { height: auto; border: 0.5px solid rgba(0, 0, 0, 0.12); }
+.g__card { background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 8px 0px; }
+.g__fit-width { width: fit-content; }
+.g__btn-large { display: flex; justify-content: center; align-items: center; border-radius: 4px; padding: 0px 1.5rem; white-space: nowrap; height: 44px; }
+h2 { color: rgb(33, 33, 33); line-height: 1.75; font-size: 1.5rem; margin-bottom: 0px; }
+h2:not(:first-child) { margin-top: 44px; }
+h1, h3 { color: rgb(84, 84, 84); }
+* { text-align: right; direction: rtl; -webkit-tap-highlight-color: transparent; line-height: 2; }
+html { color: rgb(33, 33, 33); font-size: 16px; }
+@media only screen and (max-width: 959px) {
+  html { font-size: 14px; }
+}
+a:focus, button:focus { outline: none; }
+.sidenav { height: 100%; width: 0px; position: fixed; z-index: 20; top: 56px; right: -2px; background-color: rgb(255, 255, 255); overflow-x: hidden; transition: 0.5s; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px; }
+.footer-info-card { width: 38%; }
+@media only screen and (max-width: 959px) {
+  .footer-info-card { width: 100%; }
+}
+.footer-info img { height: 120px; width: 120px; }
+@media only screen and (max-width: 959px) {
+  .footer-info img { height: 80px; width: 80px; }
+}
+.mdi::before { display: inline-block; font-style: normal; font-variant: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-weight: normal; font-stretch: normal; font-family: "Material Design Icons"; font-size: inherit; text-rendering: auto; line-height: inherit; -webkit-font-smoothing: antialiased; }
+.mdi-chevron-right::before { content: "󰅂"; }
+.mdi-chevron-left::before { content: "󰅁"; }
+.mdi-map-marker-outline::before { content: "󰟙"; }
+.mdi-shield-check-outline::before { content: "󰳈"; }
+.mdi-square-rounded::before { content: "󱓻"; }
+.mdi-email-outline::before { content: "󰇰"; }
+.mdi-menu::before { content: "󰍜"; }
+.mdi-menu-down::before { content: "󰍝"; }
+.mdi-check-circle::before { content: "󰗠"; }
+.mdi-account-circle-outline::before { content: "󰭕"; }
+@media (min-width: 960px) {
+  .md\:order-1 { order: 1; }
+  .md\:order-3 { order: 3; }
+  .md\:col-span-5 { grid-column: span 5 / span 5; }
+  .md\:col-start-2 { grid-column-start: 2; }
+  .md\:col-start-3 { grid-column-start: 3; }
+  .md\:mx-6 { margin-left: 1.5rem; margin-right: 1.5rem; }
+  .md\:mx-10 { margin-left: 2.5rem; margin-right: 2.5rem; }
+  .md\:mx-16 { margin-left: 4rem; margin-right: 4rem; }
+  .md\:my-0 { margin-top: 0px; margin-bottom: 0px; }
+  .md\:my-16 { margin-top: 4rem; margin-bottom: 4rem; }
+  .md\:mt-0 { margin-top: 0px; }
+  .md\:mt-5 { margin-top: 1.25rem; }
+  .md\:mt-8 { margin-top: 2rem; }
+  .md\:mt-11 { margin-top: 2.75rem; }
+  .md\:mt-16 { margin-top: 4rem; }
+  .md\:mr-0 { margin-right: 0px; }
+  .md\:mb-0 { margin-bottom: 0px; }
+  .md\:mb-5 { margin-bottom: 1.25rem; }
+  .md\:mb-10 { margin-bottom: 2.5rem; }
+  .md\:mb-12 { margin-bottom: 3rem; }
+  .md\:mb-14 { margin-bottom: 3.5rem; }
+  .md\:mb-16 { margin-bottom: 4rem; }
+  .md\:ml-0 { margin-left: 0px; }
+  .md\:ml-3 { margin-left: 0.75rem; }
+  .md\:ml-10 { margin-left: 2.5rem; }
+  .md\:ml-16 { margin-left: 4rem; }
+  .md\:flex { display: flex; }
+  .md\:hidden { display: none; }
+  .md\:w-3\/12 { width: 25%; }
+  .md\:w-10\/12 { width: 83.3333%; }
+  .md\:w-11\/12 { width: 91.6667%; }
+  .md\:max-w-md { max-width: 28rem; }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0px, 1fr)); }
+  .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0px, 1fr)); }
+  .md\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0px, 1fr)); }
+  .md\:grid-cols-11 { grid-template-columns: repeat(11, minmax(0px, 1fr)); }
+  .md\:grid-cols-12 { grid-template-columns: repeat(12, minmax(0px, 1fr)); }
+  .md\:flex-row { flex-direction: row; }
+  .md\:justify-center { justify-content: center; }
+  .md\:gap-10 { gap: 2.5rem; }
+  .md\:p-0 { padding: 0px; }
+  .md\:p-6 { padding: 1.5rem; }
+  .md\:p-7 { padding: 1.75rem; }
+  .md\:p-10 { padding: 2.5rem; }
+  .md\:px-0 { padding-left: 0px; padding-right: 0px; }
+  .md\:px-4 { padding-left: 1rem; padding-right: 1rem; }
+  .md\:px-10 { padding-left: 2.5rem; padding-right: 2.5rem; }
+  .md\:py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+  .md\:pt-10 { padding-top: 2.5rem; }
+  .md\:pr-16 { padding-right: 4rem; }
+  .md\:pb-6 { padding-bottom: 1.5rem; }
+  .md\:pb-10 { padding-bottom: 2.5rem; }
+  .md\:pl-0 { padding-left: 0px; }
+  .md\:pl-16 { padding-left: 4rem; }
+  .md\:text-200 { font-size: 2rem; }
+  .md\:text-250 { font-size: 2.5rem; }
+  .md\:text-base { font-size: 1rem; line-height: 1.5rem; }
+  .md\:text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+  .md\:text-2xl { font-size: 1.5rem; line-height: 2rem; }
+  .md\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+}
+@media (min-width: 1264px) {
+  .lg\:w-10\/12 { width: 83.3333%; }
+  .lg\:grid-cols-5 { grid-template-columns: repeat(5, minmax(0px, 1fr)); }
+}
+@media (min-width: 1904px) {
+  .xl\:w-8\/12 { width: 66.6667%; }
+  .xl\:leading-loose { line-height: 2; }
+}
+.kw__header { background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 60px; }
+@media only screen and (max-width: 959px) {
+  .kw__header { padding: 20px; }
+}
+.kw__header_city-card { border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px 0px; background-image: linear-gradient(0deg, rgba(0, 152, 143, 0.05), rgba(254, 77, 32, 0.05)), linear-gradient(90deg, rgb(0, 152, 142), rgba(80, 128, 107, 0), rgba(254, 77, 32, 0), rgb(254, 77, 32)); padding: 1px; width: 500px; }
+@media only screen and (max-width: 959px) {
+  .kw__header_city-card { width: 100%; }
+}
+.kw__header_city-card-content { border-radius: 6px; color: rgb(255, 255, 255); padding: 2rem 95px; background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.2) -20px 20px 60px 0px; }
+@media only screen and (max-width: 959px) {
+  .kw__header_city-card-content { width: 100%; padding: 32px 20px; }
+}
+.kw__header-icon { margin: 0px 12px; font-size: 6px; --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); }
+.kw__lawyers { background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px; padding: 40px; }
+@media only screen and (max-width: 959px) {
+  .kw__lawyers { padding: 20px; }
+}
+.kw__lawyers-card { width: 500px; flex: 0 0 auto; box-shadow: rgb(99, 46, 115) 16px -16px 0px 0px; position: relative; transition: 0.1s; --tw-bg-opacity: 1; background-color: rgba(250,250,255,var(--tw-bg-opacity)); }
+@media only screen and (max-width: 1263px) {
+  .kw__lawyers-card { width: 281px; }
+}
+.kw__lawyers-card:hover { bottom: 0.7px; box-shadow: none; }
+.kw__comments { padding: 40px; --tw-bg-opacity: 1; background-color: rgba(0,152,143,var(--tw-bg-opacity)); }
+@media only screen and (max-width: 959px) {
+  .kw__comments { padding: 10px; }
+}
+.kw__comments__card { background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: rgb(89, 190, 183) 16px -16px 0px 0px; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+@media only screen and (max-width: 959px) {
+  .kw__comments__card { box-shadow: none; }
+}
+.kw__comments__card:hover { box-shadow: none; transform: scale(1.04); transform-origin: left bottom; }
+.kw__comments__card-footer { background-color: rgba(46, 196, 100, 0.1); }
+.kw__slider-next, .kw__slider-prev { position: absolute; top: 50%; background-color: rgb(33, 33, 33); width: 45px; margin-top: -22px; height: 45px; text-align: center; font-size: 20px; line-height: 1; color: rgb(255, 255, 255); border-radius: 50%; font-weight: 700; transition: 0.6s; user-select: none; box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px 0px; z-index: 1; }
+.kw__slider-next:focus, .kw__slider-prev:focus { outline: none; }
+.kw__slider-next { left: var(--xPosition); }
+.kw__slider-prev { right: var(--xPosition); }
+.landing__animation { height: 720px; width: 720px; }
+@media only screen and (max-width: 959px) {
+  .landing__animation { height: 347px; width: 347px; }
+}
+.landing__city { height: 468px; background-image: url("/assets/images/IranMap.svg"), linear-gradient(rgb(255, 243, 240), rgba(255, 243, 240, 0)); background-repeat: no-repeat; background-size: contain; background-position: 118px 24px, 0px 0px; }
+@media only screen and (max-width: 959px) {
+  .landing__city { background-position: center bottom; height: 340px; }
+}
+@media only screen and (max-width: 959px) {
+  .landing__benefits { overflow: auto; width: 100vw; scrollbar-width: none; }
+}
+.landing__benefits__card { width: 420px; }
+@media only screen and (max-width: 959px) {
+  .landing__benefits__card { flex: 0 0 auto; width: 300px; }
+}
+.landing__benefits::-webkit-scrollbar { display: none; }
+.landing__benefits img { height: 180px; width: 180px; }
+.landing__statistic-card { width: 38%; }
+@media only screen and (max-width: 959px) {
+  .landing__statistic-card { width: 100%; }
+}
+.landing__statistic-card-margin { margin: -24px 0px; }
+@media only screen and (max-width: 959px) {
+  .landing__statistic-card-margin { margin: 20px 1rem; }
+}
+.mdi-star-outline::before { content: "󰓒"; }
+.mdi-arrow-left::before { content: "󰁍"; }
+.mdi-circle::before { content: "󰝥"; }
+.mdi-shield-check::before { content: "󰕥"; }
+.mdi-briefcase-outline::before { content: "󰠔"; }
+@font-face { font-family: IranYekanRegular; src: url("/fonts/iranyekanwebregularfanum.woff") format("woff"), url("/fonts/iranyekanwebregularfanum.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: IranYekanRegular; src: url("/fonts/iranyekanwebboldfanum.woff") format("woff"), url("/fonts/iranyekanwebboldfanum.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "Material Design Icons"; src: url("/fonts/materialdesignicons-webfont.woff2?v=5.9.55") format("woff2"), url("/fonts/materialdesignicons-webfont.woff?v=5.9.55") format("woff"), url("/fonts/materialdesignicons-webfont.ttf?v=5.9.55") format("truetype"); font-weight: 400; font-style: normal; }
+
+.mdi-phone-outline::before { content: "󰷰"; }
+html { tab-size: 4; line-height: 1.15; text-size-adjust: 100%; }
+body { margin: 0px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"; }
+[v-cloak] { display: none; }
+.open-sidenav { width: 202px !important; }
+body.modal-open { overflow: hidden; }
+hr { height: 0px; color: inherit; }
+button, input { font-family: inherit; font-size: 100%; line-height: 1.15; margin: 0px; }
+button { text-transform: none; appearance: button; }
+h1, h2, h3, hr { margin: 0px; }
+button { background-color: transparent; background-image: none; }
+ol { margin: 0px; padding: 0px; list-style: none; }
+html { font-family: IranYekanRegular, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; line-height: 1.5; }
+body { font-family: inherit; line-height: inherit; }
+*, ::after, ::before { box-sizing: border-box; border: 0px solid; }
+hr { border-top-width: 1px; }
+img { border-style: solid; }
+input::placeholder { color: rgb(156, 163, 175); }
+button { cursor: pointer; }
+h1, h2, h3 { font-size: inherit; font-weight: inherit; }
+a { color: inherit; text-decoration: inherit; }
+button, input { padding: 0px; line-height: inherit; color: inherit; }
+img { display: block; vertical-align: middle; max-width: 100%; height: auto; }
+*, ::after, ::before { --tw-border-opacity: 1; border-color: rgba(229,231,235,var(--tw-border-opacity)); }
+[type="text"] { appearance: none; background-color: rgb(255, 255, 255); border-color: rgb(107, 114, 128); border-width: 1px; border-radius: 0px; padding: 0.5rem 0.75rem; font-size: 1rem; line-height: 1.5rem; }
+[type="text"]:focus { outline: transparent solid 2px; outline-offset: 2px; --tw-ring-inset: var(--tw-empty,); --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: #2563eb; --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color); --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color); box-shadow: var(--tw-ring-offset-shadow),var(--tw-ring-shadow),var(--tw-shadow,0 0 transparent); border-color: rgb(37, 99, 235); }
+input::placeholder { color: rgb(107, 114, 128); opacity: 1; }
+h1 { font-size: 2.25rem; line-height: 2.5rem; }
+h1, h2 { font-weight: 800; }
+h2, h3 { font-size: 1.5rem; line-height: 2rem; }
+h3 { font-weight: 700; }
+.relative { position: relative; }
+.left-0\.5 { left: 0.125rem; }
+.order-1 { order: 1; }
+.order-2 { order: 2; }
+.order-3 { order: 3; }
+.col-span-full { grid-column: 1 / -1; }
+.mx-2 { margin-left: 0.5rem; margin-right: 0.5rem; }
+.mx-3 { margin-left: 0.75rem; margin-right: 0.75rem; }
+.mx-4 { margin-left: 1rem; margin-right: 1rem; }
+.mx-10 { margin-left: 2.5rem; margin-right: 2.5rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.my-3 { margin-top: 0.75rem; margin-bottom: 0.75rem; }
+.my-5 { margin-top: 1.25rem; margin-bottom: 1.25rem; }
+.my-6 { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+.my-7 { margin-top: 1.75rem; margin-bottom: 1.75rem; }
+.my-8 { margin-top: 2rem; margin-bottom: 2rem; }
+.my-16 { margin-top: 4rem; margin-bottom: 4rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mt-10 { margin-top: 2.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+.mr-3 { margin-right: 0.75rem; }
+.mr-4 { margin-right: 1rem; }
+.mr-6 { margin-right: 1.5rem; }
+.mb-1 { margin-bottom: 0.25rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 1.25rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-8 { margin-bottom: 2rem; }
+.mb-10 { margin-bottom: 2.5rem; }
+.ml-2 { margin-left: 0.5rem; }
+.ml-3 { margin-left: 0.75rem; }
+.ml-4 { margin-left: 1rem; }
+.ml-9 { margin-left: 2.25rem; }
+.flex { display: flex; }
+.grid { display: grid; }
+.hidden { display: none; }
+.h-16 { height: 4rem; }
+.h-auto { height: auto; }
+.h-full { height: 100%; }
+.w-1\.5 { width: 0.375rem; }
+.w-full { width: 100%; }
+.flex-1 { flex: 1 1 0%; }
+.select-none { user-select: none; }
+.grid-cols-3 { grid-template-columns: repeat(3, minmax(0px, 1fr)); }
+.flex-col { flex-direction: column; }
+.items-end { align-items: flex-end; }
+.items-center { align-items: center; }
+.items-baseline { align-items: baseline; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.justify-end { justify-content: flex-end; }
+.overflow-hidden { overflow: hidden; }
+.whitespace-nowrap { white-space: nowrap; }
+.rounded { border-radius: 0.25rem; }
+.rounded-md { border-radius: 0.375rem; }
+.rounded-3xl { border-radius: 1.5rem; }
+.rounded-tl-md { border-top-left-radius: 0.375rem; }
+.rounded-tl-xl { border-top-left-radius: 0.75rem; }
+.rounded-tr-md { border-top-right-radius: 0.375rem; }
+.rounded-br-md { border-bottom-right-radius: 0.375rem; }
+.rounded-bl-md { border-bottom-left-radius: 0.375rem; }
+.rounded-bl-xl { border-bottom-left-radius: 0.75rem; }
+.border-0 { border-width: 0px; }
+.border-2 { border-width: 2px; }
+.border { border-width: 1px; }
+.border-dashed { border-style: dashed; }
+.border-red-500 { --tw-border-opacity: 1; border-color: rgba(239,68,68,var(--tw-border-opacity)); }
+.bg-transparent { background-color: transparent; }
+.bg-black { --tw-bg-opacity: 1; background-color: rgba(0,0,0,var(--tw-bg-opacity)); }
+.bg-white { --tw-bg-opacity: 1; background-color: rgba(255,255,255,var(--tw-bg-opacity)); }
+.bg-primary-300 { --tw-bg-opacity: 1; background-color: rgba(0,152,143,var(--tw-bg-opacity)); }
+.bg-custom1 { --tw-bg-opacity: 1; background-color: rgba(250,250,255,var(--tw-bg-opacity)); }
+.hover\:bg-gray-300:hover { --tw-bg-opacity: 1; background-color: rgba(209,213,219,var(--tw-bg-opacity)); }
+.hover\:bg-primary-100:hover { --tw-bg-opacity: 1; background-color: rgba(212,238,236,var(--tw-bg-opacity)); }
+.hover\:bg-opacity-80:hover { --tw-bg-opacity: 0.8; }
+.p-3 { padding: 0.75rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+.py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-7 { padding-top: 1.75rem; padding-bottom: 1.75rem; }
+.py-10 { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.pl-2 { padding-left: 0.5rem; }
+.text-center { text-align: center; }
+.text-165 { font-size: 1.65rem; }
+.text-275 { font-size: 2.75rem; }
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-lg { font-size: 1.125rem; }
+.text-lg, .text-xl { line-height: 1.75rem; }
+.text-xl { font-size: 1.25rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+.text-xsDot { font-size: 4px; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.leading-9 { line-height: 2.25rem; }
+.leading-10 { line-height: 2.5rem; }
+.leading-none { line-height: 1; }
+.leading-loose { line-height: 2; }
+.leading-zero { line-height: 0; }
+.leading-extra { line-height: 3.125rem; }
+.text-black { --tw-text-opacity: 1; color: rgba(0,0,0,var(--tw-text-opacity)); }
+.text-white { --tw-text-opacity: 1; color: rgba(255,255,255,var(--tw-text-opacity)); }
+.text-gray-500 { --tw-text-opacity: 1; color: rgba(107,114,128,var(--tw-text-opacity)); }
+.text-secondary { --tw-text-opacity: 1; color: rgba(66,66,66,var(--tw-text-opacity)); }
+.text-newSecondary { --tw-text-opacity: 1; color: rgba(254,77,32,var(--tw-text-opacity)); }
+.text-heading { --tw-text-opacity: 1; color: rgba(68,21,81,var(--tw-text-opacity)); }
+.text-primary-200 { --tw-text-opacity: 1; color: rgba(89,190,183,var(--tw-text-opacity)); }
+.text-primary-300 { --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); }
+.text-bw-800 { --tw-text-opacity: 1; color: rgba(111,111,111,var(--tw-text-opacity)); }
+.hover\:text-black:hover { --tw-text-opacity: 1; color: rgba(0,0,0,var(--tw-text-opacity)); }
+.underline { text-decoration: underline; }
+.opacity-50 { opacity: 0.5; }
+*, ::after, ::before { --tw-shadow: 0 0 transparent; }
+.shadow-header { --tw-shadow: -3px 3px 6px rgba(0,0,0,0.08); box-shadow: var(--tw-ring-offset-shadow,0 0 transparent),var(--tw-ring-shadow,0 0 transparent),var(--tw-shadow); }
+.focus\:outline-none:focus { outline: transparent solid 2px; outline-offset: 2px; }
+*, ::after, ::before { --tw-ring-inset: var(--tw-empty,); --tw-ring-offset-width: 0px; --tw-ring-offset-color: #fff; --tw-ring-color: rgba(59,130,246,0.5); --tw-ring-offset-shadow: 0 0 transparent; --tw-ring-shadow: 0 0 transparent; }
+.slider-card { height: 476px; width: 500px; flex: 0 0 auto; }
+@media only screen and (max-width: 1263px) {
+  .slider-card { height: 464px; width: 343px; }
+}
+.horizontal_scrolling { overflow: scroll hidden; width: 100vw; display: flex; direction: ltr; scrollbar-width: none; }
+.horizontal_scrolling::-webkit-scrollbar { display: none; }
+.footer { padding: 40px 100px 20px 0px; }
+@media only screen and (max-width: 1263px) {
+  .footer { padding: 40px 0px 0px; }
+}
+.g__select { z-index: 1; position: absolute; color: rgb(0, 0, 0); right: 0px; width: 100%; background-color: rgb(255, 255, 255); padding: 12px 0px; background-position: left 0.5rem center; max-height: 300px; overflow-y: auto; }
+.g__select-selection [type="text"]:focus { outline: none; --tw-ring-shadow: unset; }
+.g__select__open-top { top: 46px; }
+.g__select li { height: 48px; padding: 0px 16px; display: flex; align-items: center; }
+.g__select li:hover { background: rgb(246, 246, 246); }
+.g__select-active { --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); background-color: rgba(0, 152, 143, 0.1); }
+.g__divider { height: auto; border: 0.5px solid rgba(0, 0, 0, 0.12); }
+.g__card { background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.06) 0px 0px 8px 0px; }
+.g__fit-width { width: fit-content; }
+.g__btn-large { display: flex; justify-content: center; align-items: center; border-radius: 4px; padding: 0px 1.5rem; white-space: nowrap; height: 44px; }
+h2 { color: rgb(33, 33, 33); line-height: 1.75; font-size: 1.5rem; margin-bottom: 0px; }
+h2:not(:first-child) { margin-top: 44px; }
+h1, h3 { color: rgb(84, 84, 84); }
+* { text-align: right; direction: rtl; -webkit-tap-highlight-color: transparent; line-height: 2; }
+html { color: rgb(33, 33, 33); font-size: 14px; }
+a:focus, button:focus { outline: none; }
+.sidenav { height: 100%; width: 0px; position: fixed; z-index: 20; top: 56px; right: -2px; background-color: rgb(255, 255, 255); overflow-x: hidden; transition: 0.5s; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px; }
+.footer-info-card { width: 100%; }
+.footer-info img { height: 80px; width: 80px; }
+.mdi::before { display: inline-block; font-style: normal; font-variant: normal; font-size-adjust: none; font-kerning: auto; font-optical-sizing: auto; font-feature-settings: normal; font-variation-settings: normal; font-weight: normal; font-stretch: normal; font-family: "Material Design Icons"; font-size: inherit; text-rendering: auto; line-height: inherit; -webkit-font-smoothing: antialiased; }
+.mdi-chevron-right::before { content: "󰅂"; }
+.mdi-chevron-left::before { content: "󰅁"; }
+.mdi-map-marker-outline::before { content: "󰟙"; }
+.mdi-shield-check-outline::before { content: "󰳈"; }
+.mdi-square-rounded::before { content: "󱓻"; }
+.mdi-email-outline::before { content: "󰇰"; }
+.mdi-menu::before { content: "󰍜"; }
+.mdi-menu-down::before { content: "󰍝"; }
+.mdi-check-circle::before { content: "󰗠"; }
+.mdi-account-circle-outline::before { content: "󰭕"; }
+.kw__header { background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+.kw__header_city-card { border-radius: 6px; box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px 0px; background-image: linear-gradient(0deg, rgba(0, 152, 143, 0.05), rgba(254, 77, 32, 0.05)), linear-gradient(90deg, rgb(0, 152, 142), rgba(80, 128, 107, 0), rgba(254, 77, 32, 0), rgb(254, 77, 32)); padding: 1px; width: 100%; }
+.kw__header_city-card-content { width: 100%; padding: 32px 20px; border-radius: 6px; color: rgb(255, 255, 255); background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.2) -20px 20px 60px 0px; }
+.kw__header-icon { margin: 0px 12px; font-size: 6px; --tw-text-opacity: 1; color: rgba(0,152,143,var(--tw-text-opacity)); }
+.kw__lawyers { background: linear-gradient(83.99deg, rgb(61, 30, 70), rgb(75, 23, 90)); box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px; padding: 20px; }
+.kw__lawyers-card { width: 500px; flex: 0 0 auto; box-shadow: rgb(99, 46, 115) 16px -16px 0px 0px; position: relative; transition: 0.1s; --tw-bg-opacity: 1; background-color: rgba(250,250,255,var(--tw-bg-opacity)); }
+@media only screen and (max-width: 1263px) {
+  .kw__lawyers-card { width: 281px; }
+}
+.kw__lawyers-card:hover { bottom: 0.7px; box-shadow: none; }
+.kw__comments { padding: 10px; --tw-bg-opacity: 1; background-color: rgba(0,152,143,var(--tw-bg-opacity)); }
+.kw__comments__card { background-color: rgb(255, 255, 255); border-radius: 6px; box-shadow: none; transition: 0.2s; display: flex; flex-direction: column; justify-content: space-between; }
+.kw__comments__card:hover { box-shadow: none; transform: scale(1.04); transform-origin: left bottom; }
+.kw__comments__card-footer { background-color: rgba(46, 196, 100, 0.1); }
+.kw__slider-next, .kw__slider-prev { position: absolute; top: 50%; background-color: rgb(33, 33, 33); width: 45px; margin-top: -22px; height: 45px; text-align: center; font-size: 20px; line-height: 1; color: rgb(255, 255, 255); border-radius: 50%; font-weight: 700; transition: 0.6s; user-select: none; box-shadow: rgba(0, 0, 0, 0.1) -10px 10px 30px 0px; z-index: 1; }
+.kw__slider-next:focus, .kw__slider-prev:focus { outline: none; }
+.kw__slider-next { left: var(--xPosition); }
+.kw__slider-prev { right: var(--xPosition); }
+.landing__animation { height: 374px; width: 374px; }
+.landing__city { height: 340px; background-image: url("/assets/images/IranMap.svg"), linear-gradient(rgb(255, 243, 240), rgba(255, 243, 240, 0)); background-repeat: no-repeat; background-size: contain; background-position: center bottom; }
+.landing__benefits { overflow: auto; width: 100vw; scrollbar-width: none; }
+.landing__benefits__card { flex: 0 0 auto; width: 300px; }
+.landing__benefits::-webkit-scrollbar { display: none; }
+.landing__benefits img { height: 180px; width: 180px; }
+.landing__statistic-card { width: 100%; }
+.landing__statistic-card-margin { margin: 20px 1rem; }
+.mdi-star-outline::before { content: "󰓒"; }
+.mdi-arrow-left::before { content: "󰁍"; }
+.mdi-circle::before { content: "󰝥"; }
+.mdi-shield-check::before { content: "󰕥"; }
+.mdi-briefcase-outline::before { content: "󰠔"; }
+@font-face { font-family: IranYekanRegular; src: url("/fonts/iranyekanwebregularfanum.woff") format("woff"), url("/fonts/iranyekanwebregularfanum.ttf") format("truetype"); font-weight: 400; }
+@font-face { font-family: IranYekanRegular; src: url("/fonts/iranyekanwebboldfanum.woff") format("woff"), url("/fonts/iranyekanwebboldfanum.ttf") format("truetype"); font-weight: 700; }
+@font-face { font-family: "Material Design Icons"; src: url("/fonts/materialdesignicons-webfont.woff2?v=5.9.55") format("woff2"), url("/fonts/materialdesignicons-webfont.woff?v=5.9.55") format("woff"), url("/fonts/materialdesignicons-webfont.ttf?v=5.9.55") format("truetype"); font-weight: 400; font-style: normal; }
+
+// JavaScript
+function openNav() {
+        document.getElementById("mySidenav").classList.toggle("open-sidenav");
+        document.body.classList.toggle("modal-open");
+    }
+
+    (function () {
+        let path = location.pathname.split("/")[1]
+        if (path && ['demand', 'lawyers', 'benefits', 'contact_us'].includes(path)) {
+            document.querySelector('a[href^="/' + path + '"]').classList.add('active-header-btn')
+            if (document.querySelector('.sidenav a[href^="/' + path + '"]'))
+                document.querySelector('.sidenav a[href^="/' + path + '"]').classList.add('active-header-btn')
+        }
+    })()
+
+// External script: https://dadsun.app/js/axios.min.js?id=e63531350b726384f625
+
+// External script: https://dadsun.app/js/vue.min.js
+
+// External script: https://dadsun.app/js/landing.min.js

@@ -1,0 +1,133 @@
+2025-12-09T20:50:59.212Z	Initializing build environment...
+2025-12-09T20:51:01.427Z	Success: Finished initializing build environment
+2025-12-09T20:51:01.868Z	Cloning repository...
+2025-12-09T20:51:03.128Z	Restoring from dependencies cache
+2025-12-09T20:51:03.130Z	Restoring from build output cache
+2025-12-09T20:51:04.162Z	Detected the following tools from environment: nodejs@20.19.6, npm@10.9.2
+2025-12-09T20:51:04.163Z	Installing nodejs 20.19.6
+2025-12-09T20:51:08.687Z	Installing project dependencies: npm clean-install --progress=false
+2025-12-09T20:51:14.393Z	npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2025-12-09T20:51:18.760Z	
+2025-12-09T20:51:18.761Z	added 388 packages, and audited 389 packages in 10s
+2025-12-09T20:51:18.761Z	
+2025-12-09T20:51:18.761Z	67 packages are looking for funding
+2025-12-09T20:51:18.762Z	  run `npm fund` for details
+2025-12-09T20:51:18.773Z	
+2025-12-09T20:51:18.774Z	2 low severity vulnerabilities
+2025-12-09T20:51:18.774Z	
+2025-12-09T20:51:18.774Z	To address all issues, run:
+2025-12-09T20:51:18.774Z	  npm audit fix --force
+2025-12-09T20:51:18.774Z	
+2025-12-09T20:51:18.774Z	Run `npm audit` for details.
+2025-12-09T20:51:18.984Z	Executing user build command: npm run build
+2025-12-09T20:51:19.222Z	
+2025-12-09T20:51:19.222Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 build
+2025-12-09T20:51:19.222Z	> vite build
+2025-12-09T20:51:19.222Z	
+2025-12-09T20:51:19.435Z	vite v6.4.1 building for production...
+2025-12-09T20:51:19.527Z	transforming...
+2025-12-09T20:51:21.260Z	[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "http" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.262Z	[plugin vite:resolve] Module "https" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.263Z	[plugin vite:resolve] Module "zlib" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.479Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.803Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/dom.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.004Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/XMLBuilderCBImpl.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.361Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/@oozcitak/url/lib/URLAlgorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.366Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/Parser.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.374Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/WritableStream.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.640Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:50:59.212Z	Initializing build environment...
+2025-12-09T20:51:01.427Z	Success: Finished initializing build environment
+2025-12-09T20:51:01.868Z	Cloning repository...
+2025-12-09T20:51:03.128Z	Restoring from dependencies cache
+2025-12-09T20:51:03.130Z	Restoring from build output cache
+2025-12-09T20:51:04.162Z	Detected the following tools from environment: nodejs@20.19.6, npm@10.9.2
+2025-12-09T20:51:04.163Z	Installing nodejs 20.19.6
+2025-12-09T20:51:08.687Z	Installing project dependencies: npm clean-install --progress=false
+2025-12-09T20:51:14.393Z	npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2025-12-09T20:51:18.760Z	
+2025-12-09T20:51:18.761Z	added 388 packages, and audited 389 packages in 10s
+2025-12-09T20:51:18.761Z	
+2025-12-09T20:51:18.761Z	67 packages are looking for funding
+2025-12-09T20:51:18.762Z	  run `npm fund` for details
+2025-12-09T20:51:18.773Z	
+2025-12-09T20:51:18.774Z	2 low severity vulnerabilities
+2025-12-09T20:51:18.774Z	
+2025-12-09T20:51:18.774Z	To address all issues, run:
+2025-12-09T20:51:18.774Z	  npm audit fix --force
+2025-12-09T20:51:18.774Z	
+2025-12-09T20:51:18.774Z	Run `npm audit` for details.
+2025-12-09T20:51:18.984Z	Executing user build command: npm run build
+2025-12-09T20:51:19.222Z	
+2025-12-09T20:51:19.222Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 build
+2025-12-09T20:51:19.222Z	> vite build
+2025-12-09T20:51:19.222Z	
+2025-12-09T20:51:19.435Z	vite v6.4.1 building for production...
+2025-12-09T20:51:19.527Z	transforming...
+2025-12-09T20:51:21.260Z	[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "http" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.261Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.262Z	[plugin vite:resolve] Module "https" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.263Z	[plugin vite:resolve] Module "zlib" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.479Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:21.803Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/dom.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.004Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/XMLBuilderCBImpl.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.361Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/@oozcitak/url/lib/URLAlgorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.366Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/Parser.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.374Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/WritableStream.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:22.640Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-09T20:51:26.951Z	✓ 1069 modules transformed.
+2025-12-09T20:51:27.774Z	rendering chunks...
+2025-12-09T20:51:28.580Z	computing gzip size...
+2025-12-09T20:51:28.888Z	dist/index.html                                  13.73 kB │ gzip:   3.92 kB
+2025-12-09T20:51:28.888Z	dist/assets/LeafletMapComponent-CIGW-MKW.css     15.61 kB │ gzip:   6.46 kB
+2025-12-09T20:51:28.888Z	dist/assets/browser-BvbE_PDb.js                   0.34 kB │ gzip:   0.27 kB
+2025-12-09T20:51:28.888Z	dist/assets/LeafletMapComponent-CUXf9zkV.js     160.48 kB │ gzip:  47.15 kB
+2025-12-09T20:51:28.888Z	dist/assets/html-to-docx.esm-C625k-jq.js      1,132.50 kB │ gzip: 311.99 kB
+2025-12-09T20:51:28.888Z	dist/assets/index-CDChWhdC.js                 1,628.43 kB │ gzip: 427.89 kB
+2025-12-09T20:51:28.888Z	✓ built in 9.43s
+2025-12-09T20:51:28.889Z	
+2025-12-09T20:51:28.889Z	(!) Some chunks are larger than 500 kB after minification. Consider:
+2025-12-09T20:51:28.889Z	- Using dynamic import() to code-split the application
+2025-12-09T20:51:28.889Z	- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2025-12-09T20:51:28.889Z	- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2025-12-09T20:51:29.025Z	Success: Build command completed
+2025-12-09T20:51:29.204Z	Executing user deploy command: npx wrangler pages deploy dist
+2025-12-09T20:51:30.267Z	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+2025-12-09T20:51:44.487Z	
+2025-12-09T20:51:44.488Z	 ⛅️ wrangler 4.53.0
+2025-12-09T20:51:44.489Z	───────────────────
+2025-12-09T20:51:44.913Z	
+2025-12-09T20:51:44.948Z	✘ [ERROR] A request to the Cloudflare API (/accounts/bc7a41d5c9f101a5384793aa40a2cc08/pages/projects/armanlawfirm) failed.
+2025-12-09T20:51:44.950Z	
+2025-12-09T20:51:44.950Z	  Authentication error [code: 10000]
+2025-12-09T20:51:44.951Z	
+2025-12-09T20:51:44.951Z	
+2025-12-09T20:51:44.951Z	📎 It looks like you are authenticating Wrangler via a custom API token set in an environment variable.
+2025-12-09T20:51:44.955Z	Please ensure it has the correct permissions for this operation.
+2025-12-09T20:51:44.956Z	
+2025-12-09T20:51:44.956Z	Getting User settings...
+2025-12-09T20:51:45.436Z	👋 You are logged in with an User API Token, associated with the email chatgpt4compas@gmail.com.
+2025-12-09T20:51:45.437Z	ℹ️  The API Token is read from the CLOUDFLARE_API_TOKEN environment variable.
+2025-12-09T20:51:45.440Z	┌────────────────────────────────────┬──────────────────────────────────┐
+2025-12-09T20:51:45.440Z	│ Account Name                       │ Account ID                       │
+2025-12-09T20:51:45.440Z	├────────────────────────────────────┼──────────────────────────────────┤
+2025-12-09T20:51:45.440Z	│ Chatgpt4compas@gmail.com's Account │ bc7a41d5c9f101a5384793aa40a2cc08 │
+2025-12-09T20:51:45.440Z	└────────────────────────────────────┴──────────────────────────────────┘
+2025-12-09T20:51:45.440Z	🔓 To see token permissions visit https://dash.cloudflare.com/profile/api-tokens.
+2025-12-09T20:51:45.622Z	🎢 Membership roles in "Chatgpt4compas@gmail.com's Account": Contact account super admin to change your permissions.
+2025-12-09T20:51:45.622Z	- Super Administrator - All Privileges
+2025-12-09T20:51:45.636Z	🪵  Logs were written to "/opt/buildhome/.config/.wrangler/logs/wrangler-2025-12-09_20-51-44_009.log"
+2025-12-09T20:51:45.682Z	Failed: error occurred while running deploy command
