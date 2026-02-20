@@ -4,6 +4,14 @@ import { GoogleGenAI, Type, Modality } from "@google/genai";
 import { GroundingChunk, StrategyTask, IntentRoute, DraftPreparationResult, ChatMessage, FilePart, LatLng, DailyTrend, GeneratedPost, VideoScript, PublishingStrategy, VideoTool, LegalCitation, CourtroomRebuttal, InstagramReel, InstagramStory, InstagramGrowthPlan, ResumeAnalysisResult, JobDetails, JobSearchSuggestion, JobApplication } from '../types';
 import { RESUME_ANALYSIS_CRITERIA } from '../constants';
 
+interface AIProvider {
+    name: string;
+    call: (prompt: string, maxTokens: number, temperature: number) => Promise<string>;
+}
+
+const CLOUDFLARE_API_TOKEN = import.meta.env.VITE_CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || '';
+const CLOUDFLARE_ACCOUNT_ID = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || '';
+
 // Initialize the Google GenAI SDK
 // We use a singleton pattern to reuse the client instance
 let aiInstance: GoogleGenAI | null = null;
@@ -96,7 +104,7 @@ const poyoProvider: AIProvider = {
         if (!POYO_API_KEY) throw new Error('Poyo AI API key not configured');
         try {
             const response = await poyoClient.chat.completions.create({
-                model: 'claude-3-5-sonnet',
+                model: 'claude-3-5-sonnet-20240620', // Try a more specific version
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: maxTokens,
                 temperature: temperature
@@ -224,6 +232,17 @@ export async function callWithFallbackJSON<T>(
 
 export async function* generateReportStream(prompt: string): AsyncGenerator<string, void, undefined> {
     const ai = getAI();
+    if (!ai) {
+        // Fallback for streaming if Gemini is not available
+        try {
+            const result = await callWithFallback(prompt, 2000, 0.7);
+            yield result;
+            return;
+        } catch (e) {
+            throwEnhancedError(e, 'All AI services failed to generate report.');
+            return;
+        }
+    }
     try {
         const response = await ai.models.generateContentStream({
             model: 'gemini-2.0-flash',
