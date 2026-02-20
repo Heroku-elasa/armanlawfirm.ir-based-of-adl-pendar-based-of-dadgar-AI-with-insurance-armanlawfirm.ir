@@ -1,0 +1,165 @@
+{
+  "company": {
+    "name": "موسسه حقوقی آرمان",
+    "name_en": "Arman Law Firm",
+    "website": "https://armanlawfirm.ir",
+    "phone": "+989026263218",
+    "description": "موسسه حقوقی آرمان ارائه دهنده خدمات حقوقی هوشمند با استفاده از هوش مصنوعی پیشرفته و وکلای پایه یک دادگستری",
+    "description_en": "Arman Law Firm provides intelligent legal services using advanced AI and certified lawyers",
+    "address": "تهران، جردن، خیابان طاهری پلاک ۱۸",
+    "working_hours": "شنبه تا پنجشنبه ۹:۰۰ تا ۱۸:۰۰، جمعه تعطیل"
+  },
+  "services": [
+    {
+      "id": "legal_drafter",
+      "title_fa": "تنظیم دادخواست",
+      "title_en": "Legal Document Drafting",
+      "description_fa": "تنظیم دادخواست، لایحه، قرارداد و سایر اسناد حقوقی با هوش مصنوعی",
+      "description_en": "AI-powered drafting of petitions, contracts, and legal documents",
+      "price": "۱۸۰,۰۰۰ تومان",
+      "features": ["پشتیبانی از تمامی انواع دعاوی", "تحلیل خودکار پرونده", "قالب‌های استاندارد قضایی"]
+    },
+    {
+      "id": "lawyer_finder",
+      "title_fa": "وکیل‌یاب",
+      "title_en": "Lawyer Finder",
+      "description_fa": "جستجوی وکیل متخصص بر اساس نوع پرونده و موقعیت جغرافیایی",
+      "description_en": "Find specialized lawyers based on case type and location",
+      "price": "رایگان",
+      "features": ["جستجو بر اساس تخصص", "نمایش رتبه‌بندی وکلا", "اطلاعات تماس مستقیم"]
+    },
+    {
+      "id": "notary_finder",
+      "title_fa": "دفترخانه‌یاب",
+      "title_en": "Notary Finder",
+      "description_fa": "جستجوی دفترخانه اسناد رسمی برای انجام امور ثبتی",
+      "description_en": "Find notary offices for official document registration",
+      "price": "رایگان",
+      "features": ["جستجو بر اساس موقعیت", "نمایش آدرس و تلفن", "ساعات کاری"]
+    },
+    {
+      "id": "contract_analyzer",
+      "title_fa": "تحلیلگر قرارداد",
+      "title_en": "Contract Analyzer",
+      "description_fa": "تحلیل قراردادها و شناسایی بندهای مشکل‌دار با هوش مصنوعی",
+      "description_en": "AI analysis of contracts to identify problematic clauses",
+      "price": "رایگان",
+      "features": ["شناسایی بندهای مشکل‌دار", "پیشنهاد اصلاحات", "تحلیل ریسک"]
+    },
+    {
+      "id": "court_assistant",
+      "title_fa": "دستیار دادگاه",
+      "title_en": "Court Assistant",
+      "description_fa": "دستیار هوشمند برای جلسات دادگاه با منبع‌یابی لایحه و پاسخ لحظه‌ای",
+      "description_en": "Smart court assistant with citation finding and real-time responses",
+      "price": "رایگان",
+      "features": ["منبع‌یابی لایحه", "دستیار صوتی لحظه‌ای", "استناد به مواد قانونی"]
+    },
+    {
+      "id": "case_strategist",
+      "title_fa": "استراتژی پرونده",
+      "title_en": "Case Strategist",
+      "description_fa": "تدوین استراتژی حقوقی برای پرونده‌ها با تحلیل AI",
+      "description_en": "Develop legal strategy for cases with AI analysis",
+      "price": "رایگان",
+      "features": ["تحلیل نقاط قوت و ضعف", "پیشنهاد اقدامات", "زمان‌بندی مراحل"]
+    },
+    {
+      "id": "insurance_services",
+      "title_fa": "خدمات بیمه",
+      "title_en": "Insurance Services",
+      "description_fa": "تحلیل بیمه‌نامه، تنظیم شکایت و ارزیابی ریسک",
+      "description_en": "Policy analysis, claim drafting, and risk assessment",
+      "price": "متغیر",
+      "features": ["تحلیل بیمه‌نامه", "تنظیم شکایت بیمه", "ارزیابی ریسک", "استعلام قیمت"]
+    },
+    {
+      "id": "corporate_services",
+      "title_fa": "خدمات شرکتی",
+      "title_en": "Corporate Services",
+      "description_fa": "ثبت شرکت، تنظیم اساسنامه و مشاوره حقوق شرکت‌ها",
+      "description_en": "Company registration, articles drafting, and corporate law consulting",
+      "price": "متغیر",
+      "features": ["ثبت شرکت", "تنظیم اساسنامه", "مشاوره حقوق شرکت‌ها"]
+    },
+    {
+      "id": "booking",
+      "title_fa": "رزرو مشاوره",
+      "title_en": "Consultation Booking",
+      "description_fa": "رزرو وقت مشاوره حضوری یا آنلاین با وکلای متخصص",
+      "description_en": "Book in-person or online consultation with specialized lawyers",
+      "price": "۲۰۰,۰۰۰ تومان",
+      "features": ["مشاوره حضوری", "مشاوره آنلاین (Google Meet)", "مشاوره واتساپ"]
+    }
+  ],
+  "pricing": {
+    "legal_drafter": {
+      "title": "تنظیم دادخواست",
+      "price": "۱۸۰,۰۰۰ تومان",
+      "old_price": "۳۶۰,۰۰۰ تومان",
+      "discount": "۵۰٪"
+    },
+    "legal_brief": {
+      "title": "تدوین لایحه",
+      "price": "۱۲۰,۰۰۰ تومان",
+      "old_price": "۲۴۰,۰۰۰ تومان",
+      "discount": "۵۰٪"
+    },
+    "ai_consultation": {
+      "title": "مشاوره حقوقی AI",
+      "price": "۸۰,۰۰۰ تومان",
+      "old_price": "۱۶۰,۰۰۰ تومان",
+      "discount": "۵۰٪"
+    },
+    "phone_consultation": {
+      "title": "مشاوره تلفنی",
+      "price": "۲۰۰,۰۰۰ تومان",
+      "old_price": "۴۰۰,۰۰۰ تومان",
+      "discount": "۵۰٪"
+    }
+  },
+  "faq": [
+    {
+      "question": "آیا مشاوره با هوش مصنوعی جایگزین وکیل است؟",
+      "answer": "خیر، هوش مصنوعی به عنوان دستیار برای تسریع و دقت در امور اولیه است. برای موارد پیچیده، حتماً با وکلای معرفی شده مشورت کنید."
+    },
+    {
+      "question": "چگونه می‌توانم به وکلای سایت اعتماد کنم؟",
+      "answer": "تمامی وکلای حاضر در پلتفرم دارای پروانه وکالت معتبر و احراز هویت شده هستند."
+    },
+    {
+      "question": "آیا اطلاعات پرونده من محرمانه می‌ماند؟",
+      "answer": "بله، امنیت و حریم خصوصی کاربران اولویت اصلی ماست و تمام اطلاعات پردازش شده رمزنگاری می‌شود."
+    },
+    {
+      "question": "هزینه خدمات چگونه محاسبه می‌شود؟",
+      "answer": "بخش‌های زیادی از خدمات هوش مصنوعی رایگان است. خدمات تخصصی وکلا طبق تعرفه توافقی با وکیل محاسبه می‌گردد."
+    }
+  ],
+  "contact": {
+    "phone": "+989026263218",
+    "whatsapp": "+989026263218",
+    "address": "تهران، جردن، خیابان طاهری پلاک ۱۸",
+    "working_hours": "شنبه تا پنجشنبه ۹:۰۰ تا ۱۸:۰۰"
+  },
+  "keywords": [
+    "وکیل",
+    "مشاوره حقوقی",
+    "دادخواست",
+    "قرارداد",
+    "طلاق",
+    "چک برگشتی",
+    "دعاوی ملکی",
+    "بیمه",
+    "ثبت شرکت",
+    "وکیل تهران",
+    "هوش مصنوعی حقوقی",
+    "lawyer",
+    "legal consultation",
+    "contract",
+    "divorce",
+    "property disputes",
+    "insurance",
+    "company registration"
+  ]
+}

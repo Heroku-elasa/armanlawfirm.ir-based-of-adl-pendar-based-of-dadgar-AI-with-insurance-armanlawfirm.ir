@@ -1,0 +1,631 @@
+
+import React, { useState, useEffect } from 'react';
+import { useLanguage, PageKey, useAppearance, THEME_PRESETS } from '../types';
+import SeoChecker from '../../components/SeoChecker';
+import { getSeoAudits, SeoAuditData } from '../../services/dbService';
+import { getPosts, createPost, deletePost, publishPost, Post } from '../../services/postsService';
+
+// WordPress Color Palette
+// #1d2327 - Sidebar/Admin Bar Dark
+// #2c3338 - Sidebar Hover
+// #2271b1 - WP Blue (Links, Primary Buttons)
+// #f0f0f1 - Main Background
+// #ffffff - Card Background
+// #dcdcde - Borders
+
+interface WordPressDashboardProps {
+    setPage: (page: 'home' | PageKey) => void;
+    userRole?: 'user' | 'admin';
+}
+
+const WordPressDashboard: React.FC<WordPressDashboardProps> = ({ setPage, userRole }) => {
+    const { t } = useLanguage();
+    const { setColorScheme, theme, toggleTheme, customLogo } = useAppearance(); // Added customLogo
+    const [activeMenu, setActiveMenu] = useState('Dashboard');
+    const [draftTitle, setDraftTitle] = useState('');
+    const [draftContent, setDraftContent] = useState('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [isHelpOpen, setIsHelpOpen] = useState(false);
+    const [isThemeMenuOpen, setIsThemeMenuOpen] = useState(false);
+    const [isSaving, setIsSaving] = useState(false);
+    
+    // Posts State
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [postsLoading, setPostsLoading] = useState(false);
+    
+    // SEO History State
+    const [auditHistory, setAuditHistory] = useState<SeoAuditData[]>([]);
+
+    // Mock Users Data
+    const [users, setUsers] = useState([
+        { id: 1, username: 'admin', email: 'admin@armanlawfirm.ir', role: 'Administrator', posts: 15 },
+        { id: 2, username: 'editor_sara', email: 'sara@example.com', role: 'Editor', posts: 42 },
+        { id: 3, username: 'author_ali', email: 'ali@example.com', role: 'Author', posts: 8 },
+        { id: 4, username: 'contributor_reza', email: 'reza@example.com', role: 'Contributor', posts: 2 },
+    ]);
+
+    const menuItems = [
+        { name: 'Dashboard', icon: 'dashicons-dashboard', active: activeMenu === 'Dashboard' },
+        { name: 'Posts', icon: 'dashicons-admin-post', badge: 2, active: activeMenu === 'Posts' },
+        { name: 'Media', icon: 'dashicons-admin-media', active: activeMenu === 'Media' },
+        { name: 'Pages', icon: 'dashicons-admin-page', active: activeMenu === 'Pages' },
+        { name: 'Comments', icon: 'dashicons-admin-comments', badge: 1, active: activeMenu === 'Comments' },
+        { name: 'SEO Check', icon: 'dashicons-chart-bar', active: activeMenu === 'SEO Check' }, // Added SEO Menu
+        // Only show Appearance, Plugins, Users, Settings to Admin
+        ...(userRole === 'admin' ? [
+            { name: 'Appearance', icon: 'dashicons-admin-appearance', active: activeMenu === 'Appearance' },
+            { name: 'Plugins', icon: 'dashicons-admin-plugins', badge: 3, active: activeMenu === 'Plugins' },
+            { name: 'Users', icon: 'dashicons-admin-users', active: activeMenu === 'Users' },
+            { name: 'Tools', icon: 'dashicons-admin-tools', active: activeMenu === 'Tools' },
+            { name: 'Settings', icon: 'dashicons-admin-settings', active: activeMenu === 'Settings' },
+        ] : []),
+    ];
+
+    const recentActivity = [
+        { time: '12:45 pm', text: 'You published the post "Adl Pendar Legal Guide"' },
+        { time: '10:30 am', text: 'Ali Rezaei commented on "Divorce Laws"' },
+        { time: 'Yesterday', text: 'System backup completed successfully' },
+    ];
+
+    useEffect(() => {
+        if (activeMenu === 'SEO Check') {
+            loadAuditHistory();
+        }
+        if (activeMenu === 'Posts' || activeMenu === 'Dashboard') {
+            loadPosts();
+        }
+    }, [activeMenu]);
+
+    const loadAuditHistory = async () => {
+        const history = await getSeoAudits();
+        setAuditHistory(history);
+    };
+
+    const loadPosts = async () => {
+        setPostsLoading(true);
+        try {
+            const allPosts = await getPosts();
+            setPosts(allPosts);
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        } finally {
+            setPostsLoading(false);
+        }
+    };
+
+    const handleSaveDraft = async () => {
+        if (!draftTitle.trim()) {
+            alert('Please enter a title');
+            return;
+        }
+        setIsSaving(true);
+        try {
+            const newPost = await createPost({
+                title: draftTitle,
+                content: draftContent,
+                status: 'draft',
+                author_email: 'admin@armanlawfirm.ir',
+            });
+            if (newPost) {
+                setDraftTitle('');
+                setDraftContent('');
+                await loadPosts();
+                alert('Draft saved successfully!');
+            } else {
+                alert('Failed to save draft');
+            }
+        } catch (error) {
+            console.error('Error saving draft:', error);
+            alert('Error saving draft');
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleDeletePost = async (id: string) => {
+        if (window.confirm('Are you sure you want to delete this post?')) {
+            const success = await deletePost(id);
+            if (success) {
+                await loadPosts();
+            } else {
+                alert('Failed to delete post');
+            }
+        }
+    };
+
+    const handlePublishPost = async (id: string) => {
+        const published = await publishPost(id);
+        if (published) {
+            await loadPosts();
+        } else {
+            alert('Failed to publish post');
+        }
+    };
+
+    const handleDeleteUser = (id: number) => {
+        if (window.confirm("Are you sure you want to delete this user?")) {
+            setUsers(users.filter(u => u.id !== id));
+        }
+    };
+
+    const handleThemeChange = (schemeId: string) => {
+        const scheme = THEME_PRESETS.find(p => p.id === schemeId);
+        if (scheme) {
+            setColorScheme(scheme);
+            // Auto-switch mode based on preset convention
+            if (schemeId === 'registry' || schemeId === 'official') {
+                if (theme === 'dark') toggleTheme();
+            } else if (schemeId === 'legal') {
+                if (theme === 'light') toggleTheme();
+            }
+        }
+        setIsThemeMenuOpen(false);
+    };
+
+    return (
+        <div className="flex h-screen bg-[#f0f0f1] font-sans text-[13px] text-[#3c434a] overflow-hidden direction-ltr ltr">
+            {/* Sidebar */}
+            <div className={`bg-[#1d2327] text-white flex-shrink-0 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-40' : 'w-9'}`}>
+                {/* Admin Bar Spacer */}
+                <div className="h-8 bg-[#1d2327]"></div> 
+                
+                <ul className="flex-grow overflow-y-auto">
+                    {menuItems.map((item, index) => (
+                        <li 
+                            key={index} 
+                            onClick={() => setActiveMenu(item.name)}
+                            className={`group relative cursor-pointer hover:bg-[#135e96] hover:text-white transition-colors ${item.active ? 'bg-[#2271b1] text-white' : 'text-[#f0f0f1]'}`}
+                        >
+                            <div className="flex items-center h-[34px] px-3">
+                                {/* Mock Icon */}
+                                <div className={`dashicons ${item.icon} w-5 h-5 flex items-center justify-center opacity-70 group-hover:opacity-100`}>
+                                    <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                        <rect width="16" height="16" x="2" y="2" rx="2" fillOpacity="0.5"/>
+                                    </svg>
+                                </div>
+                                {isSidebarOpen && (
+                                    <span className="ml-2 font-medium flex-grow truncate">{item.name}</span>
+                                )}
+                                {item.badge && isSidebarOpen && (
+                                    <span className="ml-auto bg-[#d63638] text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                                        {item.badge}
+                                    </span>
+                                )}
+                            </div>
+                            {/* Hover Submenu Indicator */}
+                            {!isSidebarOpen && (
+                                <div className="absolute left-full top-0 w-48 bg-[#1d2327] text-white p-2 hidden group-hover:block z-50 shadow-lg">
+                                    {item.name}
+                                </div>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+                <button 
+                    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+                    className="h-10 text-[#a7aaad] hover:text-[#2271b1] flex items-center justify-center border-t border-[#3c434a] focus:outline-none"
+                >
+                    <span className={`transform transition-transform ${isSidebarOpen ? 'rotate-180' : ''}`}>«</span>
+                </button>
+            </div>
+
+            {/* Main Content Area */}
+            <div className="flex-grow flex flex-col h-full overflow-hidden">
+                {/* Admin Bar */}
+                <div className="h-8 bg-[#1d2327] text-[#f0f0f1] flex items-center justify-between px-3 text-[13px] flex-shrink-0 z-40">
+                    <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6] group relative">
+                            <span className="font-bold dashicons-wordpress w-5 h-5 flex items-center justify-center bg-white text-[#1d2327] rounded-full p-0.5">W</span>
+                            {/* WP Menu Dropdown */}
+                            <div className="absolute top-8 left-0 w-48 bg-[#1d2327] hidden group-hover:block shadow-lg border-t border-[#2271b1]">
+                                <div className="p-2 hover:bg-[#2271b1]">About WordPress</div>
+                                <div className="p-2 hover:bg-[#2271b1]">Get Involved</div>
+                            </div>
+                        </div>
+                        <div className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6]" onClick={() => setPage('home')}>
+                            <span className="dashicons-admin-home">🏠</span>
+                            <span className="font-semibold">Adl Pendar</span>
+                        </div>
+                        <div className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6]">
+                            <span className="dashicons-admin-comments">💬</span>
+                            <span>1</span>
+                        </div>
+                        <div className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6] group relative">
+                            <span className="dashicons-plus">➕</span>
+                            <span>New</span>
+                             <div className="absolute top-8 left-0 w-40 bg-[#1d2327] hidden group-hover:block shadow-lg">
+                                <div className="p-2 hover:bg-[#2271b1]">Post</div>
+                                <div className="p-2 hover:bg-[#2271b1]">Media</div>
+                                <div className="p-2 hover:bg-[#2271b1]">Page</div>
+                                <div className="p-2 hover:bg-[#2271b1]">User</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="flex items-center space-x-4">
+                        {/* Theme Switcher */}
+                        <div className="relative">
+                            <button 
+                                onClick={() => setIsThemeMenuOpen(!isThemeMenuOpen)} 
+                                className="flex items-center space-x-1 cursor-pointer hover:text-[#72aee6] focus:outline-none"
+                            >
+                                <span className="dashicons-art">🎨</span>
+                                <span>Appearance</span>
+                            </button>
+                            {isThemeMenuOpen && (
+                                <div className="absolute top-8 right-0 w-48 bg-[#1d2327] shadow-lg border border-[#2c3338] z-50">
+                                    {THEME_PRESETS.map((preset) => (
+                                        <button
+                                            key={preset.id}
+                                            onClick={() => handleThemeChange(preset.id)}
+                                            className="block w-full text-left px-4 py-2 hover:bg-[#2271b1] hover:text-white transition-colors flex items-center gap-2"
+                                        >
+                                            <span className="w-3 h-3 rounded-full" style={{ backgroundColor: preset.primary }}></span>
+                                            {preset.name}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        <div className="cursor-pointer hover:text-[#72aee6] font-medium flex items-center gap-2" onClick={() => setPage('dashboard')}>
+                            Return to App Dashboard
+                        </div>
+                        <div className="flex items-center space-x-2 cursor-pointer hover:text-[#72aee6]">
+                            <span>Howdy, {userRole === 'admin' ? 'Admin' : 'User'}</span>
+                            <img src={customLogo} alt="Avatar" className="w-5 h-5 rounded-sm object-cover bg-white" />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Content Body */}
+                <div className="flex-grow overflow-y-auto p-5">
+                    <div className="flex flex-col mb-4">
+                        <div className="flex justify-between items-center mb-2">
+                            <h1 className="text-2xl text-[#1d2327] font-medium">{activeMenu === 'Users' ? 'Users' : activeMenu}</h1>
+                            <div className="flex space-x-2">
+                                <button className="border border-[#2271b1] text-[#2271b1] px-3 py-1 rounded hover:bg-[#f6f7f7]">Screen Options ▼</button>
+                                <button 
+                                    onClick={() => setIsHelpOpen(!isHelpOpen)}
+                                    className={`border px-3 py-1 rounded transition-colors ${isHelpOpen ? 'bg-[#2271b1] text-white border-[#2271b1]' : 'border-[#2271b1] text-[#2271b1] hover:bg-[#f6f7f7]'}`}
+                                >
+                                    Help ▼
+                                </button>
+                            </div>
+                        </div>
+                        
+                        {/* Help Panel */}
+                        {isHelpOpen && (
+                            <div className="bg-white border border-[#dcdcde] shadow-sm p-0 mb-5 text-[13px] animate-fade-in">
+                                <div className="flex">
+                                    <div className="w-1/4 bg-[#f6f7f7] border-r border-[#dcdcde]">
+                                        <ul className="py-2">
+                                            <li className="px-4 py-2 font-semibold text-[#1d2327] bg-white border-l-4 border-[#2271b1]">Overview</li>
+                                            <li className="px-4 py-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">Navigation</li>
+                                            <li className="px-4 py-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">Layout</li>
+                                            <li className="px-4 py-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">Content</li>
+                                        </ul>
+                                    </div>
+                                    <div className="w-3/4 p-4 space-y-3 text-[#3c434a]">
+                                        <h3 className="font-semibold text-lg text-[#1d2327]">Dashboard Overview</h3>
+                                        <p>Welcome to your WordPress Dashboard! This is the central hub for managing your site.</p>
+                                        <p><strong>Admin Bar:</strong> The toolbar at the top provides quick access to common tasks like adding new posts, viewing your site, and managing your profile.</p>
+                                        <p><strong>Sidebar Menu:</strong> On the left, you'll find links to all the administrative areas of your site, such as Posts, Media, Pages, and Settings.</p>
+                                        <p><strong>Screen Options:</strong> Use this tab (top right) to customize which widgets are displayed on this screen.</p>
+                                        <p>You can drag and drop the widgets below to rearrange your dashboard layout.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+
+                    {activeMenu === 'SEO Check' ? (
+                        /* SEO CHECKER VIEW */
+                        <div className="animate-fade-in">
+                            <SeoChecker onScanComplete={loadAuditHistory} />
+                            
+                            <div className="mt-8 bg-white border border-[#c3c4c7] shadow-sm">
+                                <div className="px-4 py-3 border-b border-[#c3c4c7] font-semibold text-sm bg-white">Audit History</div>
+                                <table className="w-full text-left">
+                                    <thead>
+                                        <tr className="bg-[#f0f0f1] text-[#1d2327] text-xs uppercase">
+                                            <th className="px-4 py-2 font-medium">Date</th>
+                                            <th className="px-4 py-2 font-medium">URL</th>
+                                            <th className="px-4 py-2 font-medium">Score</th>
+                                            <th className="px-4 py-2 font-medium">Issues</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="text-sm">
+                                        {auditHistory.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={4} className="px-4 py-4 text-center text-[#646970]">No audit history found. Run a check above.</td>
+                                            </tr>
+                                        ) : (
+                                            auditHistory.map((audit) => (
+                                                <tr key={audit.id} className="border-b border-[#f0f0f1] hover:bg-[#f6f7f7]">
+                                                    <td className="px-4 py-3 text-[#2271b1]">
+                                                        {new Date(audit.created_at || '').toLocaleString()}
+                                                    </td>
+                                                    <td className="px-4 py-3 text-[#646970]">{audit.url}</td>
+                                                    <td className="px-4 py-3">
+                                                        <span className={`font-bold ${audit.score > 80 ? 'text-[#008a20]' : audit.score > 50 ? 'text-[#dba617]' : 'text-[#d63638]'}`}>
+                                                            {audit.score}%
+                                                        </span>
+                                                    </td>
+                                                    <td className="px-4 py-3 text-[#646970]">
+                                                        {audit.results?.filter((r: any) => r.status === 'fail').length} Errors
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    ) : activeMenu === 'Users' && userRole === 'admin' ? (
+                        /* USERS MANAGEMENT VIEW */
+                        <div className="animate-fade-in">
+                            <div className="flex gap-2 mb-3 text-sm">
+                                <a href="#" className="text-[#2271b1] font-semibold">All <span className="text-[#50575e]">({users.length})</span></a> |
+                                <a href="#" className="text-[#2271b1]">Administrator <span className="text-[#50575e]">(1)</span></a> | 
+                                <a href="#" className="text-[#2271b1]">Editor <span className="text-[#50575e]">(1)</span></a>
+                            </div>
+                            
+                            <div className="flex justify-between mb-3">
+                                <div className="flex gap-2">
+                                    <select className="border border-[#8c8f94] rounded text-[#2c3338] h-[30px] text-sm px-2">
+                                        <option>Bulk Actions</option>
+                                        <option>Delete</option>
+                                    </select>
+                                    <button className="border border-[#2271b1] text-[#2271b1] px-3 h-[30px] text-sm rounded hover:bg-[#f0f0f1]">Apply</button>
+                                    <select className="border border-[#8c8f94] rounded text-[#2c3338] h-[30px] text-sm px-2 ml-2">
+                                        <option>Change role to...</option>
+                                        <option>Subscriber</option>
+                                        <option>Contributor</option>
+                                        <option>Author</option>
+                                        <option>Editor</option>
+                                        <option>Administrator</option>
+                                    </select>
+                                    <button className="border border-[#2271b1] text-[#2271b1] px-3 h-[30px] text-sm rounded hover:bg-[#f0f0f1]">Change</button>
+                                </div>
+                                <div className="flex gap-1">
+                                    <input type="text" className="border border-[#8c8f94] rounded h-[30px] px-2 text-sm" />
+                                    <button className="border border-[#2271b1] text-[#2271b1] px-3 h-[30px] text-sm rounded hover:bg-[#f0f0f1]">Search Users</button>
+                                </div>
+                            </div>
+
+                            <table className="w-full bg-white border border-[#c3c4c7] shadow-sm text-left">
+                                <thead>
+                                    <tr>
+                                        <th className="p-2 border-b border-[#c3c4c7] w-8"><input type="checkbox" /></th>
+                                        <th className="p-2 border-b border-[#c3c4c7]">Username</th>
+                                        <th className="p-2 border-b border-[#c3c4c7]">Name</th>
+                                        <th className="p-2 border-b border-[#c3c4c7]">Email</th>
+                                        <th className="p-2 border-b border-[#c3c4c7]">Role</th>
+                                        <th className="p-2 border-b border-[#c3c4c7]">Posts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {users.map(user => (
+                                        <tr key={user.id} className="group hover:bg-[#f6f7f7]">
+                                            <th className="p-2 border-b border-[#c3c4c7] border-l-4 border-l-transparent"><input type="checkbox" /></th>
+                                            <td className="p-2 border-b border-[#c3c4c7]">
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-8 h-8 rounded-sm bg-gray-200 flex items-center justify-center text-xs font-bold text-gray-500">
+                                                        {user.username.substring(0,2).toUpperCase()}
+                                                    </div>
+                                                    <div>
+                                                        <strong className="text-[#2271b1]">{user.username}</strong>
+                                                        <div className="flex gap-2 text-xs text-[#2271b1] invisible group-hover:visible mt-1">
+                                                            <button className="hover:text-[#135e96]">Edit</button> | 
+                                                            <button className="text-[#b32d2e] hover:text-[#b32d2e]" onClick={() => handleDeleteUser(user.id)}>Delete</button> | 
+                                                            <button className="hover:text-[#135e96]">View</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td className="p-2 border-b border-[#c3c4c7]">-</td>
+                                            <td className="p-2 border-b border-[#c3c4c7] text-[#2271b1]">{user.email}</td>
+                                            <td className="p-2 border-b border-[#c3c4c7]">{user.role}</td>
+                                            <td className="p-2 border-b border-[#c3c4c7]">{user.posts}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th className="p-2 w-8"><input type="checkbox" /></th>
+                                        <th className="p-2">Username</th>
+                                        <th className="p-2">Name</th>
+                                        <th className="p-2">Email</th>
+                                        <th className="p-2">Role</th>
+                                        <th className="p-2">Posts</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            <div className="mt-2 text-xs text-[#646970]">
+                                {users.length} items
+                            </div>
+                        </div>
+                    ) : activeMenu === 'Posts' ? (
+                        /* POSTS VIEW */
+                        <div className="animate-fade-in">
+                            <div className="flex justify-between items-center mb-4">
+                                <div className="flex gap-2 text-sm">
+                                    <span className="text-[#2271b1] font-semibold cursor-pointer">All ({posts.length})</span> |
+                                    <span className="text-[#2271b1] cursor-pointer">Published ({posts.filter(p => p.status === 'published').length})</span> |
+                                    <span className="text-[#2271b1] cursor-pointer">Drafts ({posts.filter(p => p.status === 'draft').length})</span>
+                                </div>
+                                <button 
+                                    onClick={() => setActiveMenu('Dashboard')}
+                                    className="bg-[#2271b1] text-white px-4 py-2 rounded text-sm hover:bg-[#135e96]"
+                                >
+                                    + Add New Post
+                                </button>
+                            </div>
+
+                            {postsLoading ? (
+                                <div className="text-center py-8 text-[#646970]">Loading posts...</div>
+                            ) : posts.length === 0 ? (
+                                <div className="bg-white border border-[#c3c4c7] p-8 text-center text-[#646970]">
+                                    No posts found. Create your first post using Quick Draft on the Dashboard.
+                                </div>
+                            ) : (
+                                <table className="w-full bg-white border border-[#c3c4c7] shadow-sm text-left">
+                                    <thead>
+                                        <tr className="bg-[#f0f0f1]">
+                                            <th className="p-2 border-b border-[#c3c4c7] w-8"><input type="checkbox" /></th>
+                                            <th className="p-2 border-b border-[#c3c4c7]">Title</th>
+                                            <th className="p-2 border-b border-[#c3c4c7]">Author</th>
+                                            <th className="p-2 border-b border-[#c3c4c7]">Status</th>
+                                            <th className="p-2 border-b border-[#c3c4c7]">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {posts.map(post => (
+                                            <tr key={post.id} className="group hover:bg-[#f6f7f7]">
+                                                <td className="p-2 border-b border-[#c3c4c7]"><input type="checkbox" /></td>
+                                                <td className="p-2 border-b border-[#c3c4c7]">
+                                                    <strong className="text-[#2271b1] cursor-pointer hover:underline">{post.title}</strong>
+                                                    <div className="flex gap-2 text-xs text-[#2271b1] invisible group-hover:visible mt-1">
+                                                        <button className="hover:text-[#135e96]">Edit</button> |
+                                                        {post.status === 'draft' && (
+                                                            <>
+                                                                <button 
+                                                                    className="hover:text-[#135e96]"
+                                                                    onClick={() => post.id && handlePublishPost(post.id)}
+                                                                >
+                                                                    Publish
+                                                                </button> |
+                                                            </>
+                                                        )}
+                                                        <button 
+                                                            className="text-[#b32d2e] hover:text-[#b32d2e]"
+                                                            onClick={() => post.id && handleDeletePost(post.id)}
+                                                        >
+                                                            Delete
+                                                        </button> |
+                                                        <button className="hover:text-[#135e96]">View</button>
+                                                    </div>
+                                                </td>
+                                                <td className="p-2 border-b border-[#c3c4c7] text-[#646970]">{post.author_email || 'admin'}</td>
+                                                <td className="p-2 border-b border-[#c3c4c7]">
+                                                    <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                                        post.status === 'published' 
+                                                            ? 'bg-green-100 text-green-800' 
+                                                            : 'bg-yellow-100 text-yellow-800'
+                                                    }`}>
+                                                        {post.status === 'published' ? 'Published' : 'Draft'}
+                                                    </span>
+                                                </td>
+                                                <td className="p-2 border-b border-[#c3c4c7] text-[#646970]">
+                                                    {post.created_at ? new Date(post.created_at).toLocaleDateString() : '-'}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                            <div className="mt-2 text-xs text-[#646970]">
+                                {posts.length} items
+                            </div>
+                        </div>
+                    ) : (
+                        /* DASHBOARD / DEFAULT VIEW */
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 animate-fade-in">
+                            
+                            {/* At a Glance */}
+                            <div className="bg-white border border-[#dcdcde] shadow-sm p-0 h-fit">
+                                <div className="px-4 py-3 border-b border-[#dcdcde] font-semibold text-sm">At a Glance</div>
+                                <div className="p-4 space-y-2">
+                                    <div className="flex items-center space-x-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">
+                                        <span className="dashicons-admin-post">📝</span>
+                                        <span>12 Posts</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">
+                                        <span className="dashicons-admin-page">📄</span>
+                                        <span>5 Pages</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2 text-[#2271b1] cursor-pointer hover:text-[#135e96]">
+                                        <span className="dashicons-admin-comments">💬</span>
+                                        <span>1 Comment</span>
+                                    </div>
+                                    <div className="pt-3 mt-3 border-t border-[#f0f0f1] text-[#646970]">
+                                        Running <span className="font-semibold">AdlPendar Theme</span> with <span className="font-semibold">Dadgar AI</span> plugin.
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Activity */}
+                            <div className="bg-white border border-[#dcdcde] shadow-sm p-0 h-fit">
+                                <div className="px-4 py-3 border-b border-[#dcdcde] font-semibold text-sm">Activity</div>
+                                <div className="p-0">
+                                    <div className="px-4 py-3 border-b border-[#f0f0f1]">
+                                        <p className="text-[#646970] mb-1">Recently Published</p>
+                                        <ul className="space-y-3">
+                                            {recentActivity.map((act, i) => (
+                                                <li key={i} className="text-[#646970]">
+                                                    <span className="text-[#a7aaad] mr-1">{act.time}</span>
+                                                    <span className="text-[#1d2327]">{act.text}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Quick Draft */}
+                            <div className="bg-white border border-[#dcdcde] shadow-sm p-0 h-fit">
+                                <div className="px-4 py-3 border-b border-[#dcdcde] font-semibold text-sm">Quick Draft</div>
+                                <div className="p-4 space-y-3">
+                                    <input 
+                                        type="text" 
+                                        placeholder="Title" 
+                                        value={draftTitle}
+                                        onChange={(e) => setDraftTitle(e.target.value)}
+                                        className="w-full border border-[#8c8f94] p-1.5 rounded-sm text-sm focus:border-[#2271b1] focus:ring-1 focus:ring-[#2271b1] focus:outline-none"
+                                    />
+                                    <textarea 
+                                        rows={4} 
+                                        placeholder="What's on your mind?" 
+                                        value={draftContent}
+                                        onChange={(e) => setDraftContent(e.target.value)}
+                                        className="w-full border border-[#8c8f94] p-1.5 rounded-sm text-sm focus:border-[#2271b1] focus:ring-1 focus:ring-[#2271b1] focus:outline-none resize-none"
+                                    />
+                                    <button 
+                                        className="bg-[#2271b1] text-white px-3 py-1.5 rounded-sm text-xs font-semibold hover:bg-[#135e96] transition-colors disabled:opacity-50"
+                                        onClick={handleSaveDraft}
+                                        disabled={isSaving}
+                                    >
+                                        {isSaving ? 'Saving...' : 'Save Draft'}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* WordPress Events and News */}
+                            <div className="bg-white border border-[#dcdcde] shadow-sm p-0 h-fit">
+                                <div className="px-4 py-3 border-b border-[#dcdcde] font-semibold text-sm">WordPress Events and News</div>
+                                <div className="p-4 text-[#646970] space-y-3">
+                                    <div>
+                                        <h4 className="font-semibold text-[#2271b1] mb-1 cursor-pointer hover:underline">WordPress 6.5 "Regina"</h4>
+                                        <p>The latest version of WordPress is now available. Update today for new features and security fixes.</p>
+                                    </div>
+                                    <hr className="border-[#f0f0f1]" />
+                                    <div>
+                                        <h4 className="font-semibold text-[#2271b1] mb-1 cursor-pointer hover:underline">Community Summit 2025</h4>
+                                        <p>Join the community summit to discuss the future of the project.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    )}
+                    
+                    <div className="mt-8 text-center text-[#646970] text-xs">
+                        Thank you for creating with <a href="#" className="text-[#2271b1] hover:underline">WordPress</a>. | Version 6.5.2
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default WordPressDashboard;

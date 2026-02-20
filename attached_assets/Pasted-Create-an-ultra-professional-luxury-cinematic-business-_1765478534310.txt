@@ -1,0 +1,66 @@
+Create an ultra-professional, luxury, cinematic business canvas poster for the most successful Iranian legal-tech startup of 2024.
+
+Theme & Style:
+- Premium dark-blue + gold gradient background
+- Cinematic lighting, luxury textures, high-contrast elements
+- Modern Persian minimalism (inspired by Dubai luxury startup pitch decks)
+- Ultra-sharp typography, clean layout grid
+- A1 print-ready poster, 4K resolution
+
+Main Title (Persian – use elegant Persian font “Vazirmatn Bold”):
+«موسسه حقوقی آرمان – بزرگ‌ترین پلتفرم هوش مصنوعی حقوقی ایران»
+
+Subtitle (smaller premium gold text):
+«درآمد ماهانه فعلی: ۱۲۰ میلیون تومان | کاربران فعال: ۱,۳۷۶ | هدف جذب سرمایه ۱۴۰۳: ۲۸ میلیارد تومان»
+
+Business Model Canvas Layout:
+Create a perfectly aligned 3×3 grid (nine equal boxes), each with:
+- Thin gold border
+- Minimal luxury icon
+- Title in Persian (bold)
+- Subtitle text in Persian (regular)
+
+Box 1 — مشتریان هدف 👥  
+متن: افراد عادی، زنان ۲۸-۴۵ سال، کسب‌وکارهای کوچک
+
+Box 2 — ارزش پیشنهادی 💎  
+متن: دادخواست و لایحه در ۴ دقیقه + وکیل پایه یک + ۸۰ هزار تومان
+
+Box 3 — کانال‌ها 📱  
+متن: وبسایت، ربات تلگرام، اینستاگرام، کافه‌بازار
+
+Box 4 — ارتباط با مشتری 💬  
+متن: چت ۲۴/۷، مشاوره تلفنی، پنل کاربری
+
+Box 5 — جریان درآمدی 💰  
+متن: ۱۸۰k دادخواست، ۱۲۰k لایحه، اشتراک VIP ۲.۹ میلیون سالانه
+
+Box 6 — منابع کلیدی 🧠  
+متن: Grok-4.1-fast رایگان، ۳ وکیل پایه یک، سرور آروان
+
+Box 7 — فعالیت‌های کلیدی ⚡  
+متن: آموزش روزانه AI، تبلیغات اینستاگرام، آپدیت آرای وحدت رویه
+
+Box 8 — شرکای کلیدی 🤝  
+متن: کانون وکلا، نقدینه (بانک گردشگری)، زرین‌پال
+
+Box 9 — ساختار هزینه 📊  
+متن: سود خالص ۹۲٪ – هزینه ماهانه ۴۸ میلیون
+
+Bottom Section:
+- Large elegant gold title:
+«تحت حمایت شتاب‌دهنده نقدینه – بانک گردشگری»
+- Smaller gold text:
+«اولین استارتاپ حقوقی ایران با توکن سهام رسمی – ارزش‌گذاری ۱۴۰۴: ۳۵۰ میلیارد تومان»
+
+Include QR Code:
+- Bottom-right corner
+- Link: armanlawfirm.ir/investment
+- Gold frame around QR code
+
+Final Requirements:
+- Ultra high quality, 4K resolution
+- Luxury cinematic lighting
+- Deep Persian elegance
+- Perfect for printing as a premium A1 poster for Jordan office & investor pitches
+- Professional, clean, minimal composition

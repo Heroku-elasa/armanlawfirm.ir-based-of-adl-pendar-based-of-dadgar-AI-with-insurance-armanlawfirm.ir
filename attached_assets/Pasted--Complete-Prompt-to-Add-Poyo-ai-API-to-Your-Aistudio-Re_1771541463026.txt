@@ -1,0 +1,103 @@
+# Complete Prompt to Add Poyo.ai API to Your Aistudio/Replit Site
+
+Copy and paste this **exact prompt** to your AI assistant (Claude, ChatGPT, etc.) working on your site:
+
+---
+
+## 📋 **PROMPT:**
+
+```
+I need to add Poyo.ai API to my site. Here are the exact details:
+
+API Provider: Poyo.ai
+API Key: sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXXXFqXF3oProuUg9huz_
+Base URL: https://api.poyo.ai/v1
+Available Models: claude-sonnet-4.5, gemini-3, gpt-5
+
+TASK 1: If this is an Aistudio/dbui site:
+- Add this as a custom API provider in the settings
+- Set it as the default model provider
+- Make sure all chat interfaces can use this API
+
+TASK 2: If this is a Replit custom code project:
+- Install the OpenAI SDK (npm install openai)
+- Create an API client configuration using the above credentials
+- Set up the chat completion endpoint to use Poyo.ai
+- Use the OpenAI-compatible format with the custom base URL
+
+TASK 3: Test the integration:
+- Send a test message: "Hello, are you working?"
+- Verify the response comes from Poyo.ai API
+- Check that credits are being deducted properly
+
+Please implement this step by step and let me know when each part is complete.
+```
+
+---
+
+## 🎯 **Alternative Shorter Prompt (if you want less detail):**
+
+```
+Add Poyo.ai API to this site:
+
+API Key: sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXXXFqXF3oProuUg9huz_
+Base URL: https://api.poyo.ai/v1
+Model: claude-sonnet-4.5
+
+Use OpenAI SDK format. Make it the default chat provider. Test with "Hello" message.
+```
+
+---
+
+## 🔧 **If You're Doing it Manually in Aistudio:**
+
+1. Open your site in Aistudio
+2. Go to **⚙️ Settings** (gear icon)
+3. Find **"API Keys"** or **"Custom API"** section
+4. Click **"+ Add Custom Provider"** or **"+ New API"**
+5. Fill in:
+   - **Name:** Poyo AI
+   - **API Key:** `sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXXXFqXF3oProuUg9huz_`
+   - **Base URL:** `https://api.poyo.ai/v1`
+   - **Model:** `claude-sonnet-4.5`
+6. Click **Save**
+7. Go to chat interface → Select **"Poyo AI"** from model dropdown
+8. Test it!
+
+---
+
+## 🔧 **If You're Coding it Manually in Replit:**
+
+Create a file called `poyo-config.js`:
+
+```javascript
+import OpenAI from 'openai';
+
+export const poyoClient = new OpenAI({
+  apiKey: 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXXXFqXF3oProuUg9huz_',
+  baseURL: 'https://api.poyo.ai/v1'
+});
+
+export async function chat(userMessage) {
+  const response = await poyoClient.chat.completions.create({
+    model: 'claude-sonnet-4.5',
+    messages: [
+      { role: 'user', content: userMessage }
+    ]
+  });
+  
+  return response.choices[0].message.content;
+}
+```
+
+Then use it anywhere:
+```javascript
+import { chat } from './poyo-config.js';
+
+const reply = await chat('Hello!');
+console.log(reply);
+```
+
+---
+
+**That's everything!** Choose whichever method works for your setup 🚀

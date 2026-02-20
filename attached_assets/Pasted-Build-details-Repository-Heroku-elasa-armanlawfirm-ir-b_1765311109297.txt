@@ -1,0 +1,70 @@
+Build details
+Repository
+
+Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir
+Status
+
+a minute ago
+Branch
+main
+ea027c1
+Saved progress at the end of the loop Replit-Commit-Author: Agent Replit-Commit-Session-Id: 83c99757-ac5a-41ee-8343-09ff7e87490b Replit-Commit-Checkpoint-Type: full_checkpoint Replit-Commit-Event-Id: a5530a1e-f69a-4c25-ba3a-9a185f963b43 Replit-Commit-Screenshot-Url: https://storage.googleapis.com/screenshot-production-us-central1/7b088ed7-5526-4a40-9301-6930ebdfa6c0/83c99757-ac5a-
+Duration
+1m 1s
+Build settings
+Build command
+npm run build
+Deploy command
+npx wrangler deploy
+Root directory
+/
+Build token
+armanlawfirmr-based-of-adl-pendar-based-of-3 build token
+Environment variables
+Variable name	Value
+API_KEY
+Value encrypted
+NODE_VERSION
+20
+SUPABASE_URL
+https://vemzvvveaseghlhjmnqy.supabase.co
+VITE_API_KEY
+Value encrypted
+VITE_API_URL
+https://armanlawfirm-api.onrender.com/
+SUPABASE_ANON_KEY
+Value encrypted
+VITE_GEMINI_API_KEY
+Value encrypted
+Build log
+Initializing build environment
+3s
+Cloning git repository
+3s
+Installing tools and dependencies
+15s
+Building application
+11s
+Deploying to Cloudflare's global network
+30s
+
+Download log
+
+Copy log
+23:40:03.070	- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+23:40:03.159	Success: Build command completed
+23:40:03.313	Executing user deploy command: npx wrangler deploy
+23:40:04.541	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+23:40:25.150	
+23:40:25.150	 ⛅️ wrangler 4.53.0
+23:40:25.150	───────────────────
+23:40:25.161	
+23:40:25.199	✘ [ERROR] It looks like you've run a Workers-specific command in a Pages project.
+23:40:25.200	
+23:40:25.200	  For Pages, please run `wrangler pages deploy` instead.
+23:40:25.200	
+23:40:25.200	
+23:40:25.203	
+23:40:25.204	Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+23:40:25.212	🪵  Logs were written to "/opt/buildhome/.config/.wrangler/logs/wrangler-2025-12-09_20-10-24_662.log"
+23:40:32.304	Failed: error occurred while running deploy command
