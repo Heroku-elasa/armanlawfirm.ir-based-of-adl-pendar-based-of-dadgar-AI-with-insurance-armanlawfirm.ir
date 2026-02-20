@@ -1,0 +1,215 @@
+
+
+Chatgpt4compas@gmail.com's Account
+
+Account home
+
+Recents
+
+
+
+
+
+
+Analytics & logs
+Domains
+Build
+
+Compute
+Workers & Pages
+Observability
+Workers for Platforms
+Containers
+Beta
+Durable Objects
+Queues
+Workflows
+Browser Rendering
+VPC
+Beta
+
+Email Service
+Workers plans
+
+AI
+
+Storage & databases
+
+Media
+Protect & Connect
+
+Application security
+Zero Trust
+
+Networking
+
+Delivery & performance
+
+Domain registration
+
+Manage account
+Workers & Pages
+armanlawfirm-ir-based-of-adl-pendar-based-of-dadgar-workin
+Deployments
+Metrics
+Custom domains
+Settings
+Build
+Variables and Secrets
+Bindings
+Runtime
+General
+Pages configuration
+Give feedback
+Choose Environment:
+Build
+Git repository
+
+Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir
+Build configuration
+Build command:
+npm run build && npm run db:migrate && npm run db:generate-migration && npm run db:migrate:data ##&& npx wrangler d1 execute wb-data_bs_armanlawfirm --remote --file=./migrations/0001_init.sql # اجرای schema npm run db:generate-migration # تولید SQL از JSON npm run db:migrate:data && npx wrangler d1 execute wb-data_bs_armanlawfirm --remote --file=./migrations/0001_init.sql # وارد کردن داده‌ها##npm install &&
+Build output:
+dist
+Root directory:
+Build comments:
+Enabled
+Build cache
+Disabled
+Branch control
+Production branch:
+main
+Automatic deployments:
+Enabled
+Build watch paths
+Include paths:
+*
+Build system version
+Version 3
+Deploy Hooks
+No deploy hooks defined
+Variables and Secrets
+Define the text, secret or build variables for your project
+
+Type
+Name
+Value
+Secret
+AI_INTEGRATIONS_GEMINI_API_KEY
+Value encrypted
+
+
+Secret
+AI_INTEGRATIONS_GEMINI_BASE_URL
+Value encrypted
+
+
+Secret
+API_KEY
+Value encrypted
+
+
+Secret
+CODEWORDS_API_KEY
+Value encrypted
+
+
+Plaintext
+NODE_VERSION
+20
+
+
+Secret
+OPENROUTER_API_KEY
+Value encrypted
+
+
+Secret
+PORTKEY_API_KEY
+Value encrypted
+
+
+Secret
+POYO_AI_API_KEY
+Value encrypted
+
+
+Secret
+SESSION_SECRET
+Value encrypted
+
+
+Secret
+SUPABASE_ANON_KEY
+Value encrypted
+
+
+Secret
+SUPABASE_URL
+Value encrypted
+
+
+Secret
+TELEGRAM_BOT_TOKEN
+Value encrypted
+
+
+Secret
+TELEGRAM_CHANNEL_ID
+Value encrypted
+
+
+Secret
+VITE_API_KEY
+Value encrypted
+
+
+Secret
+VITE_API_URL
+Value encrypted
+
+
+Secret
+VITE_GEMINI_API_KEY
+Value encrypted
+
+
+Bindings
+
+Define the set of resources available to your Pages Functions
+
+Type
+Name
+Value
+D1 database
+DB
+wb-data_bs_armanlawfirm
+
+
+Runtime
+Define the runtime configuration for your Pages Functions
+
+Placement
+Default
+Compatibility date
+Jan 1, 2024
+Compatibility flags
+No flags defined
+Fail open/closed
+Fail open
+General
+Name
+armanlawfirm-ir-based-of-adl-pendar-based-of-dadgar-workin
+Notifications
+Subscribe to specific events by adding a notification to your project
+Access policy
+Control access to preview deployments with Cloudflare Access.
+Permanently delete this Pages project including all deployments, assets, functions and configurations associated with it.
+Support
+System status
+Careers
+Terms of Use
+Report Security Issues
+Privacy Policy
+A blue and white pill with a checkmark and an x, representing privacy choicesCookie Preferences
+© 2026 Cloudflare, Inc.

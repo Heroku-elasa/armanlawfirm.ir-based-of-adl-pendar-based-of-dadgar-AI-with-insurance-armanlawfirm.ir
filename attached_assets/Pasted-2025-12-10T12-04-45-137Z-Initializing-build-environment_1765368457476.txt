@@ -1,0 +1,133 @@
+2025-12-10T12:04:45.137Z	Initializing build environment...
+2025-12-10T12:04:47.086Z	Success: Finished initializing build environment
+2025-12-10T12:04:47.483Z	Cloning repository...
+2025-12-10T12:04:48.070Z	Restoring from dependencies cache
+2025-12-10T12:04:48.071Z	Restoring from build output cache
+2025-12-10T12:04:48.073Z	Detected the following tools from environment: npm@10.9.2, nodejs@22.16.0
+2025-12-10T12:04:48.372Z	Installing project dependencies: npm clean-install --progress=false
+2025-12-10T12:04:51.300Z	npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2025-12-10T12:04:53.585Z	
+2025-12-10T12:04:53.586Z	added 389 packages, and audited 390 packages in 5s
+2025-12-10T12:04:53.586Z	
+2025-12-10T12:04:53.586Z	67 packages are looking for funding
+2025-12-10T12:04:53.586Z	  run `npm fund` for details
+2025-12-10T12:04:53.593Z	
+2025-12-10T12:04:53.594Z	2 low severity vulnerabilities
+2025-12-10T12:04:53.594Z	
+2025-12-10T12:04:53.594Z	To address all issues, run:
+2025-12-10T12:04:53.594Z	  npm audit fix --force
+2025-12-10T12:04:53.594Z	
+2025-12-10T12:04:53.594Z	Run `npm audit` for details.
+2025-12-10T12:04:53.811Z	Executing user build command: npm run build
+2025-12-10T12:04:53.994Z	
+2025-12-10T12:04:53.994Z	> saved-hstory-of-armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-ai-with-insurance-armanlawfirm.ir@0.0.0 build
+2025-12-10T12:04:53.994Z	> vite build
+2025-12-10T12:04:53.994Z	
+2025-12-10T12:04:54.175Z	vite v6.4.1 building for production...
+2025-12-10T12:04:54.250Z	transforming...
+2025-12-10T12:04:55.550Z	[plugin vite:resolve] Module "crypto" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.551Z	[plugin vite:resolve] Module "fs" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.551Z	[plugin vite:resolve] Module "path" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.551Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.551Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.551Z	[plugin vite:resolve] Module "stream" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.553Z	[plugin vite:resolve] Module "http" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.554Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.554Z	[plugin vite:resolve] Module "https" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.554Z	[plugin vite:resolve] Module "zlib" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/html-to-docx/dist/html-to-docx.esm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:55.818Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.084Z	[plugin vite:resolve] Module "util" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/dom.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.203Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/xmlbuilder2/lib/builder/XMLBuilderCBImpl.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.394Z	[plugin vite:resolve] Module "events" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/Parser.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.400Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/htmlparser2/lib/WritableStream.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.422Z	[plugin vite:resolve] Module "url" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/@oozcitak/url/lib/URLAlgorithm.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:04:56.617Z	[plugin vite:resolve] Module "buffer" has been externalized for browser compatibility, imported by "/opt/buildhome/repo/node_modules/safe-buffer/index.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.
+2025-12-10T12:05:00.117Z	✓ 1070 modules transformed.
+2025-12-10T12:05:00.702Z	rendering chunks...
+2025-12-10T12:05:01.380Z	computing gzip size...
+2025-12-10T12:05:01.433Z	dist/index.html                                  13.73 kB │ gzip:   3.92 kB
+2025-12-10T12:05:01.434Z	dist/assets/LeafletMapComponent-CIGW-MKW.css     15.61 kB │ gzip:   6.46 kB
+2025-12-10T12:05:01.436Z	dist/assets/browser-DPa5piJu.js                   0.34 kB │ gzip:   0.27 kB
+2025-12-10T12:05:01.436Z	dist/assets/LeafletMapComponent-kn2SQ9IW.js     160.48 kB │ gzip:  47.15 kB
+2025-12-10T12:05:01.436Z	dist/assets/html-to-docx.esm-L6XpS4D8.js      1,132.50 kB │ gzip: 311.99 kB
+2025-12-10T12:05:01.436Z	dist/assets/index-D7i4vs-R.js                 1,634.17 kB │ gzip: 429.00 kB
+2025-12-10T12:05:01.436Z	✓ built in 7.24s
+2025-12-10T12:05:01.437Z	
+2025-12-10T12:05:01.437Z	(!) Some chunks are larger than 500 kB after minification. Consider:
+2025-12-10T12:05:01.437Z	- Using dynamic import() to code-split the application
+2025-12-10T12:05:01.437Z	- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2025-12-10T12:05:01.437Z	- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2025-12-10T12:05:01.522Z	Success: Build command completed
+2025-12-10T12:05:01.681Z	Executing user deploy command: npx wrangler d1 execute wb-data_bs_armanlawfirm --remote --file=./migrations/0001_init.sql && npx wrangler deploy 
+2025-12-10T12:05:03.352Z	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+2025-12-10T12:05:11.040Z	
+2025-12-10T12:05:11.041Z	 ⛅️ wrangler 4.53.0
+2025-12-10T12:05:11.041Z	───────────────────
+2025-12-10T12:05:11.041Z	Resource location: remote 
+2025-12-10T12:05:11.041Z	
+2025-12-10T12:05:11.097Z	▲ [WARNING] ⚠️ This process may take some time, during which your D1 database will be unavailable to serve queries.
+2025-12-10T12:05:11.097Z	
+2025-12-10T12:05:11.098Z	
+2025-12-10T12:05:11.099Z	🌀 Executing on remote database wb-data_bs_armanlawfirm (54480fa8-5a72-4664-ab2d-0b676c942805):
+2025-12-10T12:05:11.099Z	🌀 To execute on your local development database, remove the --remote flag from your wrangler command.
+2025-12-10T12:05:11.103Z	Note: if the execution fails to complete, your DB will return to its original state and you can safely retry.
+2025-12-10T12:05:11.103Z	├ Checking if file needs uploading
+2025-12-10T12:05:12.240Z	│
+2025-12-10T12:05:12.244Z	├ 🌀 Uploading 54480fa8-5a72-4664-ab2d-0b676c942805.a31276c32af8e024.sql
+2025-12-10T12:05:12.409Z	│ 🌀 Uploading complete.
+2025-12-10T12:05:12.409Z	│
+2025-12-10T12:05:13.325Z	🌀 Starting import...
+2025-12-10T12:05:13.325Z	🌀 Warning: leftover buffer from sql.ingest: "
+2025-12-10T12:05:13.325Z	
+2025-12-10T12:05:13.325Z	-- ============================================================
+2025-12-10T12:05:13.325Z	-- Sample data for testing (optional)
+2025-12-10T12:05:13.325Z	-- ============================================================
+2025-12-10T12:05:13.325Z	-- INSERT INTO users (id, email, first_name, last_name, role) 
+2025-12-10T12:05:13.326Z	-- VALUES ('admin-001', 'admin@armanlawfirm.ir', 'Admin', 'User', 'admin');
+2025-12-10T12:05:13.326Z	"
+2025-12-10T12:05:13.326Z	🚣 Executed 13 queries in 3.48ms (22 rows read, 24 rows written)
+2025-12-10T12:05:13.326Z	   Database is currently at bookmark 00000003-00000004-00004fd0-372d75754a840b8ff3a97ce9accbda3c.
+2025-12-10T12:05:13.326Z	[
+2025-12-10T12:05:13.326Z	  {
+2025-12-10T12:05:13.326Z	    "results": [
+2025-12-10T12:05:13.326Z	      {
+2025-12-10T12:05:13.326Z	        "Total queries executed": 13,
+2025-12-10T12:05:13.326Z	        "Rows read": 22,
+2025-12-10T12:05:13.326Z	        "Rows written": 24,
+2025-12-10T12:05:13.326Z	        "Database size (MB)": "0.09"
+2025-12-10T12:05:13.327Z	      }
+2025-12-10T12:05:13.327Z	    ],
+2025-12-10T12:05:13.327Z	    "success": true,
+2025-12-10T12:05:13.327Z	    "finalBookmark": "00000003-00000004-00004fd0-372d75754a840b8ff3a97ce9accbda3c",
+2025-12-10T12:05:13.327Z	    "meta": {
+2025-12-10T12:05:13.327Z	      "served_by": "v3-prod",
+2025-12-10T12:05:13.327Z	      "served_by_region": "WEUR",
+2025-12-10T12:05:13.327Z	      "served_by_primary": true,
+2025-12-10T12:05:13.327Z	      "timings": {
+2025-12-10T12:05:13.328Z	        "sql_duration_ms": 3.4847
+2025-12-10T12:05:13.328Z	      },
+2025-12-10T12:05:13.328Z	      "duration": 3.4847,
+2025-12-10T12:05:13.328Z	      "changes": 1,
+2025-12-10T12:05:13.328Z	      "last_row_id": 0,
+2025-12-10T12:05:13.328Z	      "changed_db": true,
+2025-12-10T12:05:13.328Z	      "size_after": 86016,
+2025-12-10T12:05:13.328Z	      "rows_read": 22,
+2025-12-10T12:05:13.328Z	      "rows_written": 24,
+2025-12-10T12:05:13.328Z	      "num_tables": 5,
+2025-12-10T12:05:13.328Z	      "total_attempts": 1
+2025-12-10T12:05:13.328Z	    }
+2025-12-10T12:05:13.328Z	  }
+2025-12-10T12:05:13.329Z	]
+2025-12-10T12:05:14.830Z	
+2025-12-10T12:05:14.830Z	Cloudflare collects anonymous telemetry about your usage of Wrangler. Learn more at https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler/telemetry.md
+2025-12-10T12:05:14.907Z	
+2025-12-10T12:05:14.907Z	 ⛅️ wrangler 4.53.0
+2025-12-10T12:05:14.907Z	───────────────────
+2025-12-10T12:05:14.925Z	
+2025-12-10T12:05:14.971Z	✘ [ERROR] It looks like you've run a Workers-specific command in a Pages project.
+2025-12-10T12:05:14.971Z	
+2025-12-10T12:05:14.971Z	  For Pages, please run `wrangler pages deploy` instead.
+2025-12-10T12:05:14.971Z	
+2025-12-10T12:05:14.971Z	
+2025-12-10T12:05:15.007Z	🪵  Logs were written to "/opt/buildhome/.config/.wrangler/logs/wrangler-2025-12-10_12-05-14_687.log"
+2025-12-10T12:05:15.093Z	Failed: error occurred while running deploy command

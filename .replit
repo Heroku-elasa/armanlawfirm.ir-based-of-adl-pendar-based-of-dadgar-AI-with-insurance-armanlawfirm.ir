@@ -1,0 +1,77 @@
+modules = ["nodejs-20", "web"]
+[nix]
+channel = "stable-25_05"
+packages = ["unzip", "undollar"]
+
+[agent]
+expertMode = true
+integrations = ["javascript_gemini_ai_integrations:2.0.0"]
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Arman Law Firm"
+
+[[workflows.workflow]]
+name = "Arman Law Firm"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run dev"
+waitForPort = 5000
+
+[[ports]]
+localPort = 3001
+externalPort = 3002
+
+[[ports]]
+localPort = 5000
+externalPort = 80
+
+[[ports]]
+localPort = 5002
+externalPort = 3001
+
+[[ports]]
+localPort = 5003
+externalPort = 3000
+
+[[ports]]
+localPort = 5004
+externalPort = 3003
+
+[[ports]]
+localPort = 5005
+externalPort = 4200
+
+[userenv]
+
+[userenv.shared]
+SUPABASE_URL = "https://vemzvvveaseghlhjmnqy.supabase.co"
+SUPABASE_ANON_KEY = "sb_publishable_RsEVi4y85hR5b_3xXaDtCQ_Y3mgfdBj"
+VITE_SUPABASE_URL = "https://vemzvvveaseghlhjmnqy.supabase.co"
+VITE_SUPABASE_ANON_KEY = "sb_publishable_RsEVi4y85hR5b_3xXaDtCQ_Y3mgfdBj"
+TELEGRAM_BOT_TOKEN = "8434464737:AAHuN0nyUoya9-t8p7U0MfnfwraWvLTf_Z0"
+TELEGRAM_CHANNEL_ID = "@ARMAN_LAW_FIRM"
+POYO_AI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
+OPENROUTER_API_KEY = "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"
+GEMINI_API_KEY = ""
+PORTKEY_API_KEY = "gASN7iokVzgqJLweJTWr12V75JG+"
+VITE_PORTKEY_API_KEY = "gASN7iokVzgqJLweJTWr12V75JG+"
+VITE_POYO_AI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
+VITE_GEMINI_API_KEY = ""
+VITE_OPENROUTER_API_KEY = "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"
+AIVEN_DATABASE_URL = "postgres://avnadmin:REPLACE_WITH_PASSWORD@pg-375b79cc-gold-bee7.c.aivencloud.com:19692/defaultdb?sslmode=require"
+POYO_AI_API_KEY_PRIMARY = "sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_"
+POYO_AI_API_KEY_BACKUP = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"

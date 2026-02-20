@@ -1,0 +1,101 @@
+Skip to content
+Cloudflare
+Chatgpt4compas@gmail.com's Account
+
+Add
+
+Support
+
+Profile
+Workers & Pages
+armanlawfirmr-based-of-adl-pendar-based-of-3
+Overview
+Metrics
+Deployments
+Bindings
+Observability
+Settings
+Latest build failed
+ Back to builds
+Build details
+Repository
+
+Heroku-elasa/armanlawfirm.ir-based-of-adl-pendar-based-of-dadgar-AI-with-insurance-armanlawfirm.ir
+Status
+
+a minute ago
+Branch
+main
+ea027c1
+Duration
+48s
+Build settings
+Build command
+npm run build
+Deploy command
+npx wrangler pages deploy dist
+Root directory
+/
+Build token
+armanlawfirmr-based-of-adl-pendar-based-of-3 build token
+Environment variables
+Variable name	Value
+API_KEY
+Value encrypted
+NODE_VERSION
+20
+SUPABASE_URL
+https://vemzvvveaseghlhjmnqy.supabase.co
+VITE_API_KEY
+Value encrypted
+VITE_API_URL
+https://armanlawfirm-api.onrender.com/
+SUPABASE_ANON_KEY
+Value encrypted
+VITE_GEMINI_API_KEY
+Value encrypted
+Build log
+Initializing build environment
+3s
+Cloning git repository
+2s
+Installing tools and dependencies
+16s
+Building application
+11s
+Deploying to Cloudflare's global network
+17s
+
+Download log
+
+Copy log
+23:43:52.901	npm warn exec The following package was not found and will be installed: wrangler@4.53.0
+23:44:05.814	
+23:44:05.815	 ⛅️ wrangler 4.53.0
+23:44:05.815	───────────────────
+23:44:06.311	
+23:44:06.353	✘ [ERROR] A request to the Cloudflare API (/accounts/bc7a41d5c9f101a5384793aa40a2cc08/pages/projects/armanlawfirm) failed.
+23:44:06.354	
+23:44:06.354	  Authentication error [code: 10000]
+23:44:06.354	
+23:44:06.354	
+23:44:06.354	📎 It looks like you are authenticating Wrangler via a custom API token set in an environment variable.
+23:44:06.354	Please ensure it has the correct permissions for this operation.
+23:44:06.354	
+23:44:06.354	Getting User settings...
+23:44:06.983	👋 You are logged in with an User API Token, associated with the email chatgpt4compas@gmail.com.
+23:44:06.983	ℹ️  The API Token is read from the CLOUDFLARE_API_TOKEN environment variable.
+23:44:06.987	┌────────────────────────────────────┬──────────────────────────────────┐
+23:44:06.987	│ Account Name                       │ Account ID                       │
+23:44:06.987	├────────────────────────────────────┼──────────────────────────────────┤
+23:44:06.987	│ Chatgpt4compas@gmail.com's Account │ bc7a41d5c9f101a5384793aa40a2cc08 │
+23:44:06.987	└────────────────────────────────────┴──────────────────────────────────┘
+23:44:06.987	🔓 To see token permissions visit https://dash.cloudflare.com/profile/api-tokens.
+Support
+System status
+Careers
+Terms of Use
+Report Security Issues
+Privacy Policy
+A blue and white pill with a checkmark and an x, representing privacy choicesCookie Preferences
+© 2025 Cloudflare, Inc.

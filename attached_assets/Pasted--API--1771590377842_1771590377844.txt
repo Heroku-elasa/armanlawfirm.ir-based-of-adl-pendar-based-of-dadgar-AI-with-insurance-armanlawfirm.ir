@@ -1,0 +1,297 @@
+## 🎯 آهان! پس فقط می‌خوای API‌های جدید رو اضافه کنی!
+
+خیلی بهتر! این خیلی امن‌تره. بیا قدم به قدم فقط API‌های جدید رو اضافه کنیم **بدون دست زدن** به فایل‌های اصلی که کار می‌کنن.
+
+---
+
+## 📋 پرامپت برای Replit AI:
+
+```
+I'm on commit 8634aac (working version) where content generation works perfectly.
+
+I want to ADD ONLY the new API features from the latest main branch WITHOUT touching the existing working files.
+
+Please help me:
+
+STEP 1: Show me NEW files
+---
+Run this command to see what NEW files were added in main:
+```bash
+git fetch origin main
+git diff --name-status 8634aac origin/main | grep "^A"
+```
+
+Show me the list of added files only.
+
+STEP 2: Show me API-related changes
+---
+Look for changes in these paths:
+- server/
+- functions/
+- api/
+- routes/
+
+Run:
+```bash
+git diff --name-only 8634aac origin/main | grep -E "(server|functions|api|routes)"
+```
+
+STEP 3: Extract ONLY API files
+---
+For each NEW API file, copy it to my project:
+```bash
+# Example:
+git checkout origin/main -- server/new-api.ts
+git checkout origin/main -- functions/api/new-endpoint.ts
+```
+
+DO NOT update these files (they're working):
+- App.tsx
+- components/ContentHubPage.tsx
+- components/Hero.tsx
+- types.ts
+- constants.ts
+- index.html
+
+STEP 4: Check for new dependencies
+---
+Compare package.json to see if new APIs need new packages:
+```bash
+git diff 8634aac origin/main -- package.json
+```
+
+If new dependencies are needed, add them manually:
+```bash
+npm install <new-package>
+```
+
+STEP 5: Test
+---
+After adding new API files:
+```bash
+npm install
+npm run build
+npm run dev
+```
+
+Verify:
+1. Old content generation still works ✓
+2. New API endpoints are available ✓
+
+Start with STEP 1 and show me what NEW files exist in main.
+```
+
+---
+
+## 🔧 یا خودت دستی اینکارو بکن:
+
+### مرحله 1: ببین چه API‌های جدیدی اضافه شده
+
+```bash
+# بیار تغییرات جدید
+git fetch origin main
+
+# فقط فایل‌های جدید (A = Added)
+git diff --name-status 8634aac origin/main | grep "^A"
+
+# فقط فایل‌های API
+git diff --name-only 8634aac origin/main | grep -E "(server|functions|api|routes|endpoint)"
+```
+
+**نتیجه رو بهم بگو، من بهت میگم کدوما رو بیاری!**
+
+---
+
+### مرحله 2: فقط فایل‌های API جدید رو بیار
+
+مثال:
+
+```bash
+# اگه یه API جدید برای بیمه اضافه شده:
+git checkout origin/main -- server/insurance-api.ts
+
+# اگه یه endpoint جدید هست:
+git checkout origin/main -- functions/api/new-feature.ts
+
+# اگه یه route جدید اضافه شده:
+git checkout origin/main -- server/routes/insurance.ts
+```
+
+**مهم:** فقط فایل‌هایی که **جدیداً اضافه شدن** رو بیار، نه اونایی که **تغییر کردن**!
+
+---
+
+### مرحله 3: چک کن dependencies جدید لازمه؟
+
+```bash
+# ببین package.json چی اضافه شده
+git diff 8634aac origin/main -- package.json
+```
+
+اگه package جدیدی اضافه شده، فقط اونو نصب کن:
+
+```bash
+# مثال:
+npm install axios
+npm install @types/express
+```
+
+**یا اگه نمی‌خوای کل package.json رو آپدیت کنی:**
+
+```bash
+# فقط dependencies جدید رو از main بگیر
+git show origin/main:package.json > package.json.new
+
+# باز کن و ببین چه چیزایی جدیده
+diff package.json package.json.new
+
+# دستی نصب کن
+npm install <package-name>
+```
+
+---
+
+### مرحله 4: فایل‌های config API (اگه لازمه)
+
+```bash
+# اگه .env جدیدی لازمه
+git diff 8634aac origin/main -- .env.example
+
+# اگه API key جدیدی اضافه شده، دستی به .env اضافه کن
+```
+
+---
+
+### مرحله 5: تست کن
+
+```bash
+npm install
+npm run build
+npm run dev
+```
+
+چک کن:
+- ✅ تولید محتوای قدیمی کار می‌کنه
+- ✅ API های جدید اضافه شدن
+- ✅ هیچ چیزی خراب نشده
+
+---
+
+## 📂 ساختار امن برای اضافه کردن API:
+
+```
+پروژه شما (8634aac - کارا)
+│
+├─ components/
+│  ├─ ContentHubPage.tsx  ← دست نزن! ✅
+│  ├─ Hero.tsx            ← دست نزن! ✅
+│  └─ App.tsx             ← دست نزن! ✅
+│
+├─ server/
+│  ├─ index.ts            ← دست نزن! ✅
+│  ├─ routes.ts           ← دست نزن! ✅
+│  └─ insurance-api.ts    ← جدید! بیارش ✅
+│
+├─ functions/api/
+│  ├─ generate.ts         ← دست نزن! ✅
+│  └─ new-feature.ts      ← جدید! بیارش ✅
+│
+└─ package.json           ← فقط dependency جدید اضافه کن ✅
+```
+
+---
+
+## 🎯 اسکریپت خودکار (فقط API‌های جدید):
+
+ذخیره کن به اسم `add_new_apis.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🔍 پیدا کردن API‌های جدید..."
+
+# بیار تغییرات
+git fetch origin main
+
+# فایل‌های جدید API
+NEW_API_FILES=$(git diff --name-only --diff-filter=A 8634aac origin/main | grep -E "(server|functions|api|routes)")
+
+echo "📂 فایل‌های API جدید:"
+echo "$NEW_API_FILES"
+
+if [ -z "$NEW_API_FILES" ]; then
+    echo "❌ هیچ API جدیدی پیدا نشد!"
+    exit 0
+fi
+
+echo ""
+read -p "می‌خوای اینارو اضافه کنی؟ (y/n) " -n 1 -r
+echo
+
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+    # بیار فایل‌های جدید
+    for file in $NEW_API_FILES; do
+        echo "➕ اضافه کردن: $file"
+        git checkout origin/main -- "$file"
+    done
+    
+    # کامیت
+    git add .
+    git commit -m "Added new API files from main"
+    
+    # تست
+    echo "🧪 تست..."
+    npm install
+    npm run build
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ موفق! همه چی کار می‌کنه"
+    else
+        echo "❌ خطا! برمی‌گردیم..."
+        git reset --hard HEAD~1
+    fi
+else
+    echo "❌ لغو شد"
+fi
+```
+
+اجرا:
+```bash
+chmod +x add_new_apis.sh
+./add_new_apis.sh
+```
+
+---
+
+## 🚀 سریع‌ترین راه (اگه مطمئنی):
+
+```bash
+# فقط فایل‌های جدید API
+git fetch origin main
+git diff --name-only --diff-filter=A 8634aac origin/main | grep -E "(server|functions|api)" | xargs -I {} git checkout origin/main -- {}
+
+# تست
+npm install
+npm run build
+```
+
+---
+
+## ✅ بهترین استراتژی:
+
+1. اول **لیست فایل‌های جدید** رو ببین
+2. بهم **بگو چه فایل‌هایی** هستن
+3. من بهت میگم کدوما **امنه** و کدوما **خطرناکه**
+4. فقط فایل‌های امن رو بیار
+5. تست کن
+
+---
+
+**الان این دستور رو بزن و نتیجه رو بهم بگو:**
+
+```bash
+git fetch origin main
+git diff --name-status 8634aac origin/main | grep "^A"
+```
+
+بهم بگو چه فایل‌هایی **Added** شدن، من بهت میگم کدوما رو بیاری! 🎯
