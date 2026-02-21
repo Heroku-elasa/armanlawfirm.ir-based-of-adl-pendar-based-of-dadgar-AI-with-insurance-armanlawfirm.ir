@@ -86,19 +86,99 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
         }
     };
 
+    const [apiStatus, setApiStatus] = useState<any[]>([]);
+    const [loadingStatus, setLoadingStatus] = useState(false);
+
+    const checkApiStatus = async () => {
+        setLoadingStatus(true);
+        try {
+            const response = await fetch('/api/ai/health-check', { method: 'POST' });
+            if (response.ok) {
+                const data = await response.json();
+                setApiStatus(data);
+            }
+        } catch (error) {
+            console.error("Failed to check API status", error);
+        } finally {
+            setLoadingStatus(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) {
+            checkApiStatus();
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
 
     return (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-[100] animate-fade-in backdrop-blur-sm" onClick={onClose}>
-            <div className="bg-white dark:bg-brand-blue rounded-xl shadow-2xl w-full max-w-md m-4 overflow-hidden border border-brand-gold/30" onClick={e => e.stopPropagation()}>
+            <div className="bg-white dark:bg-brand-blue rounded-xl shadow-2xl w-full max-w-2xl m-4 overflow-hidden border border-brand-gold/30" onClick={e => e.stopPropagation()}>
                 <div className="bg-brand-blue/50 p-4 border-b border-brand-gold/20 flex justify-between items-center">
-                    <h2 className="text-xl font-bold text-white">تنظیمات سایت (Site Settings)</h2>
+                    <h2 className="text-xl font-bold text-white">تنظیمات و وضعیت API (Settings & API Status)</h2>
                     <button onClick={onClose} className="text-gray-400 hover:text-white">
                         <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
                 
                 <div className="p-6 space-y-8 max-h-[80vh] overflow-y-auto">
+                    {/* API Status Table */}
+                    <section>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider">AI API Status</h3>
+                            <button 
+                                onClick={checkApiStatus}
+                                disabled={loadingStatus}
+                                className="text-xs bg-brand-gold/20 text-brand-gold px-2 py-1 rounded hover:bg-brand-gold/30 disabled:opacity-50"
+                            >
+                                {loadingStatus ? 'Checking...' : 'Refresh Status'}
+                            </button>
+                        </div>
+                        <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
+                            <table className="w-full text-sm text-left">
+                                <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+                                    <tr>
+                                        <th className="px-4 py-2">Provider</th>
+                                        <th className="px-4 py-2">Status</th>
+                                        <th className="px-4 py-2">Latency</th>
+                                        <th className="px-4 py-2">Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {apiStatus.map((api, idx) => (
+                                        <tr key={idx} className="bg-white dark:bg-brand-blue/40">
+                                            <td className="px-4 py-2 font-medium text-gray-900 dark:text-white">{api.provider}</td>
+                                            <td className="px-4 py-2">
+                                                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                                    api.status === 'online' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
+                                                    api.status === 'offline' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' :
+                                                    'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
+                                                }`}>
+                                                    {api.status.toUpperCase()}
+                                                </span>
+                                            </td>
+                                            <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
+                                                {api.latency ? `${api.latency}ms` : '-'}
+                                            </td>
+                                            <td className="px-4 py-2 text-[10px] text-gray-400 truncate max-w-[150px]">
+                                                {api.error || 'Working normally'}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    {apiStatus.length === 0 && (
+                                        <tr>
+                                            <td colSpan={4} className="px-4 py-8 text-center text-gray-500">
+                                                No API data available. Click refresh to test.
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <hr className="border-gray-200 dark:border-gray-700" />
                     
                     {/* Theme Templates (New Section) */}
                     <section>

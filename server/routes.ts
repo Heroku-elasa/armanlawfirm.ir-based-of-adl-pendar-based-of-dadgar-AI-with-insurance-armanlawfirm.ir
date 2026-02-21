@@ -320,12 +320,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      const openRouterKey1 = process.env.OPENROUTER_API_KEY;
+      const openRouterKey1 = process.env.OPENROUTER_API_KEY_1;
       const openRouterKey2 = process.env.OPENROUTER_API_KEY_2;
+      const portkeyKey1 = process.env.PORTKEY_API_KEY_1;
+      const portkeyKey2 = process.env.PORTKEY_API_KEY_2;
+      const poyoKey1 = process.env.POYO_API_KEY_1;
+      const poyoKey2 = process.env.POYO_API_KEY_2;
       const openaiKey = process.env.OPENAI_API_KEY;
-      const poyoKey = process.env.POYO_AI_API_KEY;
       
-      if (!openRouterKey1 && !openRouterKey2 && !openaiKey && !poyoKey) {
+      if (!openRouterKey1 && !openRouterKey2 && !portkeyKey1 && !portkeyKey2 && !poyoKey1 && !poyoKey2 && !openaiKey) {
         console.error("No AI API keys configured");
         return res.status(500).json({ message: "Chatbot not configured" });
       }
@@ -362,52 +365,70 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let aiResponse: string | null = null;
       let usedProvider = '';
 
-      // Try Poyo AI first if key exists
-      if (poyoKey) {
+      // Helper for Portkey
+      const tryPortkey = async (apiKey: string, keyName: string): Promise<boolean> => {
+        if (aiResponse) return true;
         try {
-          console.log("Trying Poyo AI with SDK...");
-          const poyo = new OpenAI({
-            apiKey: poyoKey,
-            baseURL: 'https://api.poyo.ai/v1'
-          });
-          
-          const response = await poyo.chat.completions.create({
-            model: 'claude-3-5-sonnet',
-            messages: messages as any,
-            max_tokens: 1000,
-            temperature: 0.7
-          });
-
-          aiResponse = response.choices[0]?.message?.content || null;
-          if (aiResponse) {
-            usedProvider = 'Poyo AI';
-            console.log("Poyo AI response received");
-          }
-        } catch (error) {
-          console.error("Poyo AI failed, trying fallback model:", error);
-          try {
-            const poyo = new OpenAI({
-              apiKey: poyoKey,
-              baseURL: 'https://api.poyo.ai/v1'
-            });
-            const response = await poyo.chat.completions.create({
-              model: 'gpt-4o-mini',
-              messages: messages as any,
+          console.log(`Trying ${keyName}...`);
+          const response = await fetch('https://api.portkey.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'x-portkey-api-key': apiKey,
+              'x-portkey-provider': 'google'
+            },
+            body: JSON.stringify({
+              model: 'gemini-2.0-flash',
+              messages,
               max_tokens: 1000,
               temperature: 0.7
-            });
-            aiResponse = response.choices[0]?.message?.content || null;
-            if (aiResponse) {
-              usedProvider = 'Poyo AI (Fallback)';
-              console.log("Poyo AI fallback response received");
-            }
-          } catch (fallbackError) {
-            console.error("Poyo AI fallback failed:", fallbackError);
-          }
-        }
-      }
+            })
+          });
 
-      // Helper function to try OpenRouter with a specific key
+          if (response.ok) {
+            const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+            aiResponse = data.choices?.[0]?.message?.content || null;
+            if (aiResponse) {
+              usedProvider = keyName;
+              return true;
+            }
+          }
+        } catch (e) {}
+        return false;
+      };
+
+      // Helper for Poyo
+      const tryPoyo = async (apiKey: string, keyName: string): Promise<boolean> => {
+        if (aiResponse) return true;
+        try {
+          console.log(`Trying ${keyName}...`);
+          const response = await fetch('https://api.poyo.ai/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify({
+              model: 'gemini-2.0-flash',
+              messages,
+              max_tokens: 1000,
+              temperature: 0.7
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+            aiResponse = data.choices?.[0]?.message?.content || null;
+            if (aiResponse) {
+              usedProvider = keyName;
+              return true;
+            }
+          }
+        } catch (e) {}
+        return false;
+      };
+
+      // Helper for OpenRouter
       const tryOpenRouter = async (apiKey: string, keyName: string): Promise<boolean> => {
         if (aiResponse) return true;
         try {
@@ -433,28 +454,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             aiResponse = data.choices?.[0]?.message?.content || null;
             if (aiResponse) {
               usedProvider = keyName;
-              console.log(`${keyName} response received`);
               return true;
             }
-          } else {
-            const errorText = await response.text();
-            console.error(`${keyName} error:`, response.status, errorText);
           }
-        } catch (error) {
-          console.error(`${keyName} failed:`, error);
-        }
+        } catch (e) {}
         return false;
       };
 
-      // Try OpenRouter Key 1 first
-      if (openRouterKey1) {
-        await tryOpenRouter(openRouterKey1, 'OpenRouter-Key1');
-      }
-
-      // Fallback to OpenRouter Key 2
-      if (!aiResponse && openRouterKey2) {
-        await tryOpenRouter(openRouterKey2, 'OpenRouter-Key2');
-      }
+      // Execution sequence
+      await tryPoyo(poyoKey1!, 'Poyo-1');
+      if (!aiResponse) await tryPoyo(poyoKey2!, 'Poyo-2');
+      if (!aiResponse) await tryPortkey(portkeyKey1!, 'Portkey-1');
+      if (!aiResponse) await tryPortkey(portkeyKey2!, 'Portkey-2');
+      if (!aiResponse) await tryOpenRouter(openRouterKey1!, 'OpenRouter-1');
+      if (!aiResponse) await tryOpenRouter(openRouterKey2!, 'OpenRouter-2');
 
       // Fallback to OpenAI if OpenRouter failed or not configured
       if (!aiResponse && openaiKey) {
@@ -504,79 +517,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/ai/health-check', async (_req: Request, res: Response) => {
     const results = [];
-    const start = Date.now();
-
-    // Google Gemini Health Check
-    try {
-      const geminiKey = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
-      if (geminiKey) {
-        results.push({ provider: 'Gemini', status: 'online', latency: Date.now() - start });
-      } else {
-        results.push({ provider: 'Gemini', status: 'offline', error: 'Key not configured' });
+    
+    const checkProvider = async (name: string, url: string, key: string | undefined, headers: any, body: any) => {
+      if (!key) {
+        results.push({ provider: name, status: 'offline', error: 'Key not configured' });
+        return;
       }
-    } catch (err: any) {
-      results.push({ provider: 'Gemini', status: 'offline', error: err.message });
-    }
-
-    // OpenRouter Health Check
-    try {
-      const openRouterKey = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
-      if (openRouterKey) {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      const start = Date.now();
+      try {
+        const response = await fetch(url, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${openRouterKey}`,
+            ...headers
           },
-          body: JSON.stringify({
-            model: 'google/gemini-2.0-flash-001',
-            messages: [{ role: 'user', content: 'health check' }],
-            max_tokens: 1
-          })
+          body: JSON.stringify(body)
         });
-        const data = await response.json();
         results.push({
-          provider: 'OpenRouter',
+          provider: name,
           status: response.ok ? 'online' : 'error',
           latency: Date.now() - start,
-          error: response.ok ? null : JSON.stringify(data)
+          error: response.ok ? null : `Status ${response.status}`
         });
-      } else {
-        results.push({ provider: 'OpenRouter', status: 'offline', error: 'Key not configured' });
+      } catch (err: any) {
+        results.push({ provider: name, status: 'offline', error: err.message });
       }
-    } catch (err: any) {
-      results.push({ provider: 'OpenRouter', status: 'offline', error: err.message });
-    }
+    };
 
-    // Poyo AI Health Check
-    try {
-      const poyoKey = process.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm';
-      if (poyoKey) {
-        const response = await fetch('https://api.poyo.ai/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${poyoKey}`,
-          },
-          body: JSON.stringify({
-            model: 'gemini-2.0-flash',
-            messages: [{ role: 'user', content: 'health check' }],
-            max_tokens: 1
-          })
-        });
-        const data = await response.json();
-        results.push({
-          provider: 'PoyoAI',
-          status: response.ok ? 'online' : 'error',
-          latency: Date.now() - start,
-          error: response.ok ? null : JSON.stringify(data)
-        });
-      } else {
-        results.push({ provider: 'PoyoAI', status: 'offline', error: 'Key not configured' });
-      }
-    } catch (err: any) {
-      results.push({ provider: 'PoyoAI', status: 'offline', error: err.message });
-    }
+    const messages = [{ role: 'user', content: 'hi' }];
+    
+    await Promise.all([
+      checkProvider('Poyo-1', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_1, { 'Authorization': `Bearer ${process.env.POYO_API_KEY_1}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Poyo-2', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_2, { 'Authorization': `Bearer ${process.env.POYO_API_KEY_2}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Portkey-1', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_1, { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_1, 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Portkey-2', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_2, { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_2, 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('OpenRouter-1', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_1, { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_1}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
+      checkProvider('OpenRouter-2', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_2, { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_2}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
+    ]);
 
     return res.json(results);
   });
