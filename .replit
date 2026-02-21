@@ -77,3 +77,6 @@ AIVEN_DATABASE_URL = "postgres://avnadmin:REPLACE_WITH_PASSWORD@pg-375b79cc-gold
 deploymentTarget = "cloudrun"
 publicDir = "dist/public"
 run = ["sh", "-c", "bash -c printf \"%s\\n\\n%s\" \"$0\" \"$1\" Please use the \u001B[1;93mConfiguration\u001B[0m pane to configure your run command. For more info, see: https://docs.replit.com/replit-workspace/configuring-repl#run"]
+
+[objectStorage]
+defaultBucketID = "replit-objstore-ad4c5cb1-71aa-4504-9a98-0794425bf4bc"
