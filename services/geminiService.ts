@@ -19,13 +19,13 @@ let aiInstance: GoogleGenAI | null = null;
 // @ts-ignore
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY || '';
 // @ts-ignore
-const POYO_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || '';
+const POYO_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || process.env.POYO_API_KEY || '';
 // @ts-ignore
 const PORTKEY_API_KEY = import.meta.env.VITE_PORTKEY_API_KEY || process.env.PORTKEY_API_KEY || '';
 // @ts-ignore
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 // @ts-ignore
-const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
 
 const getAI = (): GoogleGenAI | null => {
     if (!aiInstance) {
@@ -90,6 +90,7 @@ const geminiProvider: AIProvider = {
     name: 'Gemini',
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
         const ai = getAI();
+        if (!ai) throw new Error('Gemini API not initialized');
         const response = await ai.models.generateContent({
             model: 'gemini-2.0-flash',
             contents: [{ parts: [{ text: prompt }] }],
@@ -105,7 +106,7 @@ const poyoProvider: AIProvider = {
         if (!POYO_API_KEY) throw new Error('Poyo AI API key not configured');
         try {
             const response = await poyoClient.chat.completions.create({
-                model: 'claude-3-5-sonnet',
+                model: 'gpt-4o',
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: maxTokens,
                 temperature: temperature
@@ -300,6 +301,11 @@ export interface SearchResult {
 
 async function performSearch(prompt: string, useThinkingMode: boolean, location?: LatLng | null): Promise<SearchResult> {
     const ai = getAI();
+    if (!ai) {
+        // Fallback to callWithFallback for search if Gemini is not initialized
+        const result = await callWithFallback(prompt, 1500, 0.7);
+        return { text: result, sources: [] };
+    }
     const model = 'gemini-2.0-flash';
 
     let enhancedPrompt = prompt;

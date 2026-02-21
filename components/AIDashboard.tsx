@@ -36,7 +36,7 @@ const DEFAULT_PROVIDERS: AIProvider[] = [
     name: 'Google Gemini',
     enabled: true,
     priority: 1,
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.0-flash',
     endpoint: 'googleapis.com',
     limits: { requestsPerMinute: 15, requestsPerDay: 1500 },
     usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
