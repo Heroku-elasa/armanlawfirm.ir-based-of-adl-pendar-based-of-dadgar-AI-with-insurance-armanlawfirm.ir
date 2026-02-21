@@ -92,11 +92,24 @@ const AIDashboard: React.FC = () => {
   
   const [apiKeys, setApiKeys] = useState({
     gemini: '',
-    openrouter: '',
+    openrouter: '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',
     cloudflare_account: '',
     cloudflare_token: '',
-    openai: ''
+    openai: '',
+    portkey: 'gASN7iokVzgqJLweJTWr12V75JG+',
+    poyo: 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm'
   });
+
+  const testAllProviders = async () => {
+    setLoading(true);
+    for (const provider of providers) {
+      if (provider.enabled) {
+        await testProvider(provider.id);
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
     fetchProviders();
@@ -309,13 +322,22 @@ const AIDashboard: React.FC = () => {
                   <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                     {isRtl ? 'ارائه‌دهندگان API' : 'API Providers'}
                   </h2>
-                  <button
-                    onClick={runHealthCheck}
-                    disabled={healthCheckRunning}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
-                  >
-                    {healthCheckRunning ? (isRtl ? 'در حال بررسی...' : 'Checking...') : (isRtl ? 'بررسی سلامت' : 'Health Check')}
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={testAllProviders}
+                      disabled={loading || healthCheckRunning}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 transition-colors flex items-center gap-2"
+                    >
+                      {loading ? '...' : (isRtl ? 'تست همه' : 'Test All')}
+                    </button>
+                    <button
+                      onClick={runHealthCheck}
+                      disabled={healthCheckRunning || loading}
+                      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-colors"
+                    >
+                      {healthCheckRunning ? (isRtl ? 'در حال بررسی...' : 'Checking...') : (isRtl ? 'بررسی سلامت' : 'Health Check')}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

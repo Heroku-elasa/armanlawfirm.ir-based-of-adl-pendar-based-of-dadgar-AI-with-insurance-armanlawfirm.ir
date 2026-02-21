@@ -550,7 +550,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     // Poyo AI Health Check
     try {
-      const poyoKey = process.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY;
+      const poyoKey = process.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm';
       if (poyoKey) {
         const response = await fetch('https://api.poyo.ai/v1/chat/completions', {
           method: 'POST',
