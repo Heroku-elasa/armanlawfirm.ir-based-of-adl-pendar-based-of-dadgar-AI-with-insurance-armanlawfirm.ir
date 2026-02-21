@@ -42,8 +42,8 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
   
-  const handlePageChange = (page: 'home' | PageKey) => {
-      setPage(page);
+  const handlePageChange = (page: PageKey | 'home' | 'wordpress_dashboard') => {
+      setPage(page as any);
       window.scrollTo(0, 0);
       setIsMobileMenuOpen(false);
       setIsToolsMenuOpen(false);
@@ -115,6 +115,7 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
     // Tools dropdown goes here in desktop view
     { key: 'pricing', text: t('header.pricing'), action: () => handlePageChange('pricing') },
     { key: 'investment', text: language === 'fa' ? 'سرمایه‌گذاری' : 'Investment', action: () => handlePageChange('investment') },
+    { key: 'ai_dashboard', text: language === 'fa' ? 'داشبورد هوش مصنوعی' : 'AI Dashboard', action: () => handlePageChange('ai_dashboard') },
     { key: 'services', text: t('header.services'), action: () => handleScrollTo('services') },
     { key: 'contact', text: t('header.contact'), action: () => handleScrollTo('footer'), isPriority: true },
   ];

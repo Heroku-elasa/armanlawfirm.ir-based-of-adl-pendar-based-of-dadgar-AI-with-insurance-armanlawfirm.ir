@@ -201,14 +201,23 @@ const AIDashboard: React.FC = () => {
 
   const saveApiKeys = async () => {
     try {
-      await fetch('/api/ai/settings', {
+      // Save to local storage for immediate persistence in browser
+      localStorage.setItem('dadgar-api-keys', JSON.stringify(apiKeys));
+      
+      const res = await fetch('/api/ai/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(apiKeys)
       });
-      alert(isRtl ? 'تنظیمات ذخیره شد' : 'Settings saved');
+      
+      if (res.ok) {
+        alert(isRtl ? 'تنظیمات ذخیره شد' : 'Settings saved');
+      } else {
+        throw new Error('Failed to save settings to server');
+      }
     } catch (error) {
       console.error('Error saving settings:', error);
+      alert(isRtl ? 'خطا در ذخیره تنظیمات' : 'Error saving settings');
     }
   };
 

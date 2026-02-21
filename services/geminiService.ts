@@ -9,31 +9,31 @@ interface AIProvider {
     call: (prompt: string, maxTokens: number, temperature: number) => Promise<string>;
 }
 
-const CLOUDFLARE_API_TOKEN = import.meta.env.VITE_CLOUDFLARE_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || '';
-const CLOUDFLARE_ACCOUNT_ID = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_ID || process.env.CLOUDFLARE_ACCOUNT_ID || '';
+const CLOUDFLARE_API_TOKEN = (import.meta as any).env?.VITE_CLOUDFLARE_API_TOKEN || (process as any).env?.CLOUDFLARE_API_TOKEN || '';
+const CLOUDFLARE_ACCOUNT_ID = (import.meta as any).env?.VITE_CLOUDFLARE_ACCOUNT_ID || (process as any).env?.CLOUDFLARE_ACCOUNT_ID || '';
 
 // Initialize the Google GenAI SDK
 // We use a singleton pattern to reuse the client instance
 let aiInstance: GoogleGenAI | null = null;
 
 // @ts-ignore
-const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY || process.env.OPENAI_API_KEY || '';
+const OPENAI_API_KEY = (import.meta as any).env?.VITE_OPENAI_API_KEY || (process as any).env?.OPENAI_API_KEY || '';
 // @ts-ignore
-const POYO_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || process.env.POYO_API_KEY || '';
+const POYO_API_KEY = (import.meta as any).env?.VITE_POYO_AI_API_KEY || (process as any).env?.POYO_AI_API_KEY || (process as any).env?.POYO_API_KEY || '';
 // @ts-ignore
-const PORTKEY_API_KEY = import.meta.env.VITE_PORTKEY_API_KEY || process.env.PORTKEY_API_KEY || '';
+const PORTKEY_API_KEY = (import.meta as any).env?.VITE_PORTKEY_API_KEY || (process as any).env?.PORTKEY_API_KEY || '';
 // @ts-ignore
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || (process as any).env?.GEMINI_API_KEY || '';
 // @ts-ignore
-const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
+const OPENROUTER_API_KEY = (import.meta as any).env?.VITE_OPENROUTER_API_KEY || (process as any).env?.OPENROUTER_API_KEY || '';
 // @ts-ignore
-const POYO_AI_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || '';
+const POYO_AI_API_KEY_VAR = (import.meta as any).env?.VITE_POYO_AI_API_KEY || (process as any).env?.POYO_AI_API_KEY || '';
 
 const getAI = (): GoogleGenAI | null => {
     if (!aiInstance) {
         // Try multiple potential keys for Gemini
         const apiKey = (GEMINI_API_KEY && GEMINI_API_KEY.length > 10) ? GEMINI_API_KEY : 
-                       (POYO_AI_API_KEY && POYO_AI_API_KEY.length > 10) ? POYO_AI_API_KEY : null;
+                       (POYO_AI_API_KEY_VAR && POYO_AI_API_KEY_VAR.length > 10) ? POYO_AI_API_KEY_VAR : null;
         
         if (!apiKey) {
             console.warn("Google Gemini API key not found. Falling back to other providers.");
@@ -88,7 +88,12 @@ const portkeyProvider: AIProvider = {
             return data.choices?.[0]?.message?.content || '';
         } catch (error) {
             console.error("Portkey Error:", error);
-            throw error;
+            // Fallback for Portkey
+            try {
+                return await poyoProvider.call(prompt, maxTokens, temperature);
+            } catch (fallbackError) {
+                throw error;
+            }
         }
     }
 };
@@ -118,24 +123,25 @@ const poyoProvider: AIProvider = {
     name: 'PoyoAI',
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
         if (!POYO_API_KEY) throw new Error('Poyo AI API key not configured');
-        try {
-            const response = await poyoClient.chat.completions.create({
-                model: 'gpt-4o',
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: maxTokens,
-                temperature: temperature
-            });
-            return response.choices[0]?.message?.content || '';
-        } catch (error) {
-            console.error("Poyo AI Primary Model Error, trying fallback:", error);
-            const response = await poyoClient.chat.completions.create({
-                model: 'gpt-4o-mini',
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: maxTokens,
-                temperature: temperature
-            });
-            return response.choices[0]?.message?.content || '';
+        const models = ['claude-3-5-sonnet', 'gemini-2.0-flash', 'gpt-4o-mini'];
+        let lastError: any = null;
+        
+        for (const model of models) {
+            try {
+                const response = await poyoClient.chat.completions.create({
+                    model: model,
+                    messages: [{ role: 'user', content: prompt }],
+                    max_tokens: maxTokens,
+                    temperature: temperature
+                });
+                return response.choices[0]?.message?.content || '';
+            } catch (error: any) {
+                console.warn(`Poyo AI Model ${model} failed:`, error.message);
+                lastError = error;
+                continue;
+            }
         }
+        throw lastError || new Error('Poyo AI all models failed');
     }
 };
 
@@ -239,6 +245,26 @@ const openAIProvider: AIProvider = {
 };
 
 const allProviders: AIProvider[] = [poyoProvider, openRouterProvider, geminiProvider, portkeyProvider, cloudflareProvider, openAIProvider];
+
+// Load dynamic API keys from localStorage if available
+if (typeof window !== 'undefined') {
+    try {
+        const savedKeys = localStorage.getItem('dadgar-api-keys');
+        if (savedKeys) {
+            const keys = JSON.parse(savedKeys);
+            // In a real production app, we would update the service instances here
+            // For now, we'll rely on the dashboard to test with these keys
+        }
+        
+        const savedProviders = localStorage.getItem('dadgar-ai-providers');
+        if (savedProviders) {
+            const providers = JSON.parse(savedProviders);
+            // This could be used to reorder allProviders dynamically
+        }
+    } catch (e) {
+        console.error("Error loading dynamic AI config:", e);
+    }
+}
 
 export async function callWithFallback(
     prompt: string,
