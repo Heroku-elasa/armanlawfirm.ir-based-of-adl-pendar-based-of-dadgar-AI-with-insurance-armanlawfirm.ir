@@ -1,0 +1,284 @@
+Based on your message, you want to **integrate PoYo API into an AI Studio project** to support **different types of LLMs, video generation, image generation, music**, etc.
+
+Here's a complete code implementation guide:
+
+---
+
+## 🔧 **Step 1: Get Your PoYo API Key**
+
+1. Go to [PoYo API Keys page](https://poyo.ai/api-key)
+2. Generate a new API key
+3. Copy it securely
+
+---
+
+## 📦 **Step 2: Install Dependencies**
+
+```bash
+npm install axios dotenv
+```
+
+---
+
+## 🔐 **Step 3: Configure Environment Variables**
+
+Create a `.env` file:
+
+```env
+POYO_API_KEY=your_poyo_api_key_here
+POYO_BASE_URL=https://api.poyo.ai/v1
+```
+
+---
+
+## 💻 **Step 4: Create PoYo API Helper (Node.js/TypeScript)**
+
+```typescript
+// lib/poyoClient.ts
+import axios, { AxiosInstance } from 'axios';
+
+interface PoYoConfig {
+  apiKey: string;
+  baseURL?: string;
+}
+
+class PoYoClient {
+  private client: AxiosInstance;
+
+  constructor(config: PoYoConfig) {
+    this.client = axios.create({
+      baseURL: config.baseURL || 'https://api.poyo.ai/v1',
+      headers: {
+        'Authorization': `Bearer ${config.apiKey}`,
+        'Content-Type': 'application/json',
+      },
+    });
+  }
+
+  // ===== TEXT GENERATION (LLMs) =====
+  async generateText(model: string, prompt: string, options = {}) {
+    try {
+      const response = await this.client.post('/chat/completions', {
+        model,
+        messages: [{ role: 'user', content: prompt }],
+        ...options,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`PoYo Text Error: ${error.response?.data?.error || error.message}`);
+    }
+  }
+
+  // ===== IMAGE GENERATION =====
+  async generateImage(model: string, prompt: string, options = {}) {
+    try {
+      const response = await this.client.post('/images/generations', {
+        model, // e.g., "gpt-image-1.5", "flux-2", "seedream-4.5"
+        prompt,
+        ...options,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`PoYo Image Error: ${error.response?.data?.error || error.message}`);
+    }
+  }
+
+  // ===== VIDEO GENERATION =====
+  async generateVideo(model: string, prompt: string, options = {}) {
+    try {
+      const response = await this.client.post('/videos/generations', {
+        model, // e.g., "sora-2", "kling-2.6", "hailuo-02", "veo-3.1"
+        prompt,
+        ...options,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`PoYo Video Error: ${error.response?.data?.error || error.message}`);
+    }
+  }
+
+  // ===== MUSIC GENERATION =====
+  async generateMusic(prompt: string, options = {}) {
+    try {
+      const response = await this.client.post('/music/generations', {
+        prompt,
+        ...options,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`PoYo Music Error: ${error.response?.data?.error || error.message}`);
+    }
+  }
+
+  // ===== CHECK TASK STATUS (for async operations) =====
+  async getTaskStatus(taskId: string) {
+    try {
+      const response = await this.client.get(`/tasks/${taskId}`);
+      return response.data;
+    } catch (error: any) {
+      throw new Error(`PoYo Task Error: ${error.response?.data?.error || error.message}`);
+    }
+  }
+}
+
+export default PoYoClient;
+```
+
+---
+
+## 🚀 **Step 5: Usage Examples**
+
+### **A. Text Generation (LLM)**
+
+```typescript
+import PoYoClient from './lib/poyoClient';
+
+const poyo = new PoYoClient({
+  apiKey: process.env.POYO_API_KEY!,
+});
+
+async function chatExample() {
+  const result = await poyo.generateText(
+    'gpt-4o', // or 'claude-3-sonnet', 'gemini-pro', etc.
+    'Explain quantum computing in simple terms',
+    {
+      max_tokens: 500,
+      temperature: 0.7,
+    }
+  );
+  
+  console.log(result.choices[0].message.content);
+}
+
+chatExample();
+```
+
+---
+
+### **B. Image Generation**
+
+```typescript
+async function imageExample() {
+  const result = await poyo.generateImage(
+    'flux-2', // or 'gpt-image-1.5', 'seedream-4.5'
+    'A futuristic city at sunset, cyberpunk style',
+    {
+      width: 1024,
+      height: 1024,
+      num_images: 1,
+    }
+  );
+  
+  console.log('Image URL:', result.data[0].url);
+}
+
+imageExample();
+```
+
+---
+
+### **C. Video Generation**
+
+```typescript
+async function videoExample() {
+  const result = await poyo.generateVideo(
+    'sora-2-pro', // or 'kling-2.6', 'veo-3.1', 'hailuo-02'
+    'A drone flying through a forest at sunrise',
+    {
+      duration: 5, // seconds
+      resolution: '1080p',
+    }
+  );
+  
+  // Since video generation is async, poll for status
+  const taskId = result.task_id;
+  
+  let status = await poyo.getTaskStatus(taskId);
+  while (status.status === 'processing') {
+    await new Promise(resolve => setTimeout(resolve, 5000)); // wait 5s
+    status = await poyo.getTaskStatus(taskId);
+  }
+  
+  console.log('Video URL:', status.result.url);
+}
+
+videoExample();
+```
+
+---
+
+### **D. Music Generation**
+
+```typescript
+async function musicExample() {
+  const result = await poyo.generateMusic(
+    'Epic orchestral soundtrack with drums and violins',
+    {
+      duration: 30, // seconds
+      genre: 'cinematic',
+    }
+  );
+  
+  console.log('Music URL:', result.url);
+}
+
+musicExample();
+```
+
+---
+
+## 🔄 **Step 6: Error Handling & Fallbacks**
+
+```typescript
+async function robustGeneration() {
+  const models = ['gpt-4o', 'claude-3-sonnet', 'gemini-pro'];
+  
+  for (const model of models) {
+    try {
+      const result = await poyo.generateText(model, 'Hello world');
+      console.log(`✅ ${model} worked:`, result);
+      return result;
+    } catch (error) {
+      console.error(`❌ ${model} failed:`, error.message);
+      continue;
+    }
+  }
+  
+  throw new Error('All models failed');
+}
+```
+
+---
+
+## 📊 **Step 7: Track Usage (Optional)**
+
+```typescript
+async function checkUsage() {
+  const usage = await poyo.client.get('/usage');
+  console.log('Total Spend:', usage.data.total_spend);
+  console.log('Credits Remaining:', usage.data.credits);
+}
+```
+
+---
+
+## 🎯 **Available Models on PoYo**
+
+| Category | Models |
+|----------|--------|
+| **Text (LLM)** | gpt-4o, claude-3-sonnet, gemini-pro, grok |
+| **Image** | flux-2, gpt-image-1.5, seedream-4.5, dall-e-3, z-image |
+| **Video** | sora-2, sora-2-pro, kling-2.6, veo-3.1, hailuo-02, wan-animate |
+| **Music** | ai-music-api |
+
+---
+
+## ⚠️ **Important Notes**
+
+1. **Region Blocks**: If in Iran, you'll still hit the 403 error. Use a **VPN** or proxy server in a supported region
+2. **Billing**: Check [PoYo Pricing](https://poyo.ai/pricing) - most APIs are pay-per-use
+3. **Rate Limits**: Add retry logic with exponential backoff
+
+---
+
+Would you like me to create a **React frontend** or **full AI Studio dashboard** using this setup?
