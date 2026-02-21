@@ -39,6 +39,7 @@ import QuotaErrorModal from './components/QuotaErrorModal';
 import Chatbot from './components/Chatbot';
 import WhatsAppChatbot from './components/WhatsAppChatbot';
 import SettingsModal from './components/SettingsModal';
+import ApiTestPage from './components/ApiTestPage';
 import { ToastProvider } from './components/Toast';
 import BookingModal from './components/BookingModal'; 
 import DonationModal from './components/DonationModal'; 
