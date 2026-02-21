@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { produce } from 'immer';
 import { nanoid } from 'nanoid';
@@ -451,10 +450,6 @@ const AppContent: React.FC = () => {
       setState(produce((draft: AppState) => { draft.lawyerFinderKeywords = keywords; }));
 
       const cacheKey = `lawyer-${keywords}`;
-      const cachedResult = await FastCache.get<any>(cacheKey);
-      if (cachedResult) {
-      }
-
       const prompt = t('lawyerFinder.prompt').replace('{queries}', keywords).replace('{maxResults}', "10");
       try {
           await geminiService.findLawyers(prompt);
@@ -581,41 +576,37 @@ const AppContent: React.FC = () => {
               draft.form.description = result.description;
               draft.document = '';
           }));
-          window.scrollTo(0, 0);
-
       } catch (err) {
-          const msg = handleApiError(err);
-          alert(msg); 
+          console.error("Failed to prepare draft", err);
       } finally {
           setIsExecutingTask(false);
       }
   };
 
-  const handleAnalyzeWebPage = async (url: string, query: string, useThinkingMode: boolean) => {
-      setIsLoading(true);
-      setIsApiError(null);
-      setState(produce((draft: AppState) => {
-          draft.webAnalyzerUrl = url;
-          draft.webAnalyzerQuery = query;
-          draft.webAnalyzerResult = '';
-          draft.webAnalyzerSources = [];
-      }));
-      const prompt = t('webAnalyzer.prompt').replace('{url}', url).replace('{query}', query);
-      try {
-          const result = await geminiService.analyzeWebPage(prompt, useThinkingMode);
-          setState(produce((draft: AppState) => {
-              draft.webAnalyzerResult = result.text;
-              draft.webAnalyzerSources = result.sources;
-          }));
-      } catch (err) {
-          const msg = handleApiError(err);
-          setIsApiError(msg);
-      } finally {
-          setIsLoading(false);
-      }
+  const handleAnalyzeWebPage = async (url: string, query: string) => {
+    setIsLoading(true);
+    setIsApiError(null);
+    setState(produce((draft: AppState) => {
+        draft.webAnalyzerUrl = url;
+        draft.webAnalyzerQuery = query;
+        draft.webAnalyzerResult = '';
+        draft.webAnalyzerSources = [];
+    }));
+    try {
+        const result = await geminiService.analyzeWebPage(url, query, t('webAnalyzer.prompt'));
+        setState(produce((draft: AppState) => {
+            draft.webAnalyzerResult = result.text;
+            draft.webAnalyzerSources = result.sources;
+        }));
+    } catch (err) {
+        const msg = handleApiError(err);
+        setIsApiError(msg);
+    } finally {
+        setIsLoading(false);
+    }
   };
 
-  const handleAnalyzeSiteStructure = async (url: string, query: string, useThinkingMode: boolean) => {
+  const handleAnalyzeSiteStructure = async (url: string, query: string) => {
     setIsLoading(true);
     setIsApiError(null);
     setState(produce((draft: AppState) => {
@@ -624,9 +615,8 @@ const AppContent: React.FC = () => {
         draft.siteArchitectResult = '';
         draft.siteArchitectSources = [];
     }));
-    const prompt = t('siteArchitect.prompt').replace('{url}', url).replace('{query}', query);
     try {
-        const result = await geminiService.analyzeSiteStructure(prompt, useThinkingMode);
+        const result = await geminiService.analyzeSiteStructure(url, query, t('siteArchitect.prompt'));
         setState(produce((draft: AppState) => {
             draft.siteArchitectResult = result.text;
             draft.siteArchitectSources = result.sources;
@@ -637,111 +627,45 @@ const AppContent: React.FC = () => {
     } finally {
         setIsLoading(false);
     }
-};
-  
-  const handleRouteUserIntent = async (goal: string) => {
-      setIsLoading(true);
-      setIsApiError(null);
-      setState(produce((draft: AppState) => {
-          draft.aiGuidePrompt = goal;
-          draft.aiGuideResults = [];
-      }));
-      try {
-          const results = await geminiService.routeUserIntent(goal, t('aiGuide.prompt'));
-          setState(produce((draft: AppState) => { draft.aiGuideResults = results; }));
-      } catch (err) {
-          const msg = handleApiError(err);
-          setIsApiError(msg);
-      } finally {
-          setIsLoading(false);
-      }
-  };
-  
-  const handleSelectRoute = async (page: PageKey) => {
-      const userGoal = state.aiGuidePrompt;
-      setIsAIGuideOpen(false);
-      
-      setState(produce((draft: AppState) => { 
-          draft.page = page; 
-          
-          // Smart Context Transfer: Pre-fill the target tool based on the user's initial goal
-          if (userGoal) {
-              switch(page) {
-                  case 'legal_drafter':
-                      draft.form.description = userGoal;
-                      // Optionally set topic if easy to extract or just leave blank for user
-                      break;
-                  case 'lawyer_finder':
-                      draft.lawyerFinderKeywords = userGoal;
-                      break;
-                  case 'news_summarizer':
-                      draft.newsQuery = userGoal;
-                      break;
-                  case 'case_strategist':
-                      draft.strategyGoal = userGoal;
-                      break;
-                  case 'notary_finder':
-                      draft.notaryFinderKeywords = userGoal;
-                      break;
-                  case 'contract_analyzer':
-                      draft.contractAnalyzerQuery = userGoal;
-                      break;
-                  case 'evidence_analyzer':
-                      draft.evidenceAnalyzerQuery = userGoal;
-                      break;
-                  case 'web_analyzer':
-                      draft.webAnalyzerQuery = userGoal;
-                      break;
-                  case 'image_generator':
-                      draft.imageGenPrompt = userGoal;
-                      break;
-                  case 'corporate_services':
-                      // Default to Q&A as it's the most generic entry point
-                      draft.corporateServices_complianceQuery = userGoal;
-                      break;
-                  case 'insurance_services':
-                      // Default to recommendation
-                      draft.insurance_recommendationQuery = userGoal;
-                      break;
-                  case 'site_architect':
-                      draft.siteArchitectQuery = userGoal;
-                      break;
-                  case 'general_questions':
-                      draft.generalQuestionsQuery = userGoal;
-                      break;
-                  case 'court_assistant':
-                      // Default to live chat input or citation text
-                      draft.courtAssistant_draftText = userGoal;
-                      break;
-                  // Add more mappings as needed
-              }
-          }
-      }));
-      
-      // Keep existing logic for specific tools if needed (e.g. generating search queries)
-      if (page === 'lawyer_finder' || page === 'notary_finder') {
-          try {
-              // Try to optimize the query using AI, but fallback to raw input is handled in state above
-              const query = await geminiService.generateSearchQuery(state.aiGuidePrompt);
-              preparedSearchQueryRef.current = { for: page, query: query };
-              setPreparedSearchQuery(preparedSearchQueryRef.current);
-          } catch(err) {
-              console.error("Failed to generate search query, using raw input:", err);
-          }
-      }
   };
 
-  const handleAnalyzeContract = async (content: { file?: FilePart; text?: string }, userQuery: string, useThinkingMode: boolean) => {
+  const handleRouteUserIntent = async (prompt: string) => {
     setIsLoading(true);
     setIsApiError(null);
     setState(produce((draft: AppState) => {
-        draft.contractAnalysis = "";
-        draft.contractAnalyzerQuery = userQuery;
-        if (content.text) draft.initialContractText = content.text;
+        draft.aiGuidePrompt = prompt;
+        draft.aiGuideResults = [];
     }));
-
     try {
-        const result = await geminiService.analyzeContract(content, userQuery, t('contractAnalyzer.prompt'), useThinkingMode);
+        const result: IntentRoute[] = await geminiService.routeUserIntent(prompt, t('aiGuide.routingPrompt'));
+        setState(produce((draft: AppState) => { draft.aiGuideResults = result; }));
+    } catch (err) {
+        const msg = handleApiError(err);
+        setIsApiError(msg);
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const handleSelectRoute = (route: IntentRoute) => {
+      setIsAIGuideOpen(false);
+      if (route.page === 'lawyer_finder' || route.page === 'notary_finder') {
+          preparedSearchQueryRef.current = { for: route.page, query: route.suggestedQuery || '' };
+          setPreparedSearchQuery(preparedSearchQueryRef.current);
+      }
+      setPage(route.page);
+  };
+
+  const handleAnalyzeContract = async (text: string, query: string) => {
+    setIsLoading(true);
+    setIsApiError(null);
+    setState(produce((draft: AppState) => {
+        draft.contractAnalysis = '';
+        draft.contractAnalyzerQuery = query;
+        draft.initialContractText = text;
+    }));
+    try {
+        const result = await geminiService.analyzeContract(text, query, t('contractAnalyzer.prompt'));
         setState(produce((draft: AppState) => { draft.contractAnalysis = result; }));
     } catch (err) {
         const msg = handleApiError(err);
@@ -751,58 +675,54 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const handleAnalyzeEvidence = async (content: { file: FilePart }, userQuery: string, useThinkingMode: boolean) => {
-    setIsLoading(true);
-    setIsApiError(null);
-    setState(produce((draft: AppState) => {
-        draft.evidenceAnalysisResult = "";
-        draft.evidenceAnalyzerQuery = userQuery;
-    }));
-
-    try {
-        const result = await geminiService.analyzeImage(content, userQuery, t('evidenceAnalyzer.prompt'), useThinkingMode);
-        setState(produce((draft: AppState) => { draft.evidenceAnalysisResult = result; }));
-    } catch (err) {
-        const msg = handleApiError(err);
-        setIsApiError(msg);
-    } finally {
-        setIsLoading(false);
-    }
-  };
-  
-  const handleGenerateImage = async (prompt: string, aspectRatio: string) => {
-    setIsLoading(true);
-    setIsApiError(null);
-    setState(produce((draft: AppState) => {
-        draft.imageGenPrompt = prompt;
-        draft.imageGenAspectRatio = aspectRatio;
-        draft.generatedImage = '';
-    }));
-
-    try {
-        const result = await geminiService.generateImage(prompt, aspectRatio);
-        setState(produce((draft: AppState) => { draft.generatedImage = result; }));
-    } catch (err) {
-        const msg = handleApiError(err);
-        setIsApiError(msg);
-    } finally {
-        setIsLoading(false);
-    }
-  };
-  
-  const handleGenerateCompanyNames = async (keywords: string, companyType: string) => {
+  const handleAnalyzeEvidence = async (files: FilePart[], query: string) => {
       setIsLoading(true);
       setIsApiError(null);
       setState(produce((draft: AppState) => {
-          draft.corporateServices_nameQuery = keywords;
+          draft.evidenceAnalysisResult = '';
+          draft.evidenceAnalyzerQuery = query;
+      }));
+      try {
+          const result = await geminiService.analyzeEvidence(files, query, t('evidenceAnalyzer.prompt'));
+          setState(produce((draft: AppState) => { draft.evidenceAnalysisResult = result; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
+
+  const handleGenerateImage = async (prompt: string, aspectRatio: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.imageGenPrompt = prompt;
+          draft.imageGenAspectRatio = aspectRatio;
+          draft.generatedImage = '';
+      }));
+      try {
+          const result = await geminiService.generateImage(prompt, aspectRatio);
+          setState(produce((draft: AppState) => { draft.generatedImage = result; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
+
+  const handleGenerateCompanyNames = async (query: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.corporateServices_nameQuery = query;
           draft.corporateServices_generatedNames = [];
       }));
       try {
-          const companyTypeText = t(`corporateServices.nameGenerator.types.${companyType}`);
-          const prompt = t('corporateServices.prompts.nameGenerator')
-              .replace('{keywords}', keywords)
-              .replace('{companyType}', companyTypeText);
-          const names = await geminiService.generateJsonArray(prompt);
+          const prompt = t('corporateServices.prompts.nameGenerator').replace('{query}', query);
+          const answer = await geminiService.generateText(prompt);
+          const names = answer.split('\n').filter(n => n.trim().length > 0).map(n => n.replace(/^\d+\.\s*/, '').trim());
           setState(produce((draft: AppState) => { draft.corporateServices_generatedNames = names; }));
       } catch (err) {
           const msg = handleApiError(err);
@@ -820,22 +740,13 @@ const AppContent: React.FC = () => {
           draft.corporateServices_generatedArticles = '';
       }));
       try {
-          const companyTypeText = t(`corporateServices.nameGenerator.types.${query.type}`);
           const prompt = t('corporateServices.prompts.articlesDrafter')
-              .replace('{companyName}', query.name)
-              .replace('{companyType}', companyTypeText)
+              .replace('{name}', query.name)
+              .replace('{type}', query.type)
               .replace('{activity}', query.activity)
               .replace('{capital}', query.capital);
-          
-          const generator = geminiService.generateReportStream(prompt);
-          let fullText = '';
-          for await (const chunk of generator) {
-              fullText += chunk;
-              setState(produce((draft: AppState) => { draft.corporateServices_generatedArticles = fullText; }));
-          }
-          if (!fullText) {
-              throw new Error("AI returned an empty response.");
-          }
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.corporateServices_generatedArticles = answer; }));
       } catch (err) {
           const msg = handleApiError(err);
           setIsApiError(msg);
@@ -852,7 +763,7 @@ const AppContent: React.FC = () => {
           draft.corporateServices_complianceAnswer = '';
       }));
       try {
-          const prompt = t('corporateServices.prompts.complianceQA').replace('{query}', query);
+          const prompt = t('corporateServices.prompts.complianceAssistant').replace('{query}', query);
           const answer = await geminiService.generateText(prompt);
           setState(produce((draft: AppState) => { draft.corporateServices_complianceAnswer = answer; }));
       } catch (err) {
@@ -863,351 +774,336 @@ const AppContent: React.FC = () => {
       }
   };
 
-    const handleAnalyzePolicy = async (content: { file?: FilePart; text?: string }, userQuery: string, useThinkingMode: boolean) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_policyAnalysis = "";
-            draft.insurance_policyQuery = userQuery;
-            if (content.text) draft.insurance_initialPolicyText = content.text;
-        }));
+  const handleAnalyzePolicy = async (text: string, query: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_policyAnalysis = '';
+          draft.insurance_policyQuery = query;
+          draft.insurance_initialPolicyText = text;
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.policyAnalyzer')
+              .replace('{policyText}', text)
+              .replace('{query}', query);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_policyAnalysis = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-        try {
-            const result = await geminiService.analyzeContract(content, userQuery, t('insuranceServices.prompts.policyAnalyzer'), useThinkingMode);
-            setState(produce((draft: AppState) => { draft.insurance_policyAnalysis = result; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleDraftClaim = async (query: AppState['insurance_claimQuery']) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_claimQuery = query;
+          draft.insurance_generatedClaim = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.claimDrafter')
+              .replace('{incidentType}', query.incidentType)
+              .replace('{description}', query.description)
+              .replace('{policyNumber}', query.policyNumber);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_generatedClaim = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleDraftClaim = async (query: AppState['insurance_claimQuery']) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_claimQuery = query;
-            draft.insurance_generatedClaim = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.claimDrafter')
-                .replace('{incidentType}', query.incidentType)
-                .replace('{policyNumber}', query.policyNumber)
-                .replace('{description}', query.description);
-            
-            const generator = geminiService.generateReportStream(prompt);
-            let fullText = '';
-            for await (const chunk of generator) {
-                fullText += chunk;
-                setState(produce((draft: AppState) => { draft.insurance_generatedClaim = fullText; }));
-            }
-            if (!fullText) {
-                throw new Error("AI returned an empty response.");
-            }
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleRecommendInsurance = async (query: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_recommendationQuery = query;
+          draft.insurance_recommendationAnswer = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.insuranceAdvisor').replace('{query}', query);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_recommendationAnswer = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleRecommendInsurance = async (query: string) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_recommendationQuery = query;
-            draft.insurance_recommendationAnswer = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.recommender').replace('{query}', query);
-            const answer = await geminiService.generateText(prompt);
-            setState(produce((draft: AppState) => { draft.insurance_recommendationAnswer = answer; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleAssessRisk = async (query: AppState['insurance_riskQuery']) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_riskQuery = query;
+          draft.insurance_riskAssessmentResult = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.riskAssessor')
+              .replace('{assetType}', query.assetType)
+              .replace('{description}', query.description);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_riskAssessmentResult = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleAssessRisk = async (query: AppState['insurance_riskQuery']) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_riskQuery = query;
-            draft.insurance_riskAssessmentResult = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.riskAssessor')
-                .replace('{assetType}', query.assetType)
-                .replace('{description}', query.description);
-            const answer = await geminiService.generateText(prompt);
-            setState(produce((draft: AppState) => { draft.insurance_riskAssessmentResult = answer; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleDetectFraud = async (query: AppState['insurance_fraudQuery']) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_fraudQuery = query;
+          draft.insurance_fraudDetectionResult = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.fraudDetector')
+              .replace('{claimDescription}', query.claimDescription);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_fraudDetectionResult = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleDetectFraud = async (query: AppState['insurance_fraudQuery']) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_fraudQuery = query;
-            draft.insurance_fraudDetectionResult = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.fraudDetector')
-                .replace('{claimDescription}', query.claimDescription);
-            const answer = await geminiService.generateText(prompt);
-            setState(produce((draft: AppState) => { draft.insurance_fraudDetectionResult = answer; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
-    
-    const handleAutoClaimAssess = async (content: { file: FilePart }, userQuery: string, useThinkingMode: boolean) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_autoClaimResult = "";
-            draft.insurance_autoClaimQuery = userQuery;
-        }));
+  const handleAutoClaimAssess = async (query: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_autoClaimQuery = query;
+          draft.insurance_autoClaimResult = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.autoClaimAssessor').replace('{query}', query);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_autoClaimResult = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-        try {
-            const result = await geminiService.analyzeImage(content, userQuery, t('insuranceServices.prompts.autoClaimAssessor'), useThinkingMode);
-            setState(produce((draft: AppState) => { draft.insurance_autoClaimResult = result; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleSimulateQuote = async (query: AppState['insurance_quoteQuery']) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_quoteQuery = query;
+          draft.insurance_quoteResult = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.quoteSimulator')
+              .replace('{carModel}', query.carModel)
+              .replace('{carYear}', query.carYear)
+              .replace('{driverAge}', query.driverAge)
+              .replace('{drivingHistory}', query.drivingHistory);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_quoteResult = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleSimulateQuote = async (query: AppState['insurance_quoteQuery']) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_quoteQuery = query;
-            draft.insurance_quoteResult = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.quoteSimulator')
-                .replace('{carModel}', query.carModel)
-                .replace('{carYear}', query.carYear)
-                .replace('{driverAge}', query.driverAge)
-                .replace('{drivingHistory}', query.drivingHistory);
-            const answer = await geminiService.generateText(prompt);
-            setState(produce((draft: AppState) => { draft.insurance_quoteResult = answer; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleAnalyzeLifeNeeds = async (query: AppState['insurance_lifeNeedsQuery']) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.insurance_lifeNeedsQuery = query;
+          draft.insurance_lifeNeedsResult = '';
+      }));
+      try {
+          const prompt = t('insuranceServices.prompts.lifeNeedsAnalyzer')
+              .replace('{age}', query.age)
+              .replace('{income}', query.income)
+              .replace('{dependents}', query.dependents)
+              .replace('{debts}', query.debts)
+              .replace('{goals}', query.goals);
+          const answer = await geminiService.generateText(prompt);
+          setState(produce((draft: AppState) => { draft.insurance_lifeNeedsResult = answer; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleAnalyzeLifeNeeds = async (query: AppState['insurance_lifeNeedsQuery']) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.insurance_lifeNeedsQuery = query;
-            draft.insurance_lifeNeedsResult = '';
-        }));
-        try {
-            const prompt = t('insuranceServices.prompts.lifeNeedsAnalyzer')
-                .replace('{age}', query.age)
-                .replace('{income}', query.income)
-                .replace('{dependents}', query.dependents)
-                .replace('{debts}', query.debts)
-                .replace('{goals}', query.goals);
-            const answer = await geminiService.generateText(prompt);
-            setState(produce((draft: AppState) => { draft.insurance_lifeNeedsResult = answer; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleAskGeneralQuestion = async (query: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.generalQuestionsQuery = query;
+          draft.generalQuestionsAnswer = '';
+          draft.generalQuestionsSources = [];
+      }));
+      try {
+          const result = await geminiService.askGroundedQuestion(query);
+          setState(produce((draft: AppState) => { 
+              draft.generalQuestionsAnswer = result.text; 
+              draft.generalQuestionsSources = result.sources;
+          }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleAskGeneralQuestion = async (query: string) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.generalQuestionsQuery = query;
-            draft.generalQuestionsAnswer = '';
-            draft.generalQuestionsSources = [];
-        }));
-        try {
-            const result = await geminiService.askGroundedQuestion(query);
-            setState(produce((draft: AppState) => { 
-                draft.generalQuestionsAnswer = result.text; 
-                draft.generalQuestionsSources = result.sources;
-            }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleFetchTrends = async () => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => { draft.contentHub_trends = null; }));
+      try {
+          const trends = await geminiService.fetchDailyTrends(language);
+          setState(produce((draft: AppState) => { draft.contentHub_trends = trends; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleFetchTrends = async () => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => { draft.contentHub_trends = null; }));
-        try {
-            const trends = await geminiService.fetchDailyTrends(language);
-            setState(produce((draft: AppState) => { draft.contentHub_trends = trends; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleGeneratePost = async (topic: string, platform: 'linkedin' | 'twitter' | 'instagram' | 'facebook') => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => { draft.contentHub_generatedPost = null; }));
+      try {
+          const post = await geminiService.generateSocialPost(topic, platform, language);
+          setState(produce((draft: AppState) => { draft.contentHub_generatedPost = post; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleGeneratePost = async (topic: string, platform: 'linkedin' | 'twitter' | 'instagram' | 'facebook') => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => { draft.contentHub_generatedPost = null; }));
-        try {
-            const post = await geminiService.generateSocialPost(topic, platform, language);
-            setState(produce((draft: AppState) => { draft.contentHub_generatedPost = post; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleAdaptPost = async (postText: string, platform: string) => {
+      setIsExecutingTask(true); 
+      try {
+          const adapted = await geminiService.adaptPostForWebsite(postText, platform, language);
+          setState(produce((draft: AppState) => { draft.contentHub_adaptedPost = adapted; }));
+      } catch (err) {
+          console.error("Failed to adapt post", err);
+      } finally {
+          setIsExecutingTask(false);
+      }
+  };
 
-    const handleAdaptPost = async (postText: string, platform: string) => {
-        setIsExecutingTask(true); 
-        try {
-            const adapted = await geminiService.adaptPostForWebsite(postText, platform, language);
-            setState(produce((draft: AppState) => { draft.contentHub_adaptedPost = adapted; }));
-        } catch (err) {
-            console.error("Failed to adapt post", err);
-        } finally {
-            setIsExecutingTask(false);
-        }
-    };
+  const handleFindCitations = async (text: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.courtAssistant_citations = [];
+      }));
+      try {
+          const citations = await geminiService.findLegalCitations(text);
+          setState(produce((draft: AppState) => {
+              draft.courtAssistant_citations = citations;
+          }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleFindCitations = async (text: string) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.courtAssistant_citations = [];
-        }));
-        try {
-            const citations = await geminiService.findLegalCitations(text);
-            setState(produce((draft: AppState) => {
-                draft.courtAssistant_citations = citations;
-            }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleGetRebuttal = async (statement: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.courtAssistant_rebuttal = null;
+      }));
+      try {
+          const rebuttal = await geminiService.getCourtRebuttal(statement, t('courtAssistant.prompts.liveRebuttal'));
+          setState(produce((draft: AppState) => {
+              draft.courtAssistant_rebuttal = rebuttal;
+          }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    const handleGetRebuttal = async (statement: string) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.courtAssistant_rebuttal = null;
-        }));
-        try {
-            const rebuttal = await geminiService.getCourtRebuttal(statement, t('courtAssistant.prompts.liveRebuttal'));
-            setState(produce((draft: AppState) => {
-                draft.courtAssistant_rebuttal = rebuttal;
-            }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleAnalyzeResume = async (resumeText: string) => {
+      setIsLoading(true);
+      setIsApiError(null);
+      setState(produce((draft: AppState) => {
+          draft.resumeAnalysisResult = null;
+          draft.resumeChatHistory = [];
+      }));
+      try {
+          const result = await geminiService.analyzeResume(resumeText, language);
+          setState(produce((draft: AppState) => { draft.resumeAnalysisResult = result; }));
+      } catch (err) {
+          const msg = handleApiError(err);
+          setIsApiError(msg);
+      } finally {
+          setIsLoading(false);
+      }
+  };
 
-    // --- RESUME ANALYZER HANDLERS ---
-    const handleAnalyzeResume = async (resumeText: string) => {
-        setIsLoading(true);
-        setIsApiError(null);
-        setState(produce((draft: AppState) => {
-            draft.resumeAnalysisResult = null;
-            draft.resumeChatHistory = [];
-        }));
-        try {
-            const result = await geminiService.analyzeResume(resumeText, language);
-            setState(produce((draft: AppState) => { draft.resumeAnalysisResult = result; }));
-        } catch (err) {
-            const msg = handleApiError(err);
-            setIsApiError(msg);
-        } finally {
-            setIsLoading(false);
-        }
-    };
+  const handleResumeChat = async (userMessage: string) => {
+      setState(produce((draft: AppState) => {
+          draft.resumeChatHistory.push({ role: 'user', text: userMessage });
+      }));
+      
+      try {
+           const historyWithContext = [
+               ...state.resumeChatHistory,
+               { role: 'user', text: userMessage }
+           ] as ChatMessage[];
 
-    const handleResumeChat = async (userMessage: string) => {
-        setState(produce((draft: AppState) => {
-            draft.resumeChatHistory.push({ role: 'user', text: userMessage });
-        }));
-        
-        try {
-             const contextMsg: ChatMessage = { 
-                 role: 'user', 
-                 text: `Context: I am analyzing a resume. The analysis is: ${JSON.stringify(state.resumeAnalysisResult)}. User asks: ${userMessage}` 
-             };
-             
-             const historyWithContext = [
-                 ...state.resumeChatHistory,
-                 { role: 'user', text: userMessage }
-             ] as ChatMessage[];
+           const response = await geminiService.generateChatResponse(historyWithContext);
+           setState(produce((draft: AppState) => {
+               draft.resumeChatHistory.push({ role: 'model', text: response.reply });
+           }));
+      } catch (err) {
+           console.error("Chat Error", err);
+      }
+  };
 
-             const response = await geminiService.generateChatResponse(historyWithContext);
-             setState(produce((draft: AppState) => {
-                 draft.resumeChatHistory.push({ role: 'model', text: response.reply });
-             }));
-        } catch (err) {
-             console.error("Chat Error", err);
-        }
-    };
+  const handleAddApplication = async (app: JobApplication) => {
+      setState(produce((draft: AppState) => {
+          draft.jobApplications.push(app);
+      }));
+  };
 
-    // --- JOB ASSISTANT HANDLERS ---
-    const handleAddApplication = async (app: JobApplication) => {
-        setState(produce((draft: AppState) => {
-            draft.jobApplications.push(app);
-        }));
-    };
+  const handleUpdateApplication = async (app: JobApplication) => {
+      setState(produce((draft: AppState) => {
+          const index = draft.jobApplications.findIndex(a => a.id === app.id);
+          if (index !== -1) {
+              draft.jobApplications[index] = app;
+          }
+      }));
+  };
 
-    const handleUpdateApplication = async (app: JobApplication) => {
-        setState(produce((draft: AppState) => {
-            const index = draft.jobApplications.findIndex(a => a.id === app.id);
-            if (index !== -1) {
-                draft.jobApplications[index] = app;
-            }
-        }));
-    };
-
-
-    const toggleUserRole = () => {
-        setState(produce((draft: AppState) => {
-            draft.userRole = draft.userRole === 'admin' ? 'user' : 'admin';
-        }));
-    };
-
+  const toggleUserRole = () => {
+      setState(produce((draft: AppState) => {
+          draft.userRole = draft.userRole === 'admin' ? 'user' : 'admin';
+      }));
+  };
 
   const setSingleState = (key: keyof AppState, value: any) => {
     setState(produce((draft: AppState) => {
@@ -1221,7 +1117,6 @@ const AppContent: React.FC = () => {
     }));
   };
 
-  // Handle post-login redirection
   useEffect(() => {
     if (isAuthenticated && state.page === 'home') {
       setPage('dashboard');
@@ -1229,15 +1124,12 @@ const AppContent: React.FC = () => {
   }, [isAuthenticated]);
 
   const renderPage = () => {
-    // Protected pages: Redirect to home if not authenticated
     const protectedPages = ['dashboard', 'admin_dashboard', 'wordpress_dashboard'];
     if (protectedPages.includes(state.page) && !isAuthenticated) {
-        // Auto-open login if trying to access protected page while not authenticated
         setTimeout(() => setIsLoginOpen(true), 0);
         return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} onOpenChatbot={() => setIsWhatsAppChatOpen(true)} />;
     }
 
-    // Admin-only pages check
     const adminPages = ['admin_dashboard', 'wordpress_dashboard'];
     if (adminPages.includes(state.page) && state.userRole !== 'admin') {
         return (
@@ -1533,8 +1425,10 @@ const AppContent: React.FC = () => {
             return <InvestmentPage />;
         case 'ai_dashboard':
             return <AIDashboard />;
+        case 'api_test':
+            return <ApiTestPage />;
         default:
-            return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} />;
+            return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} onOpenChatbot={() => setIsWhatsAppChatOpen(true)} />;
     }
   };
 
@@ -1582,10 +1476,6 @@ const AppContent: React.FC = () => {
             onClose={() => setIsLoginOpen(false)} 
             onLoginSuccess={() => {
                 setIsLoginOpen(false);
-                // After successful login via Supabase, we also need to sync with the server-side session
-                // if the application uses passport/express-session for some parts.
-                // However, the current login() function redirects to /api/login which is Replit Auth.
-                // If the user is using Supabase, we should stay in the SPA.
                 window.location.reload(); 
             }} 
         />
@@ -1598,7 +1488,6 @@ const AppContent: React.FC = () => {
             onOpenWPDashboard={() => { setPage('wp_dashboard'); setIsSettingsOpen(false); }}
         />
         
-        {/* Floating Login Button (if not logged in) */}
         {!isAuthenticated && (
             <div className={`fixed z-30 bottom-4 sm:bottom-6 transition-all duration-300 ease-out ${language === 'fa' ? 'right-36 sm:right-44' : 'left-4 sm:left-5'}`}>
                 <button

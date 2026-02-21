@@ -209,7 +209,7 @@ const ApiTestPage: React.FC = () => {
         body: JSON.stringify(body)
       });
 
-      const data = await res.json();
+      const data = await res.json() as any;
       const duration = Date.now() - start;
 
       if (res.ok && data.choices?.[0]?.message?.content) {
