@@ -1,0 +1,224 @@
+# تحلیل خطا و راه‌حل
+
+خطای شما مشخص است:
+
+> **"API key not valid. Please pass a valid API key."**
+> 
+> این خطا از سرویس **Google Gemini** (`generativelanguage.googleapis.com`) می‌آید.
+
+---
+
+## 🔍 **علت مشکل**
+
+1. **کلید API نامعتبر یا منقضی شده**
+2. **کلید API فعال نشده** (API در Google Cloud Console فعال نیست)
+3. **محدودیت منطقه‌ای** (ایران در لیست تحریم‌ها)
+4. **کلید در `.env` به درستی تنظیم نشده**
+
+---
+
+## ✅ **راه‌حل گام‌به‌گام**
+
+### **مرحله 1: بررسی کلید Google Gemini**
+
+#### فایل `.env` را باز کنید:
+```env
+VITE_GOOGLE_GEMINI_API_KEY=your_actual_key_here
+```
+
+⚠️ **نکات مهم:**
+- در **Vite** باید متغیر با `VITE_` شروع شود
+- فاصله اضافی یا گیومه نباشد
+- پس از تغییر `.env` حتماً **سرور را ری‌استارت کنید**:
+  ```bash
+  # بستن سرور (Ctrl+C) و دوباره اجرا:
+  npm run dev
+  ```
+
+---
+
+### **مرحله 2: بررسی کد دسترسی به کلید**
+
+در کامپوننت‌های شما (`LawyerFinder.tsx`, `CaseStrategist.tsx`):
+
+```typescript
+// ❌ اشتباه:
+const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+
+// ✅ درست (برای Vite):
+const apiKey = import.meta.env.VITE_GOOGLE_GEMINI_API_KEY;
+```
+
+---
+
+### **مرحله 3: فعال‌سازی API در Google Cloud**
+
+1. برو به: https://aistudio.google.com/app/apikey
+2. روی **"Create API Key"** کلیک کن
+3. کلید جدید رو کپی کن
+4. بعد برو به: https://console.cloud.google.com/apis/library/generativelanguage.googleapis.com
+5. روی **"Enable"** کلیک کن
+
+---
+
+### **مرحله 4: تست کلید API**
+
+یک فایل تست بساز (`test-gemini.ts`):
+
+```typescript
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const apiKey = import.meta.env.VITE_GOOGLE_GEMINI_API_KEY;
+
+if (!apiKey) {
+  console.error("❌ کلید API یافت نشد!");
+  process.exit(1);
+}
+
+console.log("🔑 کلید API:", apiKey.substring(0, 10) + "...");
+
+const genAI = new GoogleGenerativeAI(apiKey);
+const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+async function testAPI() {
+  try {
+    const result = await model.generateContent("سلام دنیا");
+    const response = await result.response;
+    console.log("✅ پاسخ:", response.text());
+  } catch (error: any) {
+    console.error("❌ خطا:", error.message);
+    if (error.status === 400) {
+      console.error("🔴 کلید API نامعتبر است!");
+    }
+  }
+}
+
+testAPI();
+```
+
+اجرا:
+```bash
+npx tsx test-gemini.ts
+```
+
+---
+
+## 🌍 **اگر در ایران هستید**
+
+Google Gemini در ایران **مسدود** است. راه‌حل‌ها:
+
+### **راه‌حل A: استفاده از PoYo API به‌جای Google مستقیم**
+
+```typescript
+// به‌جای:
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+// استفاده کنید از:
+import PoYoClient from './lib/poyoClient';
+
+const poyo = new PoYoClient({
+  apiKey: import.meta.env.VITE_POYO_API_KEY!
+});
+
+const response = await poyo.generateText('gemini-pro', prompt);
+```
+
+### **راه‌حل B: پراکسی سمت سرور**
+
+فایل `api/gemini-proxy.ts` بسازید:
+
+```typescript
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+export default async function handler(req, res) {
+  const { prompt } = req.body;
+  
+  try {
+    const genAI = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const result = await model.generateContent(prompt);
+    
+    res.json({ text: result.response.text() });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+}
+```
+
+در فرانت‌اند:
+```typescript
+const response = await fetch('/api/gemini-proxy', {
+  method: 'POST',
+  body: JSON.stringify({ prompt }),
+  headers: { 'Content-Type': 'application/json' }
+});
+```
+
+---
+
+## 🔄 **راه‌حل جامع: سیستم Fallback**
+
+```typescript
+// lib/aiClient.ts
+const providers = [
+  {
+    name: 'PoYo-Gemini',
+    call: async (prompt: string) => {
+      const poyo = new PoYoClient({ apiKey: import.meta.env.VITE_POYO_API_KEY! });
+      return await poyo.generateText('gemini-pro', prompt);
+    }
+  },
+  {
+    name: 'PoYo-GPT4',
+    call: async (prompt: string) => {
+      const poyo = new PoYoClient({ apiKey: import.meta.env.VITE_POYO_API_KEY! });
+      return await poyo.generateText('gpt-4o', prompt);
+    }
+  },
+  {
+    name: 'Google-Direct',
+    call: async (prompt: string) => {
+      const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GEMINI_API_KEY!);
+      const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+      const result = await model.generateContent(prompt);
+      return result.response.text();
+    }
+  }
+];
+
+export async function generateWithFallback(prompt: string) {
+  for (const provider of providers) {
+    try {
+      console.log(`🔄 امتحان ${provider.name}...`);
+      const result = await provider.call(prompt);
+      console.log(`✅ ${provider.name} موفق!`);
+      return result;
+    } catch (error: any) {
+      console.error(`❌ ${provider.name} ناموفق:`, error.message);
+      continue;
+    }
+  }
+  
+  throw new Error('همه سرویس‌ها شکست خوردند');
+}
+```
+
+استفاده:
+```typescript
+const answer = await generateWithFallback("قانون مدنی ایران چیست؟");
+```
+
+---
+
+## 📋 **چک‌لیست نهایی**
+
+- [ ] کلید API در `.env` با `VITE_` شروع می‌شود
+- [ ] سرور Vite ری‌استارت شده (`npm run dev`)
+- [ ] کلید از https://aistudio.google.com/app/apikey دریافت شده
+- [ ] API در Google Cloud فعال است
+- [ ] اگر در ایران هستید، از PoYo یا پراکسی استفاده می‌کنید
+- [ ] کد از `import.meta.env` استفاده می‌کند نه `process.env`
+
+---
+
+**کدام راه‌حل را ترجیح می‌دهید؟ PoYo API یا پراکسی سمت سرور؟**

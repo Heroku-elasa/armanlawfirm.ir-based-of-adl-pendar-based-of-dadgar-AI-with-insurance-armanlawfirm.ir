@@ -95,12 +95,19 @@ const geminiProvider: AIProvider = {
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
         const ai = getAI();
         if (!ai) throw new Error('Gemini API not initialized');
-        const response = await ai.models.generateContent({
-            model: 'gemini-2.0-flash',
-            contents: [{ parts: [{ text: prompt }] }],
-            config: { maxOutputTokens: maxTokens, temperature: temperature }
-        });
-        return response.text || '';
+        try {
+            const response = await ai.models.generateContent({
+                model: 'gemini-2.0-flash',
+                contents: [{ parts: [{ text: prompt }] }],
+                config: { maxOutputTokens: maxTokens, temperature: temperature }
+            });
+            return response.text || '';
+        } catch (error: any) {
+            if (error.status === 400 || error.message?.includes('API key not valid')) {
+                throw new Error('API_KEY_INVALID: Google Gemini API key is invalid.');
+            }
+            throw error;
+        }
     }
 };
 
@@ -208,7 +215,7 @@ const openAIProvider: AIProvider = {
     }
 };
 
-const allProviders: AIProvider[] = [poyoProvider, geminiProvider, openRouterProvider, portkeyProvider, cloudflareProvider, openAIProvider];
+const allProviders: AIProvider[] = [poyoProvider, openRouterProvider, geminiProvider, portkeyProvider, cloudflareProvider, openAIProvider];
 
 export async function callWithFallback(
     prompt: string,
