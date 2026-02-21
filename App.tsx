@@ -649,7 +649,7 @@ const AppContent: React.FC = () => {
   const handleSelectRoute = (route: IntentRoute) => {
       setIsAIGuideOpen(false);
       if (route.module === 'lawyer_finder' || route.module === 'notary_finder') {
-          preparedSearchQueryRef.current = { for: route.module, query: route.suggestedQuery || '' };
+          preparedSearchQueryRef.current = { for: route.module as 'lawyer_finder' | 'notary_finder', query: route.suggestedQuery || '' };
           setPreparedSearchQuery(preparedSearchQueryRef.current);
       }
       setPage(route.module);
