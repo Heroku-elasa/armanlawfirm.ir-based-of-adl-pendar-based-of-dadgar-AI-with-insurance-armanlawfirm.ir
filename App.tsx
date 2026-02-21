@@ -449,10 +449,9 @@ const AppContent: React.FC = () => {
       setIsApiError(null);
       setState(produce((draft: AppState) => { draft.lawyerFinderKeywords = keywords; }));
 
-      const cacheKey = `lawyer-${keywords}`;
       const prompt = t('lawyerFinder.prompt').replace('{queries}', keywords).replace('{maxResults}', "10");
       try {
-          await geminiService.findLawyers(prompt);
+          const result = await geminiService.findLawyers(prompt, null);
       } catch (err) {
           const msg = handleApiError(err);
           setIsApiError(msg);
@@ -593,7 +592,7 @@ const AppContent: React.FC = () => {
         draft.webAnalyzerSources = [];
     }));
     try {
-        const result = await geminiService.analyzeWebPage(url, query, t('webAnalyzer.prompt'));
+        const result = await geminiService.analyzeWebPage(url, query, language);
         setState(produce((draft: AppState) => {
             draft.webAnalyzerResult = result.text;
             draft.webAnalyzerSources = result.sources;
@@ -616,7 +615,7 @@ const AppContent: React.FC = () => {
         draft.siteArchitectSources = [];
     }));
     try {
-        const result = await geminiService.analyzeSiteStructure(url, query, t('siteArchitect.prompt'));
+        const result = await geminiService.analyzeSiteStructure(url, query, language);
         setState(produce((draft: AppState) => {
             draft.siteArchitectResult = result.text;
             draft.siteArchitectSources = result.sources;
@@ -649,11 +648,11 @@ const AppContent: React.FC = () => {
 
   const handleSelectRoute = (route: IntentRoute) => {
       setIsAIGuideOpen(false);
-      if (route.page === 'lawyer_finder' || route.page === 'notary_finder') {
-          preparedSearchQueryRef.current = { for: route.page, query: route.suggestedQuery || '' };
+      if (route.module === 'lawyer_finder' || route.module === 'notary_finder') {
+          preparedSearchQueryRef.current = { for: route.module, query: route.suggestedQuery || '' };
           setPreparedSearchQuery(preparedSearchQueryRef.current);
       }
-      setPage(route.page);
+      setPage(route.module);
   };
 
   const handleAnalyzeContract = async (text: string, query: string) => {

@@ -414,16 +414,42 @@ export async function findNotaries(prompt: string, location?: LatLng | null): Pr
     return performSearch(prompt, false, location);
 }
 
-export async function summarizeNews(prompt: string, useThinkingMode: boolean): Promise<SearchResult> {
-    return performSearch(prompt, useThinkingMode);
+export async function analyzeWebPage(url: string, query: string, lang: string): Promise<SearchResult> {
+    const prompt = `Analyze this webpage: ${url}\n\nUser Question: ${query}\n\nLanguage: ${lang === 'fa' ? 'Persian (Farsi)' : 'English'}`;
+    return performSearch(prompt, false);
 }
 
-export async function analyzeWebPage(prompt: string, useThinkingMode: boolean): Promise<SearchResult> {
-    return performSearch(prompt, useThinkingMode);
+export async function analyzeSiteStructure(url: string, query: string, lang: string): Promise<SearchResult> {
+    const prompt = `Analyze the site structure of ${url}\n\nUser Question: ${query}\n\nLanguage: ${lang === 'fa' ? 'Persian (Farsi)' : 'English'}`;
+    return performSearch(prompt, false);
 }
 
-export async function analyzeSiteStructure(prompt: string, useThinkingMode: boolean): Promise<SearchResult> {
-    return performSearch(prompt, useThinkingMode);
+export async function analyzeEvidence(files: FilePart[], query: string, prompt: string): Promise<string> {
+    const ai = getAI();
+    if (!ai) return await callWithFallback(`${prompt}\n\nEvidence Query: ${query}`, 1500, 0.7);
+    
+    try {
+        const response = await ai.models.generateContent({
+            model: "gemini-2.0-flash",
+            contents: [
+                {
+                    role: "user",
+                    parts: [
+                        { text: `${prompt}\n\nQuery: ${query}` },
+                        ...files.map(f => ({
+                            inlineData: {
+                                mimeType: f.mimeType,
+                                data: f.data
+                            }
+                        }))
+                    ]
+                }
+            ]
+        });
+        return response.text || "";
+    } catch (error) {
+        throwEnhancedError(error, 'Evidence analysis failed.');
+    }
 }
 
 export async function askGroundedQuestion(query: string): Promise<SearchResult> {

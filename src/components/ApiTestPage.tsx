@@ -87,7 +87,6 @@ const ApiTestPage: React.FC = () => {
   const { language, t } = useLanguage();
   const isRtl = language === 'fa';
   
-  const [activeTab, setActiveTab] = useState<'providers' | 'usage' | 'logs' | 'settings'>('providers');
   const [providers, setProviders] = useState<AIProvider[]>(DEFAULT_PROVIDERS);
   const [logs, setLogs] = useState<AILog[]>([]);
   const [loading, setLoading] = useState(false);
@@ -100,7 +99,7 @@ const ApiTestPage: React.FC = () => {
     model?: string;
   } | null>(null);
   const [testingProvider, setTestingProvider] = useState<string | null>(null);
-  const [testPrompt, setTestPrompt] = useState('سلام، یک جمله کوتاه درباره قانون بگو.');
+  const [testPrompt] = useState('سلام، یک جمله کوتاه درباره قانون بگو.');
   const [selectedModel, setSelectedModel] = useState<{[key: string]: string}>({});
   
   const [apiKeys, setApiKeys] = useState({

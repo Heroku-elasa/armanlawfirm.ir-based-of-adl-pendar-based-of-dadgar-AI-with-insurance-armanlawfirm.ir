@@ -214,6 +214,8 @@ export interface IntentRoute {
   module: PageKey;
   confidencePercentage: number;
   reasoning: string;
+  suggestedQuery?: string;
+  explanation?: string;
 }
 
 // Interface for the result of preparing a draft from a strategy task
