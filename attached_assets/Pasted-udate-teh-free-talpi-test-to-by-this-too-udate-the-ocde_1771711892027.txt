@@ -1,0 +1,189 @@
+udate teh free talpi test to by this too udate the ocde by this for the api test too :( import requests
+from openai import OpenAI
+import time
+from datetime import datetime, timedelta, timezone
+
+# ────────────────────────────────────────────────
+# Helper to test models for OpenAI-compatible clients
+# ────────────────────────────────────────────────
+def test_models(client, models, api_name, key_short):
+    results = {}
+    for model in models:
+        print(f"Testing {api_name} model '{model}' with key {key_short}...")
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": f"Say 'Test OK for {model}'"}],
+                max_tokens=20
+            )
+            results[model] = "WORKS"
+            print(f"SUCCESS: {model} works! Response: {response.choices[0].message.content.strip()}")
+        except Exception as e:
+            results[model] = f"FAILED: {str(e)}"
+            print(results[model])
+    return results
+
+# ────────────────────────────────────────────────
+# OpenRouter usage check (remaining credits & estimated reset time)
+# ────────────────────────────────────────────────
+def check_openrouter_usage(key, key_short):
+    print(f"\n=== Checking OpenRouter usage for key {key_short} ===")
+    headers = {"Authorization": f"Bearer {key}"}
+    try:
+        resp = requests.get("https://openrouter.ai/api/v1/key", headers=headers)
+        resp.raise_for_status()
+        data = resp.json()["data"]
+        
+        print(f"Remaining credits: {data.get('limit_remaining', 'Unlimited')}")
+        print(f"Total usage (all time): {data['usage']}")
+        print(f"Daily usage: {data['usage_daily']}")
+        print(f"Is free tier: {data['is_free_tier']}")
+        
+        reset_type = data.get('limit_reset')
+        if reset_type:
+            now = datetime.now(timezone.utc)
+            if reset_type == 'daily':
+                next_reset = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+            elif reset_type == 'weekly':
+                next_reset = now + timedelta(days=(7 - now.weekday()))  # Next Monday UTC
+                next_reset = next_reset.replace(hour=0, minute=0, second=0, microsecond=0)
+            elif reset_type == 'monthly':
+                next_month = now.replace(day=28) + timedelta(days=4)  # Approx next month
+                next_reset = next_month.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            else:
+                next_reset = None
+            
+            if next_reset:
+                time_remaining = next_reset - now
+                print(f"Estimated time to reset ({reset_type}): {time_remaining}")
+            else:
+                print(f"Reset type: {reset_type} (no time estimate available)")
+        else:
+            print("No reset limit (unlimited or never resets)")
+    except Exception as e:
+        print(f"Usage check FAILED: {str(e)} (Key may be invalid)")
+
+# ────────────────────────────────────────────────
+# 1. Test Portkey.ai (Gateway - low-cost models)
+# ────────────────────────────────────────────────
+def test_portkey(key):
+    print("\n=== Testing Portkey key ===")
+    client = OpenAI(api_key=key, base_url="https://api.portkey.ai/v1")
+    # 2026 low-cost models (via providers; no fully $0, but cheap if credits)
+    models = ["gpt-4o-mini", "claude-3-haiku-20240307", "gemini-1.5-flash"]
+    print("Note: No API for usage remaining; check dashboard: https://app.portkey.ai/dashboard")
+    return test_models(client, models, "Portkey", key[:10] + "...")
+
+# ────────────────────────────────────────────────
+# 2. Test OpenRouter keys (2026 free models)
+# ────────────────────────────────────────────────
+def test_openrouter(key):
+    key_short = key[:10] + "..."
+    check_openrouter_usage(key, key_short)  # Usage check first
+    print(f"\n=== Testing OpenRouter models ===")
+    client = OpenAI(api_key=key, base_url="https://openrouter.ai/api/v1")
+    # 2026 free models (text/chat; from sources, 24-31 available with quotas)
+    models = [
+        "deepseek/deepseek-r1-0528:free",  # Worked in your test
+        "upstage/solar-pro-3:free",        # New free (Feb 2026)
+        "arcee-ai/trinity-large-preview:free",
+        "stepfun/step-3.5-flash:free",
+        "z-ai/glm-4.5-air:free"
+    ]
+    return test_models(client, models, "OpenRouter", key_short)
+
+# ────────────────────────────────────────────────
+# 3. Test Poyo.ai keys (Generation API)
+# ────────────────────────────────────────────────
+def test_poyo(key):
+    key_short = key[:10] + "..."
+    print(f"\n=== Testing Poyo key: {key_short} ===")
+    headers = {
+        "Authorization": f"Bearer {key}",
+        "Content-Type": "application/json"
+    }
+    # 2026 models (image/video; fixed names like 'flux.2')
+    models = ["flux.2", "nano-banana-pro", "seedream-4.5", "kling-3.0", "sora-2"]  # First 3 image, last 2 video
+    results = {}
+    print("Note: No API for usage remaining; check dashboard: https://poyo.ai/dashboard")
+    
+    for model in models:
+        print(f"Testing Poyo model '{model}'...")
+        payload = {
+            "model": model,
+            "input": {"prompt": "a simple test: red circle on white background"},  # Text-to-image/video test
+            "callback_url": "https://example.com/webhook"
+        }
+        try:
+            resp = requests.post(
+                "https://api.poyo.ai/api/generate/submit",
+                headers=headers,
+                json=payload,
+                timeout=15
+            )
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code") == 200 and "task_id" in data.get("data", {}):
+                task_id = data["data"]["task_id"]
+                results[model] = f"WORKS (Task ID: {task_id})"
+                print(results[model])
+                time.sleep(2)
+                status_resp = requests.get(f"https://api.poyo.ai/api/generate/status/{task_id}", headers=headers)
+                if status_resp.status_code == 200:
+                    print("Status:", status_resp.json())
+                else:
+                    print("Status failed:", status_resp.text)
+            else:
+                results[model] = f"FAILED: {data}"
+                print(results[model])
+        except Exception as e:
+            results[model] = f"FAILED: {str(e)}"
+            print(results[model])
+    
+    if all("FAILED" in v for v in results.values()):
+        print("All failed - key invalid/expired? Get new: https://poyo.ai/dashboard/api-key")
+    
+    return results
+
+# ────────────────────────────────────────────────
+# Keys (updated with new ones)
+# ────────────────────────────────────────────────
+PORTKEY_KEY = "nJqZtrgTuBQzAF5DM77t64UCIgZT"  # New
+
+POYO_KEYS = [
+    "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm",
+    "sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_"
+]
+
+OPENROUTER_KEYS = [
+    "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"  # New better one
+]
+
+# ────────────────────────────────────────────────
+# Run tests
+# ────────────────────────────────────────────────
+if __name__ == "__main__":
+    print("Starting API key & model validity tests (Feb 2026)...\n")
+    
+    portkey_results = test_portkey(PORTKEY_KEY)
+    
+    print("\nTesting Poyo keys...")
+    poyo_results = {}
+    for k in POYO_KEYS:
+        poyo_results[k] = test_poyo(k)
+    
+    print("\nTesting OpenRouter keys...")
+    openrouter_results = {}
+    for k in OPENROUTER_KEYS:
+        openrouter_results[k] = test_openrouter(k)
+    
+    # Summary
+    print("\n=== Summary ===")
+    print("Portkey:", portkey_results)
+    for k, res in poyo_results.items():
+        print(f"Poyo {k[:10]}...:", res)
+    for k, res in openrouter_results.items():
+        print(f"OpenRouter {k[:10]}...:", res)
+    
+    print("\nNotes: For non-queryable usage (Portkey/Poyo), log in to dashboards. OpenRouter estimates based on reset type & prior usage data.")
+    print("Done.") 

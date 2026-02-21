@@ -73,14 +73,16 @@ const portkeyClient = new OpenAI({
 
 const portkeyProvider: AIProvider = {
     name: 'Portkey',
+    apiKey: PORTKEY_API_KEY,
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        if (!PORTKEY_API_KEY) throw new Error('Portkey API key not configured');
+        const key = (portkeyProvider as any).apiKey || PORTKEY_API_KEY;
+        if (!key) throw new Error('Portkey API key not configured');
         try {
             const response = await fetch('https://api.portkey.ai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-portkey-api-key': PORTKEY_API_KEY,
+                    'x-portkey-api-key': key,
                     'x-portkey-provider': 'google'
                 },
                 body: JSON.stringify({
@@ -131,8 +133,17 @@ const geminiProvider: AIProvider = {
 
 const poyoProvider: AIProvider = {
     name: 'PoyoAI',
+    apiKey: POYO_API_KEY,
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        if (!POYO_API_KEY) throw new Error('Poyo AI API key not configured');
+        const key = (poyoProvider as any).apiKey || POYO_API_KEY;
+        if (!key) throw new Error('Poyo AI API key not configured');
+        
+        const client = new OpenAI({
+            apiKey: key,
+            baseURL: 'https://api.poyo.ai/v1',
+            dangerouslyAllowBrowser: true
+        });
+        
         const models = ['claude-3-5-sonnet', 'gemini-2.0-flash', 'gpt-4o-mini'];
         let lastError: any = null;
         
@@ -157,14 +168,16 @@ const poyoProvider: AIProvider = {
 
 const openRouterProvider: AIProvider = {
     name: 'OpenRouter',
+    apiKey: OPENROUTER_API_KEY,
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        if (!OPENROUTER_API_KEY) throw new Error('OpenRouter API key not configured');
+        const key = (openRouterProvider as any).apiKey || OPENROUTER_API_KEY;
+        if (!key) throw new Error('OpenRouter API key not configured');
         try {
             const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'Authorization': `Bearer ${key}`,
                     'HTTP-Referer': 'https://armanlawfirm.ir',
                     'X-Title': 'Arman Law Firm Assistant'
                 },
@@ -254,22 +267,18 @@ const openAIProvider: AIProvider = {
     }
 };
 
+// 257 Providers updated to use dynamic keys
 const allProviders: AIProvider[] = [poyoProvider, openRouterProvider, geminiProvider, portkeyProvider, cloudflareProvider, openAIProvider];
 
 // Load dynamic API keys from localStorage if available
 if (typeof window !== 'undefined') {
     try {
-        const savedKeys = localStorage.getItem('dadgar-api-keys');
-        if (savedKeys) {
-            const keys = JSON.parse(savedKeys);
-            // In a real production app, we would update the service instances here
-            // For now, we'll rely on the dashboard to test with these keys
-        }
-        
-        const savedProviders = localStorage.getItem('dadgar-ai-providers');
-        if (savedProviders) {
-            const providers = JSON.parse(savedProviders);
-            // This could be used to reorder allProviders dynamically
+        const savedKeysStr = localStorage.getItem('arman-api-keys');
+        if (savedKeysStr) {
+            const savedKeys = JSON.parse(savedKeysStr);
+            if (savedKeys.portkey) (portkeyProvider as any).apiKey = savedKeys.portkey;
+            if (savedKeys.poyo1) (poyoProvider as any).apiKey = savedKeys.poyo1;
+            if (savedKeys.openrouter1) (openRouterProvider as any).apiKey = savedKeys.openrouter1;
         }
     } catch (e) {
         console.error("Error loading dynamic AI config:", e);

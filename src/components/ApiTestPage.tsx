@@ -13,6 +13,8 @@ interface AIProvider {
   status: 'idle' | 'testing' | 'success' | 'error';
   lastError?: string;
   lastLatency?: number;
+  usageInfo?: string;
+  dashboardUrl: string;
   limits: {
     requestsPerMinute: number;
     requestsPerDay: number;
@@ -42,11 +44,12 @@ const DEFAULT_PROVIDERS: AIProvider[] = [
     name: 'Poyo AI',
     enabled: true,
     priority: 1,
-    model: 'gpt-4o-mini', 
-    models: ['gpt-4o-mini', 'gpt-4o', 'claude-3-sonnet', 'gemini-pro'],
+    model: 'flux.2', 
+    models: ['flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2'],
     endpoint: 'api.poyo.ai',
     keyConfigured: true,
     status: 'idle',
+    dashboardUrl: 'https://poyo.ai/dashboard',
     limits: { requestsPerMinute: 20, requestsPerDay: 100 },
     usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
   },
@@ -55,16 +58,18 @@ const DEFAULT_PROVIDERS: AIProvider[] = [
     name: 'OpenRouter',
     enabled: true,
     priority: 2,
-    model: 'google/gemini-2.0-flash-exp:free', 
+    model: 'deepseek/deepseek-r1-0528:free', 
     models: [
-      'google/gemini-2.0-flash-exp:free',
-      'google/gemini-pro:free',
-      'meta-llama/llama-3.2-3b-instruct:free',
-      'mistralai/mistral-7b-instruct:free'
+      'deepseek/deepseek-r1-0528:free',
+      'upstage/solar-pro-3:free',
+      'arcee-ai/trinity-large-preview:free',
+      'stepfun/step-3.5-flash:free',
+      'z-ai/glm-4.5-air:free'
     ],
     endpoint: 'openrouter.ai',
     keyConfigured: true,
     status: 'idle',
+    dashboardUrl: 'https://openrouter.ai/keys',
     limits: { requestsPerMinute: 20, requestsPerDay: 50 },
     usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
   },
@@ -74,10 +79,11 @@ const DEFAULT_PROVIDERS: AIProvider[] = [
     enabled: true, 
     priority: 3,
     model: 'gpt-4o-mini',
-    models: ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo'],
+    models: ['gpt-4o-mini', 'claude-3-haiku-20240307', 'gemini-1.5-flash'],
     endpoint: 'api.portkey.ai',
     keyConfigured: true, 
     status: 'idle',
+    dashboardUrl: 'https://app.portkey.ai/dashboard',
     limits: { requestsPerMinute: 60, requestsPerDay: 1000 },
     usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
   }
@@ -99,22 +105,20 @@ const ApiTestPage: React.FC = () => {
     model?: string;
   } | null>(null);
   const [testingProvider, setTestingProvider] = useState<string | null>(null);
-  const [testPrompt] = useState('سلام، یک جمله کوتاه درباره قانون بگو.');
   const [selectedModel, setSelectedModel] = useState<{[key: string]: string}>({});
   
   const [apiKeys, setApiKeys] = useState({
-    portkey: 'gASN7iokVzgqJLweJTWr12V75JG+', 
+    portkey: 'nJqZtrgTuBQzAF5DM77t64UCIgZT', 
     poyo1: 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm',
     poyo2: 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_',
-    openrouter1: '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',
-    openrouter2: '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'
+    openrouter1: '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'
   });
 
   useEffect(() => {
     const savedKeys = localStorage.getItem('arman-api-keys');
     if (savedKeys) {
       try {
-        setApiKeys(JSON.parse(savedKeys));
+        setApiKeys(prev => ({...prev, ...JSON.parse(savedKeys)}));
       } catch (e) {
         console.error('Error loading saved keys:', e);
       }
@@ -143,12 +147,28 @@ const ApiTestPage: React.FC = () => {
     setLogs(prev => [newLog, ...prev].slice(0, 100)); 
   };
 
-  const updateProviderStatus = (id: string, status: AIProvider['status'], error?: string, latency?: number) => {
+  const updateProviderStatus = (id: string, status: AIProvider['status'], error?: string, latency?: number, usageInfo?: string) => {
     setProviders(prev => prev.map(p => 
       p.id === id 
-        ? { ...p, status, lastError: error, lastLatency: latency }
+        ? { ...p, status, lastError: error, lastLatency: latency, usageInfo }
         : p
     ));
+  };
+
+  const checkOpenRouterUsage = async (key: string) => {
+    try {
+      const resp = await fetch("https://openrouter.ai/api/v1/key", {
+        headers: { "Authorization": `Bearer ${key}` }
+      });
+      const data = await resp.json();
+      if (data.data) {
+        const d = data.data;
+        return `Credits: ${d.limit_remaining || 'N/A'}, Usage: ${d.usage_daily || 0}, IsFree: ${d.is_free_tier}`;
+      }
+    } catch (e) {
+      return "Usage check failed";
+    }
+    return "";
   };
 
   const testProvider = async (id: string, retryWithBackup = true) => {
@@ -167,6 +187,7 @@ const ApiTestPage: React.FC = () => {
       let headers: any = { 'Content-Type': 'application/json' };
       let body: any = {};
       let apiKey = '';
+      let usageInfo = '';
 
       if (id === 'openrouter') {
         url = 'https://openrouter.ai/api/v1/chat/completions';
@@ -176,29 +197,27 @@ const ApiTestPage: React.FC = () => {
         headers['X-Title'] = 'Arman Law Firm';
         body = {
           model: model,
-          messages: [{ role: 'user', content: testPrompt }],
-          max_tokens: 150
+          messages: [{ role: 'user', content: "Say 'Test OK'" }],
+          max_tokens: 20
         };
+        usageInfo = await checkOpenRouterUsage(apiKey);
       } else if (id === 'poyo') {
-        url = 'https://api.poyo.ai/v1/chat/completions';
+        url = 'https://api.poyo.ai/api/generate/submit';
         apiKey = apiKeys.poyo1;
         headers['Authorization'] = `Bearer ${apiKey}`;
         body = {
           model: model,
-          messages: [{ role: 'user', content: testPrompt }],
-          max_tokens: 150
+          input: { prompt: "a simple test: red circle on white background" },
+          callback_url: "https://example.com/webhook"
         };
       } else if (id === 'portkey') {
-        if (!apiKeys.portkey) {
-          throw new Error('کلید Portkey تنظیم نشده است');
-        }
         url = 'https://api.portkey.ai/v1/chat/completions';
         headers['x-portkey-api-key'] = apiKeys.portkey;
         headers['x-portkey-provider'] = 'openai';
         body = {
           model: model,
-          messages: [{ role: 'user', content: testPrompt }],
-          max_tokens: 150
+          messages: [{ role: 'user', content: "Say 'Test OK'" }],
+          max_tokens: 20
         };
       }
 
@@ -211,8 +230,14 @@ const ApiTestPage: React.FC = () => {
       const data = await res.json() as any;
       const duration = Date.now() - start;
 
-      if (res.ok && data.choices?.[0]?.message?.content) {
-        const responseText = data.choices[0].message.content;
+      if (res.ok) {
+        let responseText = "";
+        if (id === 'poyo') {
+          responseText = data.data?.task_id ? `Task ID: ${data.data.task_id}` : JSON.stringify(data);
+        } else {
+          responseText = data.choices?.[0]?.message?.content || JSON.stringify(data);
+        }
+        
         setTestResult({ 
           provider: id, 
           success: true, 
@@ -220,7 +245,7 @@ const ApiTestPage: React.FC = () => {
           response: responseText,
           model 
         });
-        updateProviderStatus(id, 'success', undefined, duration);
+        updateProviderStatus(id, 'success', undefined, duration, usageInfo);
         addLog(id, model, 'success', duration, undefined, responseText);
       } else {
         const errorMsg = data.error?.message || data.error?.code || res.statusText || 'Unknown error';
@@ -228,13 +253,6 @@ const ApiTestPage: React.FC = () => {
       }
     } catch (error: any) {
       const duration = Date.now() - start;
-      
-      if (retryWithBackup && id === 'openrouter' && apiKeys.openrouter2) {
-        const tempKey = apiKeys.openrouter1;
-        setApiKeys(prev => ({ ...prev, openrouter1: apiKeys.openrouter2, openrouter2: tempKey }));
-        await testProvider(id, false);
-        return;
-      }
       
       if (retryWithBackup && id === 'poyo' && apiKeys.poyo2) {
         const tempKey = apiKeys.poyo1;
@@ -278,180 +296,103 @@ const ApiTestPage: React.FC = () => {
     }
   };
 
-  const stats = {
-    total: logs.length,
-    success: logs.filter(l => l.status === 'success').length,
-    errors: logs.filter(l => l.status === 'error').length,
-    avgLatency: logs.filter(l => l.status === 'success').length > 0
-      ? Math.round(logs.filter(l => l.status === 'success').reduce((acc, curr) => acc + curr.duration, 0) / logs.filter(l => l.status === 'success').length)
-      : 0
-  };
-
   return (
     <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 ${isRtl ? 'rtl' : 'ltr'}`} dir={isRtl ? 'rtl' : 'ltr'}>
       <div className="max-w-7xl mx-auto">
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                🧪 {isRtl ? 'تست API های هوش مصنوعی' : 'AI API Testing'}
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400">
-                {isRtl ? 'تست و مانیتورینگ کلیدهای API ارائه شده' : 'Test and monitor the provided API keys'}
-              </p>
-            </div>
-            <div className="flex gap-3">
-              <div className="bg-green-100 dark:bg-green-900/30 px-4 py-2 rounded-lg text-center">
-                <div className="text-2xl font-bold text-green-700 dark:text-green-400">{stats.success}</div>
-                <div className="text-xs text-green-600 dark:text-green-500">{isRtl ? 'موفق' : 'Success'}</div>
-              </div>
-              <div className="bg-red-100 dark:bg-red-900/30 px-4 py-2 rounded-lg text-center">
-                <div className="text-2xl font-bold text-red-700 dark:text-red-400">{stats.errors}</div>
-                <div className="text-xs text-red-600 dark:text-red-500">{isRtl ? 'خطا' : 'Errors'}</div>
-              </div>
-            </div>
+        <div className="mb-8 flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold dark:text-white mb-2">🧪 API Test Dashboard</h1>
+            <p className="text-gray-500">Monitor and test your verified AI provider keys.</p>
           </div>
+          <button onClick={testAllProviders} disabled={loading} className="btn-brand">
+            {loading ? 'Testing All...' : 'Run Full Audit'}
+          </button>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-              <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-                <h2 className="font-bold text-lg dark:text-white">{isRtl ? 'ارائه‌دهندگان' : 'Providers'}</h2>
-                <button 
-                  onClick={testAllProviders}
-                  disabled={loading}
-                  className="bg-brand-blue text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-brand-blue/90 disabled:opacity-50"
-                >
-                  {loading ? (isRtl ? 'در حال تست...' : 'Testing...') : (isRtl ? 'تست همه' : 'Test All')}
-                </button>
-              </div>
-              <div className="divide-y divide-gray-100 dark:divide-gray-700">
-                {providers.map(provider => (
-                  <div key={provider.id} className="p-6 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-xl">
-                          {provider.id === 'openrouter' ? '🌐' : provider.id === 'poyo' ? '⚡' : '🔑'}
-                        </div>
-                        <div>
-                          <h3 className="font-bold dark:text-white">{provider.name}</h3>
-                          <p className="text-xs text-gray-500">{provider.endpoint}</p>
-                        </div>
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+              <h2 className="font-bold mb-4 flex items-center gap-2">
+                📡 Active Providers
+              </h2>
+              <div className="space-y-4">
+                {providers.map(p => (
+                  <div key={p.id} className="p-4 border dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-all">
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-bold dark:text-white">{p.name}</h3>
+                        <p className="text-xs text-gray-500">{p.endpoint}</p>
                       </div>
-                      {getStatusBadge(provider.status)}
+                      <div className="flex items-center gap-2">
+                         {getStatusBadge(p.status)}
+                         <button onClick={() => testProvider(p.id)} className="text-xs text-brand-blue font-bold">Test</button>
+                      </div>
                     </div>
-                    <div className="flex flex-wrap gap-4 items-center">
-                      <select 
-                        value={selectedModel[provider.id] || provider.model}
-                        onChange={(e) => setSelectedModel(prev => ({...prev, [provider.id]: e.target.value}))}
-                        className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm dark:text-white"
-                      >
-                        {provider.models.map(m => <option key={m} value={m}>{m}</option>)}
-                      </select>
-                      <button 
-                        onClick={() => testProvider(provider.id)}
-                        disabled={testingProvider === provider.id}
-                        className="text-brand-blue text-sm font-bold hover:underline"
-                      >
-                        {isRtl ? 'تست تکی' : 'Test Individual'}
-                      </button>
+                    
+                    <div className="flex flex-wrap gap-4 text-xs">
+                       <select 
+                         value={selectedModel[p.id] || p.model}
+                         onChange={(e) => setSelectedModel(prev => ({...prev, [p.id]: e.target.value}))}
+                         className="bg-transparent border dark:border-gray-700 rounded p-1"
+                       >
+                         {p.models.map(m => <option key={m} value={m}>{m}</option>)}
+                       </select>
+                       {p.usageInfo && <span className="text-brand-blue">{p.usageInfo}</span>}
+                       {p.lastLatency && <span className="text-gray-400">{p.lastLatency}ms</span>}
                     </div>
+
+                    {(p.id === 'poyo' || p.id === 'portkey') && (
+                      <div className="mt-3 p-2 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-700 text-[10px] rounded border border-yellow-100 flex justify-between items-center">
+                        <span>⚠️ Usage cannot be checked via API. Visit dashboard:</span>
+                        <a href={p.dashboardUrl} target="_blank" className="font-bold underline">Open Dashboard</a>
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
             {testResult && (
-              <div className={`p-6 rounded-2xl border ${testResult.success ? 'bg-green-50 border-green-100 dark:bg-green-900/10 dark:border-green-900/30' : 'bg-red-50 border-red-100 dark:bg-red-900/10 dark:border-red-900/30'}`}>
-                <h3 className={`font-bold mb-2 ${testResult.success ? 'text-green-800 dark:text-green-400' : 'text-red-800 dark:text-red-400'}`}>
-                  {testResult.success ? (isRtl ? 'نتیجه تست موفق' : 'Test Success') : (isRtl ? 'خطا در تست' : 'Test Failed')}
-                </h3>
-                <div className="text-sm space-y-2">
-                  <p><span className="opacity-60">{isRtl ? 'ارائه‌دهنده:' : 'Provider:'}</span> {testResult.provider}</p>
-                  <p><span className="opacity-60">{isRtl ? 'مدل:' : 'Model:'}</span> {testResult.model}</p>
-                  {testResult.success ? (
-                    <>
-                      <p><span className="opacity-60">{isRtl ? 'زمان پاسخ:' : 'Latency:'}</span> {testResult.duration}ms</p>
-                      <div className="mt-3 p-4 bg-white/50 dark:bg-black/20 rounded-xl font-mono text-xs whitespace-pre-wrap">
-                        {testResult.response}
-                      </div>
-                    </>
-                  ) : (
-                    <p className="text-red-600 dark:text-red-400">{testResult.error}</p>
-                  )}
-                </div>
+              <div className={`p-6 rounded-2xl border ${testResult.success ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+                <h3 className="font-bold mb-2">{testResult.success ? '✅ Success' : '❌ Failed'}</h3>
+                <pre className="text-xs whitespace-pre-wrap font-mono bg-white/50 p-3 rounded-lg">{testResult.response || testResult.error}</pre>
               </div>
             )}
           </div>
 
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-              <h2 className="font-bold text-lg mb-4 dark:text-white">{isRtl ? 'تنظیمات کلیدها' : 'API Keys'}</h2>
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Portkey Key</label>
-                  <input 
-                    type="password"
-                    value={apiKeys.portkey}
-                    onChange={(e) => setApiKeys(prev => ({...prev, portkey: e.target.value}))}
-                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">PoYo Key 1</label>
-                  <input 
-                    type="password"
-                    value={apiKeys.poyo1}
-                    onChange={(e) => setApiKeys(prev => ({...prev, poyo1: e.target.value}))}
-                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm dark:text-white"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">OpenRouter Key 1</label>
-                  <input 
-                    type="password"
-                    value={apiKeys.openrouter1}
-                    onChange={(e) => setApiKeys(prev => ({...prev, openrouter1: e.target.value}))}
-                    className="w-full bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2 text-sm dark:text-white"
-                  />
-                </div>
-                <button 
-                  onClick={saveApiKeys}
-                  className="w-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-white py-2 rounded-xl text-sm font-bold hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                >
-                  {isRtl ? 'ذخیره کلیدها' : 'Save Keys'}
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-              <div className="p-6 border-b border-gray-100 dark:border-gray-700">
-                <h2 className="font-bold text-lg dark:text-white">{isRtl ? 'گزارشات اخیر' : 'Recent Logs'}</h2>
-              </div>
-              <div className="max-h-[400px] overflow-y-auto divide-y divide-gray-50 dark:divide-gray-700">
-                {logs.length === 0 ? (
-                  <div className="p-8 text-center text-gray-400 text-sm">
-                    {isRtl ? 'هیچ گزارشی ثبت نشده است' : 'No logs yet'}
-                  </div>
-                ) : (
-                  logs.map(log => (
-                    <div key={log.id} className="p-4 text-xs">
-                      <div className="flex justify-between items-center mb-1">
-                        <span className="font-bold dark:text-white">{log.provider}</span>
-                        <span className={log.status === 'success' ? 'text-green-600' : 'text-red-600'}>
-                          {log.status === 'success' ? 'SUCCESS' : 'ERROR'}
-                        </span>
-                      </div>
-                      <div className="text-gray-500 flex justify-between">
-                        <span>{log.model}</span>
-                        <span>{log.duration}ms</span>
-                      </div>
+             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+                <h2 className="font-bold mb-4">🔑 Key Management</h2>
+                <div className="space-y-4">
+                  {Object.entries(apiKeys).map(([key, val]) => (
+                    <div key={key}>
+                      <label className="text-[10px] text-gray-500 uppercase font-bold">{key}</label>
+                      <input 
+                        type="password" 
+                        value={val} 
+                        onChange={(e) => setApiKeys(prev => ({...prev, [key]: e.target.value}))}
+                        className="w-full bg-gray-50 dark:bg-gray-900 border dark:border-gray-700 rounded-lg px-3 py-2 text-xs"
+                      />
                     </div>
-                  ))
-                )}
-              </div>
-            </div>
+                  ))}
+                  <button onClick={saveApiKeys} className="w-full bg-brand-blue text-white py-2 rounded-xl text-sm font-bold">Save Keys</button>
+                </div>
+             </div>
+
+             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow p-6">
+                <h2 className="font-bold mb-4">📝 Session Logs</h2>
+                <div className="space-y-2 max-h-60 overflow-y-auto pr-2">
+                  {logs.map(l => (
+                    <div key={l.id} className="text-[10px] p-2 border-b dark:border-gray-700 flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="font-bold uppercase">{l.provider}</span>
+                        <span className="text-gray-400">{l.model}</span>
+                      </div>
+                      <span className={l.status === 'success' ? 'text-green-600' : 'text-red-600'}>{l.status.toUpperCase()}</span>
+                    </div>
+                  ))}
+                </div>
+             </div>
           </div>
         </div>
       </div>
