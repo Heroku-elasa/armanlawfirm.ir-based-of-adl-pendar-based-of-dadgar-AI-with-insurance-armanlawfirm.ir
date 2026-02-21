@@ -271,3 +271,17 @@ export async function generateChatResponse(history: ChatMessage[]): Promise<{ re
     const reply = await callWithFallback(prompt);
     return { reply };
 }
+
+export const getSuggestions = async (prompt: string): Promise<string[]> => {
+    try {
+        const res = await callWithFallback(`Based on the user's input: "${prompt}", provide 3-5 short, relevant follow-up questions or actions. Return as a JSON array of strings.`);
+        const match = res.match(/\[.*\]/s);
+        if (match) {
+            return JSON.parse(match[0]);
+        }
+        return [];
+    } catch (err) {
+        console.error("Error getting suggestions:", err);
+        return [];
+    }
+};
