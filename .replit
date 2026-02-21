@@ -76,3 +76,8 @@ VITE_POYO_AI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VT
 VITE_GEMINI_API_KEY = ""
 VITE_OPENROUTER_API_KEY = "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"
 AIVEN_DATABASE_URL = "postgres://avnadmin:REPLACE_WITH_PASSWORD@pg-375b79cc-gold-bee7.c.aivencloud.com:19692/defaultdb?sslmode=require"
+
+[deployment]
+deploymentTarget = "cloudrun"
+publicDir = "dist/public"
+run = ["sh", "-c", "bash -c printf \"%s\\n\\n%s\" \"$0\" \"$1\" Please use the \u001B[1;93mConfiguration\u001B[0m pane to configure your run command. For more info, see: https://docs.replit.com/replit-workspace/configuring-repl#run"]
