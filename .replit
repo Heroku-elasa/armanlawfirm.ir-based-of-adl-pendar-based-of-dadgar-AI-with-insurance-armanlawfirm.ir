@@ -27,7 +27,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev"
+args = "npm run dev -- --host 0.0.0.0 --port 5000"
 waitForPort = 5000
 
 [[ports]]
@@ -37,10 +37,6 @@ externalPort = 3002
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 5002
-externalPort = 3001
 
 [[ports]]
 localPort = 5003
@@ -69,11 +65,11 @@ TELEGRAM_BOT_TOKEN = "8434464737:AAHuN0nyUoya9-t8p7U0MfnfwraWvLTf_Z0"
 TELEGRAM_CHANNEL_ID = "@ARMAN_LAW_FIRM"
 POYO_AI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
 OPENROUTER_API_KEY = "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"
-GEMINI_API_KEY = ""
+GEMINI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
 PORTKEY_API_KEY = "gASN7iokVzgqJLweJTWr12V75JG+"
 VITE_PORTKEY_API_KEY = "gASN7iokVzgqJLweJTWr12V75JG+"
 VITE_POYO_AI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
-VITE_GEMINI_API_KEY = ""
+VITE_GEMINI_API_KEY = "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm"
 VITE_OPENROUTER_API_KEY = "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"
 AIVEN_DATABASE_URL = "postgres://avnadmin:REPLACE_WITH_PASSWORD@pg-375b79cc-gold-bee7.c.aivencloud.com:19692/defaultdb?sslmode=require"
 

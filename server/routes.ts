@@ -502,7 +502,85 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // AI Providers status endpoint for dashboard - fetches from database
+  app.post('/api/ai/health-check', async (_req: Request, res: Response) => {
+    const results = [];
+    const start = Date.now();
+
+    // Google Gemini Health Check
+    try {
+      const geminiKey = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY;
+      if (geminiKey) {
+        results.push({ provider: 'Gemini', status: 'online', latency: Date.now() - start });
+      } else {
+        results.push({ provider: 'Gemini', status: 'offline', error: 'Key not configured' });
+      }
+    } catch (err: any) {
+      results.push({ provider: 'Gemini', status: 'offline', error: err.message });
+    }
+
+    // OpenRouter Health Check
+    try {
+      const openRouterKey = process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY;
+      if (openRouterKey) {
+        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${openRouterKey}`,
+          },
+          body: JSON.stringify({
+            model: 'google/gemini-2.0-flash-001',
+            messages: [{ role: 'user', content: 'health check' }],
+            max_tokens: 1
+          })
+        });
+        const data = await response.json();
+        results.push({
+          provider: 'OpenRouter',
+          status: response.ok ? 'online' : 'error',
+          latency: Date.now() - start,
+          error: response.ok ? null : JSON.stringify(data)
+        });
+      } else {
+        results.push({ provider: 'OpenRouter', status: 'offline', error: 'Key not configured' });
+      }
+    } catch (err: any) {
+      results.push({ provider: 'OpenRouter', status: 'offline', error: err.message });
+    }
+
+    // Poyo AI Health Check
+    try {
+      const poyoKey = process.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY;
+      if (poyoKey) {
+        const response = await fetch('https://api.poyo.ai/v1/chat/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${poyoKey}`,
+          },
+          body: JSON.stringify({
+            model: 'gemini-2.0-flash',
+            messages: [{ role: 'user', content: 'health check' }],
+            max_tokens: 1
+          })
+        });
+        const data = await response.json();
+        results.push({
+          provider: 'PoyoAI',
+          status: response.ok ? 'online' : 'error',
+          latency: Date.now() - start,
+          error: response.ok ? null : JSON.stringify(data)
+        });
+      } else {
+        results.push({ provider: 'PoyoAI', status: 'offline', error: 'Key not configured' });
+      }
+    } catch (err: any) {
+      results.push({ provider: 'PoyoAI', status: 'offline', error: err.message });
+    }
+
+    return res.json(results);
+  });
+
   app.get('/api/ai/providers', async (_req: Request, res: Response) => {
     try {
       const today = new Date().toISOString().split('T')[0];

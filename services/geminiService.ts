@@ -40,7 +40,17 @@ const getAI = (): GoogleGenAI | null => {
             return null;
         }
         try {
-            aiInstance = new GoogleGenAI({ apiKey });
+            // Check if the key is a Poyo key used for Gemini
+            if (apiKey.startsWith('sk-') && !apiKey.includes('or-v1-')) {
+                // @ts-ignore
+                aiInstance = new GoogleGenAI({ 
+                    apiKey,
+                    // @ts-ignore
+                    baseUrl: 'https://api.poyo.ai/v1' 
+                });
+            } else {
+                aiInstance = new GoogleGenAI({ apiKey });
+            }
         } catch (e) {
             console.error("Failed to initialize GoogleGenAI:", e);
             return null;
