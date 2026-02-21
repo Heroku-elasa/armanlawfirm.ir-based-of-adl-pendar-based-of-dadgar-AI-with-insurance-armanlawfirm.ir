@@ -35,12 +35,14 @@ const portkeyProvider: AIProvider = {
         const key = portkeyProvider.apiKey || PORTKEY_API_KEY;
         if (!key) throw new Error('Portkey API key not configured');
         try {
+            // Determine provider based on model or default to google
+            const provider = 'google'; 
             const response = await fetch('https://api.portkey.ai/v1/chat/completions', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'x-portkey-api-key': key,
-                    'x-portkey-provider': 'google'
+                    'x-portkey-provider': provider
                 },
                 body: JSON.stringify({
                     model: 'gemini-1.5-flash',
@@ -50,7 +52,7 @@ const portkeyProvider: AIProvider = {
                 })
             });
             if (!response.ok) throw new Error(`Portkey error: ${response.status}`);
-            const data = await response.json();
+            const data = await response.json() as any;
             return data.choices?.[0]?.message?.content || '';
         } catch (error) {
             console.error("Portkey Error:", error);
@@ -112,7 +114,7 @@ const openRouterProvider: AIProvider = {
             })
         });
         if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
-        const data = await response.json();
+        const data = await response.json() as any;
         return data.choices?.[0]?.message?.content || '';
     }
 };

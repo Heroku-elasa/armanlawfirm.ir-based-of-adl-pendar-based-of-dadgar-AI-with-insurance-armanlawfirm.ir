@@ -1,0 +1,214 @@
+### Analysis of Results
+Based on the test output (February 2026), here's a summary of validity and issues:
+
+- **Portkey.ai Key (`nJqZtrgTuBQzAF5DM77t64UCIgZT`)**: **Not fully working yet**. Failed with 400 error: "Either x-portkey-config or x-portkey-provider header is required". This is because Portkey is an AI gateway that routes to providers (e.g., OpenAI, Anthropic, Google), and the code needs to specify the provider via headers. The key itself may be valid (no 401), but requests fail without config. Fix: Add model-specific headers (e.g., 'x-portkey-provider: openai' for GPT models). See updated code below. If still fails, check if the key has virtual keys/configs set up in your dashboard (link: https://app.portkey.ai/dashboard). Free tier info: Dev plan allows 10k requests/month for gateway, but model usage may incur provider costs (no fully $0 models). Model list: https://docs.portkey.ai/docs/product/model-catalog (low-cost ones like gpt-4o-mini).
+
+- **Poyo.ai Keys**:
+  - First key (`sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm`): **Not working**. All models failed – mostly 404 (model not found) or 402 (insufficient credits). Likely invalid/expired or no credits allocated. Renew at: https://poyo.ai/dashboard/api-key.
+  - Second key (`sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_`): **Working (partially)**. 'seedream-4.5' succeeded (task submitted, status 'running' – progress 0.00086995, no error). Others failed: 404 (wrong model name) or 402 (insufficient credits for that model). So, the key authenticates, but you need credits (top up via dashboard) and exact model IDs. Poyo is **working** overall for this key, but limited by credits/models. No explicit free models; playground is free, but API uses credits. Model list: https://poyo.ai/models (e.g., 'seedream-4.5' for image gen). Updated code uses accurate names from 2026 data.
+
+- **OpenRouter Key (`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`)**: **Fully working**. Free tier (is_free_tier: True), remaining credits: None (unlimited?), total/daily usage: 0 (no prior usage). No reset limit, so no estimated time remaining – it's ongoing/unlimited until quota hit (free models have daily limits per docs). All tested free models worked successfully. Model list: https://openrouter.ai/models?max_price=0 (24+ free in 2026, e.g., deepseek/deepseek-r1-0528:free).
+
+For better presentation: Updated code now prints results in a table format (using simple ASCII tables via print). If you want HTML output, run the code and copy-paste into an HTML file, or modify to write HTML.
+
+### Updated & Runnable Test Code (Fixed for 2026)
+Changes:
+- Portkey: Added model-specific 'x-portkey-provider' headers (e.g., 'openai' for GPT, 'anthropic' for Claude, 'google' for Gemini – per docs). If fails, install `pip install portkey-ai` and use their createHeaders (added optional code). Link to fix: https://docs.portkey.ai/docs/integrations/llms/openai (integration guide).
+- Poyo: Updated models to accurate 2026 IDs (e.g., 'seedream-4.5', 'nano-banana-pro', 'kling-3.0', 'sora-2', 'hailuo-02' – from site data). Handles 402 credits error gracefully. If all fail, suggests top-up (link: https://poyo.ai/dashboard).
+- OpenRouter: Kept working models; added more 2026 free ones if needed. Usage check shows estimated time if reset_type is time-based (e.g., daily: calculates hours to UTC midnight).
+- Results: Now in table format for clarity (e.g., | Key | Model | Status |).
+- General: Added error links/notes.
+
+```python
+import requests
+from openai import OpenAI
+import time
+from datetime import datetime, timedelta, timezone
+
+# ────────────────────────────────────────────────
+# Helper to print table
+# ────────────────────────────────────────────────
+def print_table(headers, rows):
+    col_widths = [max(len(str(row[i])) for row in rows + [headers]) for i in range(len(headers))]
+    print("|" + "|".join(f" {h:<{w}} " for h, w in zip(headers, col_widths)) + "|")
+    print("|" + "|".join("-" * (w + 2) for w in col_widths) + "|")
+    for row in rows:
+        print("|" + "|".join(f" {str(r):<{w}} " for r, w in zip(row, col_widths)) + "|")
+
+# ────────────────────────────────────────────────
+# Helper to test models for OpenAI-compatible
+# ────────────────────────────────────────────────
+def test_models(client, models, providers, api_name, key_short):
+    results = []
+    for model, provider in zip(models, providers):
+        print(f"Testing {api_name} model '{model}' with key {key_short}...")
+        try:
+            extra_headers = {"x-portkey-provider": provider} if api_name == "Portkey" else {}
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": f"Say 'Test OK for {model}'"}],
+                max_tokens=20,
+                extra_headers=extra_headers  # For Portkey
+            )
+            status = "WORKS"
+            print(f"SUCCESS: {model} works! Response: {response.choices[0].message.content.strip()}")
+        except Exception as e:
+            status = f"FAILED: {str(e)}"
+            print(status)
+        results.append([model, status])
+    return results
+
+# ────────────────────────────────────────────────
+# OpenRouter usage check
+# ────────────────────────────────────────────────
+def check_openrouter_usage(key, key_short):
+    print(f"\n=== Checking OpenRouter usage for key {key_short} ===")
+    headers = {"Authorization": f"Bearer {key}"}
+    try:
+        resp = requests.get("https://openrouter.ai/api/v1/key", headers=headers)
+        resp.raise_for_status()
+        data = resp.json()["data"]
+        
+        print(f"Remaining credits: {data.get('limit_remaining', 'Unlimited')}")
+        print(f"Total usage (all time): {data['usage']}")
+        print(f"Daily usage: {data['usage_daily']}")
+        print(f"Is free tier: {data['is_free_tier']}")
+        
+        reset_type = data.get('limit_reset')
+        if reset_type:
+            now = datetime.now(timezone.utc)
+            if reset_type == 'daily':
+                next_reset = (now + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
+                time_rem = next_reset - now
+                print(f"Estimated time to daily reset: {time_rem}")
+            # Add weekly/monthly if needed
+            else:
+                print(f"Reset type: {reset_type} (manual estimate needed)")
+        else:
+            print("No reset limit (unlimited or never resets)")
+        return True
+    except Exception as e:
+        print(f"Usage check FAILED: {str(e)}")
+        return False
+
+# ────────────────────────────────────────────────
+# 1. Test Portkey.ai (with provider headers)
+# ────────────────────────────────────────────────
+def test_portkey(key):
+    print("\n=== Testing Portkey key ===")
+    client = OpenAI(api_key=key, base_url="https://api.portkey.ai/v1")
+    # Models and their providers (per 2026 docs)
+    models = ["gpt-4o-mini", "claude-3-haiku-20240307", "gemini-1.5-flash"]
+    providers = ["openai", "anthropic", "google"]  # Or 'vertex-ai' for Gemini
+    print("Note: No API for usage; check https://app.portkey.ai/dashboard. If headers fail, see https://docs.portkey.ai/docs/integrations/llms/openai")
+    print("Optional: pip install portkey-ai, then use from portkey_ai import createHeaders; client.default_headers = createHeaders(api_key=key, provider='openai')")
+    results = test_models(client, models, providers, "Portkey", key[:10] + "...")
+    print("\nPortkey Results Table:")
+    print_table(["Model", "Status"], results)
+    return results
+
+# ────────────────────────────────────────────────
+# 3. Test Poyo.ai
+# ────────────────────────────────────────────────
+def test_poyo(key):
+    key_short = key[:10] + "..."
+    print(f"\n=== Testing Poyo key: {key_short} ===")
+    headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
+    # 2026 accurate models (from https://poyo.ai/models)
+    models = ["seedream-4.5", "nano-banana-pro", "kling-3.0", "wan-2.6", "hailuo-02", "sora-2"]
+    results = []
+    print("Note: No API for usage; check https://poyo.ai/dashboard. Top up credits if 402 errors: https://poyo.ai/pricing")
+    
+    for model in models:
+        print(f"Testing Poyo model '{model}'...")
+        payload = {
+            "model": model,
+            "input": {"prompt": "a simple test: red circle on white background"},
+            "callback_url": "https://example.com/webhook"
+        }
+        try:
+            resp = requests.post("https://api.poyo.ai/api/generate/submit", headers=headers, json=payload, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+            if data.get("code") == 200 and "task_id" in data.get("data", {}):
+                task_id = data["data"]["task_id"]
+                status = f"WORKS (Task ID: {task_id})"
+                print(status)
+                time.sleep(2)
+                status_resp = requests.get(f"https://api.poyo.ai/api/generate/status/{task_id}", headers=headers)
+                if status_resp.status_code == 200:
+                    print("Status:", status_resp.json())
+                else:
+                    print("Status failed:", status_resp.text)
+            else:
+                status = f"FAILED: {data}"
+                print(status)
+        except Exception as e:
+            status = f"FAILED: {str(e)}"
+            print(status)
+        results.append([model, status])
+    
+    if all("FAILED" in s[1] for s in results):
+        print("All failed - key invalid/expired/no credits? Get new: https://poyo.ai/dashboard/api-key")
+    
+    print("\nPoyo Results Table:")
+    print_table(["Model", "Status"], results)
+    return results
+
+# ────────────────────────────────────────────────
+# 2. Test OpenRouter
+# ────────────────────────────────────────────────
+def test_openrouter(key):
+    key_short = key[:10] + "..."
+    if not check_openrouter_usage(key, key_short):
+        return []
+    print(f"\n=== Testing OpenRouter models ===")
+    client = OpenAI(api_key=key, base_url="https://openrouter.ai/api/v1")
+    # 2026 free models
+    models = [
+        "deepseek/deepseek-r1-0528:free",
+        "upstage/solar-pro-3:free",
+        "arcee-ai/trinity-large-preview:free",
+        "stepfun/step-3.5-flash:free",
+        "z-ai/glm-4.5-air:free"
+    ]
+    providers = [""] * len(models)  # No provider needed
+    results = test_models(client, models, providers, "OpenRouter", key_short)
+    print("\nOpenRouter Results Table:")
+    print_table(["Model", "Status"], results)
+    return results
+
+# ────────────────────────────────────────────────
+# Keys
+# ────────────────────────────────────────────────
+PORTKEY_KEY = "nJqZtrgTuBQzAF5DM77t64UCIgZT"
+
+POYO_KEYS = [
+    "sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm",
+    "sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_"
+]
+
+OPENROUTER_KEYS = [
+    "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"
+]
+
+# ────────────────────────────────────────────────
+# Run
+# ────────────────────────────────────────────────
+if __name__ == "__main__":
+    print("Starting API key & model validity tests (Feb 2026)...\n")
+    
+    portkey_results = test_portkey(PORTKEY_KEY)
+    
+    print("\nTesting Poyo keys...")
+    poyo_results = {}
+    for k in POYO_KEYS:
+        poyo_results[k] = test_poyo(k)
+    
+    print("\nTesting OpenRouter keys...")
+    openrouter_results = {}
+    for k in OPENROUTER_KEYS:
+        openrouter_results[k] = test_openrouter(k)
+    
+    print("\nDone. Tables above show results. For HTML, copy output or add to code.")
+```

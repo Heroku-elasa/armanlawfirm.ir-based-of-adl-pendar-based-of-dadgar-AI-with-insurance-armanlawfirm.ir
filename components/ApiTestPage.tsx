@@ -39,7 +39,7 @@ const DEFAULT_PROVIDERS: AIProvider[] = [
     enabled: true,
     priority: 1,
     model: 'gpt-4o-mini', 
-    models: ['gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash', 'flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2'],
+    models: ['gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash', 'flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2', 'wan-2.6', 'hailuo-02'],
     endpoint: 'api.poyo.ai',
     status: 'idle',
     dashboardUrl: 'https://poyo.ai/dashboard',
@@ -117,8 +117,8 @@ const ApiTestPage: React.FC = () => {
   const checkOpenRouterUsage = async (key: string) => {
     try {
       const resp = await fetch("https://openrouter.ai/api/v1/key", { headers: { "Authorization": `Bearer ${key}` } });
-      const data = await resp.json();
-      if (data.data) {
+      const data = await resp.json() as any;
+      if (data?.data) {
         const d = data.data;
         return `Credits: ${d.limit_remaining || 'N/A'}, Usage: ${d.usage_daily || 0}, IsFree: ${d.is_free_tier}`;
       }
@@ -148,7 +148,7 @@ const ApiTestPage: React.FC = () => {
         usageInfo = await checkOpenRouterUsage(apiKey);
       } else if (id === 'poyo') {
         // Checking if it's an image/video model based on suffix
-        const isGenModel = ['flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2'].includes(model);
+        const isGenModel = ['flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2', 'wan-2.6', 'hailuo-02'].includes(model);
         if (isGenModel) {
           url = 'https://api.poyo.ai/api/generate/submit';
           apiKey = apiKeys.poyo1;
@@ -162,30 +162,35 @@ const ApiTestPage: React.FC = () => {
           url = 'https://api.poyo.ai/v1/chat/completions';
           apiKey = apiKeys.poyo1;
           headers['Authorization'] = `Bearer ${apiKey}`;
-          body = { model: 'gpt-4o-mini', messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
+          body = { model: model === 'gpt-4o-mini' ? 'gpt-4o-mini' : model, messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
         }
       } else if (id === 'portkey') {
         url = 'https://api.portkey.ai/v1/chat/completions';
+        const providerMap: {[key: string]: string} = {
+          'gpt-4o-mini': 'openai',
+          'claude-3-haiku-20240307': 'anthropic',
+          'gemini-1.5-flash': 'google'
+        };
         headers['x-portkey-api-key'] = apiKeys.portkey;
-        headers['x-portkey-provider'] = 'openai';
+        headers['x-portkey-provider'] = providerMap[model] || 'openai';
         body = { model, messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
       }
 
       const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
-      const data = await res.json();
+      const data = await res.json() as any;
       const duration = Date.now() - start;
 
       if (res.ok) {
         let responseText = "";
-        if (id === 'poyo' && data.data?.task_id) {
+        if (id === 'poyo' && data?.data?.task_id) {
           responseText = `Generation Task Started! ID: ${data.data.task_id}`;
         } else {
-          responseText = data.choices?.[0]?.message?.content || JSON.stringify(data);
+          responseText = data?.choices?.[0]?.message?.content || JSON.stringify(data);
         }
         setTestResult({ provider: id, success: true, duration, response: responseText, model });
         updateProviderStatus(id, 'success', undefined, duration, usageInfo);
         addLog(id, model, 'success', duration, undefined, responseText);
-      } else { throw new Error(data.error?.message || res.statusText); }
+      } else { throw new Error(data?.error?.message || res.statusText); }
     } catch (error: any) {
       const duration = Date.now() - start;
       if (retryWithBackup && id === 'poyo' && apiKeys.poyo2) {
