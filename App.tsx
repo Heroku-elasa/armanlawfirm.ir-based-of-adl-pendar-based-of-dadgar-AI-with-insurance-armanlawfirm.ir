@@ -30,6 +30,7 @@ import ContentHubPage from './components/ContentHubPage';
 import CourtAssistant from './components/CourtAssistant'; 
 import PricingPage from './components/PricingPage';
 import Dashboard from './components/Dashboard'; 
+import AIDashboard from './components/AIDashboard'; 
 import AdminDashboard from './components/AdminDashboard'; 
 import WordPressDashboard from './components/WordPressDashboard';
 import FaryadresiPage from './components/FaryadresiPage';
@@ -1529,8 +1530,10 @@ const AppContent: React.FC = () => {
             return <GeoReferencer setPage={setPage} isLoading={isLoading} setIsLoading={setIsLoading} />;
         case 'investment':
             return <InvestmentPage />;
-      default:
-        return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} />;
+        case 'ai_dashboard':
+            return <AIDashboard />;
+        default:
+            return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} />;
     }
   };
 

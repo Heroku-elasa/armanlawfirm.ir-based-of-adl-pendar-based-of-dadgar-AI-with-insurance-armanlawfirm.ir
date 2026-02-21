@@ -86,6 +86,7 @@ const SiteHeader: React.FC<SiteHeaderProps> = ({ currentPage, setPage, checkpoin
     {
         title: language === 'fa' ? 'ابزارهای هوشمند' : 'Smart Tools',
         items: [
+            { key: 'ai_dashboard', text: language === 'fa' ? 'داشبورد هوش مصنوعی' : 'AI Dashboard' },
             { key: 'content_hub', text: t('header.contentHub') },
             { key: 'news_summarizer', text: t('header.newsSummarizer') },
             { key: 'resume_analyzer', text: t('header.resumeAnalyzer') },

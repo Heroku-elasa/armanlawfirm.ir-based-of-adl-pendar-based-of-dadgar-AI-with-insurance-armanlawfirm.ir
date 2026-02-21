@@ -23,14 +23,17 @@ const POYO_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI
 // @ts-ignore
 const PORTKEY_API_KEY = import.meta.env.VITE_PORTKEY_API_KEY || process.env.PORTKEY_API_KEY || '';
 // @ts-ignore
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || process.env.POYO_AI_API_KEY || '';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
 // @ts-ignore
-const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
+// @ts-ignore
+const POYO_AI_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI_API_KEY || '';
 
 const getAI = (): GoogleGenAI | null => {
     if (!aiInstance) {
-        // Use GEMINI_API_KEY if available (at least 10 chars to be safe)
-        const apiKey = (GEMINI_API_KEY && GEMINI_API_KEY.length > 10) ? GEMINI_API_KEY : null;
+        // Try multiple potential keys for Gemini
+        const apiKey = (GEMINI_API_KEY && GEMINI_API_KEY.length > 10) ? GEMINI_API_KEY : 
+                       (POYO_AI_API_KEY && POYO_AI_API_KEY.length > 10) ? POYO_AI_API_KEY : null;
         
         if (!apiKey) {
             console.warn("Google Gemini API key not found. Falling back to other providers.");
@@ -71,14 +74,14 @@ const portkeyProvider: AIProvider = {
                     'x-portkey-provider': 'google'
                 },
                 body: JSON.stringify({
-                    model: 'gemini-2.0-flash',
+                    model: 'gemini-1.5-flash',
                     messages: [{ role: 'user', content: prompt }],
                     max_tokens: maxTokens,
                     temperature: temperature
                 })
             });
             if (!response.ok) {
-                const errData = await response.json();
+                const errData = await response.json().catch(() => ({}));
                 throw new Error(`Portkey error: ${response.status} - ${JSON.stringify(errData)}`);
             }
             const data = await response.json() as any;
@@ -97,7 +100,7 @@ const geminiProvider: AIProvider = {
         if (!ai) throw new Error('Gemini API not initialized');
         try {
             const response = await ai.models.generateContent({
-                model: 'gemini-2.0-flash',
+                model: 'gemini-1.5-flash',
                 contents: [{ parts: [{ text: prompt }] }],
                 config: { maxOutputTokens: maxTokens, temperature: temperature }
             });
@@ -140,31 +143,51 @@ const openRouterProvider: AIProvider = {
     name: 'OpenRouter',
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
         if (!OPENROUTER_API_KEY) throw new Error('OpenRouter API key not configured');
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'HTTP-Referer': 'https://armanlawfirm.ir',
-                'X-Title': 'Arman Law Firm Assistant'
-            },
-            body: JSON.stringify({
-                model: 'google/gemini-2.0-flash-001',
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: maxTokens,
-                temperature: temperature,
-                provider: {
-                    order: ['Google', 'OpenAI'],
-                    allow_fallbacks: true
+        try {
+            const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                    'HTTP-Referer': 'https://armanlawfirm.ir',
+                    'X-Title': 'Arman Law Firm Assistant'
+                },
+                body: JSON.stringify({
+                    model: 'google/gemini-2.0-flash-001',
+                    messages: [{ role: 'user', content: prompt }],
+                    max_tokens: maxTokens,
+                    temperature: temperature
+                })
+            });
+            if (!response.ok) {
+                const errData = await response.json().catch(() => ({}));
+                // If 401 or model error, try another model as fallback within OpenRouter
+                if (response.status === 401 || response.status === 404) {
+                     const fallbackResponse = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
+                        },
+                        body: JSON.stringify({
+                            model: 'openai/gpt-4o-mini',
+                            messages: [{ role: 'user', content: prompt }],
+                            max_tokens: maxTokens,
+                        })
+                    });
+                    if (fallbackResponse.ok) {
+                        const fallbackData = await fallbackResponse.json() as any;
+                        return fallbackData.choices?.[0]?.message?.content || '';
+                    }
                 }
-            })
-        });
-        if (!response.ok) {
-            const errData = await response.json().catch(() => ({}));
-            throw new Error(`OpenRouter error: ${response.status} - ${JSON.stringify(errData)}`);
+                throw new Error(`OpenRouter error: ${response.status} - ${JSON.stringify(errData)}`);
+            }
+            const data = await response.json() as { choices?: { message?: { content?: string } }[] };
+            return data.choices?.[0]?.message?.content || '';
+        } catch (error) {
+            console.error("OpenRouter Error:", error);
+            throw error;
         }
-        const data = await response.json() as { choices?: { message?: { content?: string } }[] };
-        return data.choices?.[0]?.message?.content || '';
     }
 };
 
