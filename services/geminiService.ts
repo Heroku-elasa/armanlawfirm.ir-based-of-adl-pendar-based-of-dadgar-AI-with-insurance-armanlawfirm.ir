@@ -63,7 +63,8 @@ const portkeyProvider: AIProvider = {
                 headers: {
                     'Content-Type': 'application/json',
                     'x-portkey-api-key': PORTKEY_API_KEY,
-                    'x-portkey-provider': 'google-gemini' // Defaulting to gemini via portkey
+                    'x-portkey-provider': 'google',
+                    'x-portkey-model': 'gemini-2.0-flash'
                 },
                 body: JSON.stringify({
                     model: 'gemini-2.0-flash',
@@ -104,7 +105,7 @@ const poyoProvider: AIProvider = {
         if (!POYO_API_KEY) throw new Error('Poyo AI API key not configured');
         try {
             const response = await poyoClient.chat.completions.create({
-                model: 'claude-3-5-sonnet-20240620', // Try a more specific version
+                model: 'claude-3-5-sonnet',
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: maxTokens,
                 temperature: temperature
@@ -132,7 +133,8 @@ const openRouterProvider: AIProvider = {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'HTTP-Referer': 'https://armanlawfirm.ir'
+                'HTTP-Referer': 'https://armanlawfirm.ir',
+                'X-Title': 'Arman Law Firm Assistant'
             },
             body: JSON.stringify({
                 model: 'google/gemini-2.0-flash-001',
@@ -141,7 +143,10 @@ const openRouterProvider: AIProvider = {
                 temperature: temperature
             })
         });
-        if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(`OpenRouter error: ${response.status} - ${JSON.stringify(errData)}`);
+        }
         const data = await response.json() as { choices?: { message?: { content?: string } }[] };
         return data.choices?.[0]?.message?.content || '';
     }
