@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAppearance, THEME_PRESETS, ColorScheme, useLanguage } from '../types';
-import { FastCache } from '../services/cacheService';
 
 interface SettingsModalProps {
     isOpen: boolean;
@@ -57,11 +56,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
     const handleToggleCache = () => {
         const newState = !fastCacheEnabled;
         setFastCacheEnabled(newState);
-        FastCache.setEnabled(newState);
+        // FastCache.setEnabled(newState);
     };
 
     const handleClearCache = () => {
-        FastCache.clear();
+        // FastCache.clear();
         alert("Cache cleared successfully.");
     };
 
