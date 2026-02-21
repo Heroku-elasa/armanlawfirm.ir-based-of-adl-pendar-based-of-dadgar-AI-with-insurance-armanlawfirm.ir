@@ -8,6 +8,7 @@ interface AIProvider {
   priority: number;
   model: string;
   endpoint: string;
+  keyConfigured?: boolean;
   limits: {
     requestsPerMinute: number;
     requestsPerDay: number;
@@ -640,66 +641,101 @@ const AIDashboard: React.FC = () => {
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Gemini API Key
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Gemini API Key
+                      </label>
+                      {providers.find(p => p.id === 'gemini')?.keyConfigured && (
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          {isRtl ? '✓ تنظیم شده' : '✓ Configured'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="password"
                       value={apiKeys.gemini}
                       onChange={(e) => setApiKeys({ ...apiKeys, gemini: e.target.value })}
-                      placeholder="AIza..."
+                      placeholder={providers.find(p => p.id === 'gemini')?.keyConfigured ? "••••••••••••" : "AIza..."}
                       className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      OpenRouter API Key
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        OpenRouter API Key
+                      </label>
+                      {providers.find(p => p.id === 'openrouter')?.keyConfigured && (
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          {isRtl ? '✓ تنظیم شده' : '✓ Configured'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="password"
                       value={apiKeys.openrouter}
                       onChange={(e) => setApiKeys({ ...apiKeys, openrouter: e.target.value })}
-                      placeholder="sk-or-..."
+                      placeholder={providers.find(p => p.id === 'openrouter')?.keyConfigured ? "••••••••••••" : "sk-or-..."}
                       className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Cloudflare Account ID
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Cloudflare Account ID
+                      </label>
+                      {providers.find(p => p.id === 'cloudflare')?.keyConfigured && (
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          {isRtl ? '✓ تنظیم شده' : '✓ Configured'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="text"
                       value={apiKeys.cloudflare_account}
                       onChange={(e) => setApiKeys({ ...apiKeys, cloudflare_account: e.target.value })}
-                      placeholder="abc123..."
+                      placeholder={providers.find(p => p.id === 'cloudflare')?.keyConfigured ? "••••••••••••" : "abc123..."}
                       className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Cloudflare API Token
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Cloudflare API Token
+                      </label>
+                      {providers.find(p => p.id === 'cloudflare')?.keyConfigured && (
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          {isRtl ? '✓ تنظیم شده' : '✓ Configured'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="password"
                       value={apiKeys.cloudflare_token}
                       onChange={(e) => setApiKeys({ ...apiKeys, cloudflare_token: e.target.value })}
-                      placeholder="..."
+                      placeholder={providers.find(p => p.id === 'cloudflare')?.keyConfigured ? "••••••••••••" : "..."}
                       className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      OpenAI API Key
-                    </label>
+                    <div className="flex justify-between items-center mb-2">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        OpenAI API Key
+                      </label>
+                      {providers.find(p => p.id === 'openai')?.keyConfigured && (
+                        <span className="text-xs text-green-600 dark:text-green-400 font-medium">
+                          {isRtl ? '✓ تنظیم شده' : '✓ Configured'}
+                        </span>
+                      )}
+                    </div>
                     <input
                       type="password"
                       value={apiKeys.openai}
                       onChange={(e) => setApiKeys({ ...apiKeys, openai: e.target.value })}
-                      placeholder="sk-..."
+                      placeholder={providers.find(p => p.id === 'openai')?.keyConfigured ? "••••••••••••" : "sk-..."}
                       className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
