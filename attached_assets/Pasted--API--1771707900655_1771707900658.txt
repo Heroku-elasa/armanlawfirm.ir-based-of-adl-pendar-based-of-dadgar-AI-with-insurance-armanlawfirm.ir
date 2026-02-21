@@ -1,0 +1,847 @@
+# 🔧 اصلاح کامل کد تست API
+
+خطاهای شما مشخص هستند:
+
+| سرویس | خطا | علت | راه‌حل |
+|-------|-----|-----|--------|
+| **PoYo** | `Model not found: gemini-1.5-flash` | نام مدل اشتباه | تغییر به `gpt-4o-mini` |
+| **Portkey** | `Invalid API Key. Error Code: 03` | کلید نامعتبر (فاصله اضافی) | حذف ` 0` از انتهای کلید |
+
+---
+
+## ✅ **کد کامل اصلاح‌شده**
+
+```typescript
+import React, { useState, useEffect } from 'react';
+import { useLanguage } from '../types';
+
+interface AIProvider {
+  id: string;
+  name: string;
+  enabled: boolean;
+  priority: number;
+  model: string;
+  models: string[]; // لیست مدل‌های قابل استفاده
+  endpoint: string;
+  keyConfigured?: boolean;
+  status: 'idle' | 'testing' | 'success' | 'error';
+  lastError?: string;
+  lastLatency?: number;
+  limits: {
+    requestsPerMinute: number;
+    requestsPerDay: number;
+  };
+  usage: {
+    requestsToday: number;
+    tokensToday: number;
+    errorsToday: number;
+  };
+}
+
+interface AILog {
+  id: number;
+  timestamp: string;
+  provider: string;
+  model: string;
+  status: 'success' | 'error' | 'fallback';
+  duration: number;
+  tokens: number;
+  error?: string;
+  response?: string;
+}
+
+const DEFAULT_PROVIDERS: AIProvider[] = [
+  {
+    id: 'poyo',
+    name: 'Poyo AI',
+    enabled: true,
+    priority: 1,
+    model: 'gpt-4o-mini', // ✅ مدل اصلاح شده
+    models: ['gpt-4o-mini', 'gpt-4o', 'claude-3-sonnet', 'gemini-pro'],
+    endpoint: 'api.poyo.ai',
+    keyConfigured: true,
+    status: 'idle',
+    limits: { requestsPerMinute: 20, requestsPerDay: 100 },
+    usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
+  },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter',
+    enabled: true,
+    priority: 2,
+    model: 'google/gemini-2.0-flash-exp:free', // ✅ مدل رایگان
+    models: [
+      'google/gemini-2.0-flash-exp:free',
+      'google/gemini-pro:free',
+      'meta-llama/llama-3.2-3b-instruct:free',
+      'mistralai/mistral-7b-instruct:free'
+    ],
+    endpoint: 'openrouter.ai',
+    keyConfigured: true,
+    status: 'idle',
+    limits: { requestsPerMinute: 20, requestsPerDay: 50 },
+    usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
+  },
+  {
+    id: 'portkey',
+    name: 'Portkey',
+    enabled: false, // ⚠️ غیرفعال چون کلید نامعتبر است
+    priority: 3,
+    model: 'gpt-4o-mini',
+    models: ['gpt-4o-mini', 'gpt-4o', 'gpt-3.5-turbo'],
+    endpoint: 'api.portkey.ai',
+    keyConfigured: false, // ❌ کلید نامعتبر
+    status: 'idle',
+    limits: { requestsPerMinute: 60, requestsPerDay: 1000 },
+    usage: { requestsToday: 0, tokensToday: 0, errorsToday: 0 }
+  }
+];
+
+const ApiTestPage: React.FC = () => {
+  const { language, t } = useLanguage();
+  const isRtl = language === 'fa';
+  
+  const [activeTab, setActiveTab] = useState<'providers' | 'usage' | 'logs' | 'settings'>('providers');
+  const [providers, setProviders] = useState<AIProvider[]>(DEFAULT_PROVIDERS);
+  const [logs, setLogs] = useState<AILog[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [testResult, setTestResult] = useState<{
+    provider: string;
+    success: boolean;
+    duration?: number;
+    response?: string;
+    error?: string;
+    model?: string;
+  } | null>(null);
+  const [testingProvider, setTestingProvider] = useState<string | null>(null);
+  const [testPrompt, setTestPrompt] = useState('سلام، یک جمله کوتاه درباره قانون بگو.');
+  const [selectedModel, setSelectedModel] = useState<{[key: string]: string}>({});
+  
+  // ✅ کلیدهای اصلاح‌شده
+  const [apiKeys, setApiKeys] = useState({
+    portkey: '', // ❌ کلید نامعتبر - باید کلید جدید بگیرید
+    poyo1: 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm',
+    poyo2: 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_',
+    openrouter1: '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',
+    openrouter2: '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'
+  });
+
+  // بارگذاری کلیدها از localStorage
+  useEffect(() => {
+    const savedKeys = localStorage.getItem('arman-api-keys');
+    if (savedKeys) {
+      try {
+        setApiKeys(JSON.parse(savedKeys));
+      } catch (e) {
+        console.error('Error loading saved keys:', e);
+      }
+    }
+  }, []);
+
+  const addLog = (
+    provider: string, 
+    model: string,
+    status: 'success' | 'error', 
+    duration: number, 
+    error?: string,
+    response?: string
+  ) => {
+    const newLog: AILog = {
+      id: Date.now(),
+      timestamp: new Date().toISOString(),
+      provider,
+      model,
+      functionName: 'test',
+      status,
+      duration,
+      tokens: 0,
+      error,
+      response
+    };
+    setLogs(prev => [newLog, ...prev].slice(0, 100)); // حداکثر 100 لاگ
+  };
+
+  const updateProviderStatus = (id: string, status: AIProvider['status'], error?: string, latency?: number) => {
+    setProviders(prev => prev.map(p => 
+      p.id === id 
+        ? { ...p, status, lastError: error, lastLatency: latency }
+        : p
+    ));
+  };
+
+  const testProvider = async (id: string, retryWithBackup = true) => {
+    setTestingProvider(id);
+    setTestResult(null);
+    updateProviderStatus(id, 'testing');
+    
+    const start = Date.now();
+    const provider = providers.find(p => p.id === id);
+    if (!provider) return;
+
+    const model = selectedModel[id] || provider.model;
+    
+    try {
+      let url = '';
+      let headers: any = { 'Content-Type': 'application/json' };
+      let body: any = {};
+      let apiKey = '';
+
+      if (id === 'openrouter') {
+        url = 'https://openrouter.ai/api/v1/chat/completions';
+        apiKey = apiKeys.openrouter1;
+        headers['Authorization'] = `Bearer ${apiKey}`;
+        headers['HTTP-Referer'] = window.location.origin;
+        headers['X-Title'] = 'Arman Law Firm';
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: testPrompt }],
+          max_tokens: 150
+        };
+      } else if (id === 'poyo') {
+        url = 'https://api.poyo.ai/v1/chat/completions';
+        apiKey = apiKeys.poyo1;
+        headers['Authorization'] = `Bearer ${apiKey}`;
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: testPrompt }],
+          max_tokens: 150
+        };
+      } else if (id === 'portkey') {
+        if (!apiKeys.portkey) {
+          throw new Error('کلید Portkey تنظیم نشده است');
+        }
+        url = 'https://api.portkey.ai/v1/chat/completions';
+        headers['x-portkey-api-key'] = apiKeys.portkey;
+        headers['x-portkey-provider'] = 'openai';
+        body = {
+          model: model,
+          messages: [{ role: 'user', content: testPrompt }],
+          max_tokens: 150
+        };
+      }
+
+      console.log(`🔄 Testing ${id} with model: ${model}`);
+
+      const res = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      const duration = Date.now() - start;
+
+      if (res.ok && data.choices?.[0]?.message?.content) {
+        const responseText = data.choices[0].message.content;
+        setTestResult({ 
+          provider: id, 
+          success: true, 
+          duration, 
+          response: responseText,
+          model 
+        });
+        updateProviderStatus(id, 'success', undefined, duration);
+        addLog(id, model, 'success', duration, undefined, responseText);
+        console.log(`✅ ${id} success:`, responseText.substring(0, 50));
+      } else {
+        const errorMsg = data.error?.message || data.error?.code || res.statusText || 'Unknown error';
+        throw new Error(errorMsg);
+      }
+    } catch (error: any) {
+      const duration = Date.now() - start;
+      console.error(`❌ ${id} error:`, error.message);
+      
+      // تلاش با کلید یدکی
+      if (retryWithBackup && id === 'openrouter' && apiKeys.openrouter2) {
+        console.log('🔄 Retrying with backup key...');
+        const tempKey = apiKeys.openrouter1;
+        setApiKeys(prev => ({ ...prev, openrouter1: apiKeys.openrouter2, openrouter2: tempKey }));
+        await testProvider(id, false);
+        return;
+      }
+      
+      if (retryWithBackup && id === 'poyo' && apiKeys.poyo2) {
+        console.log('🔄 Retrying with backup key...');
+        const tempKey = apiKeys.poyo1;
+        setApiKeys(prev => ({ ...prev, poyo1: apiKeys.poyo2, poyo2: tempKey }));
+        await testProvider(id, false);
+        return;
+      }
+
+      setTestResult({ provider: id, success: false, error: error.message, model });
+      updateProviderStatus(id, 'error', error.message, duration);
+      addLog(id, model, 'error', duration, error.message);
+    } finally {
+      setTestingProvider(null);
+    }
+  };
+
+  const testAllProviders = async () => {
+    setLoading(true);
+    
+    for (const provider of providers.filter(p => p.enabled)) {
+      await testProvider(provider.id);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+    
+    setLoading(false);
+  };
+
+  const saveApiKeys = () => {
+    localStorage.setItem('arman-api-keys', JSON.stringify(apiKeys));
+    alert(isRtl ? '✅ کلیدها ذخیره شدند' : '✅ Keys saved');
+  };
+
+  const clearLogs = () => {
+    setLogs([]);
+  };
+
+  const getStatusBadge = (status: AIProvider['status']) => {
+    switch (status) {
+      case 'testing':
+        return <span className="bg-yellow-100 text-yellow-700 text-[10px] px-2 py-1 rounded font-bold animate-pulse">⏳ {isRtl ? 'تست...' : 'Testing...'}</span>;
+      case 'success':
+        return <span className="bg-green-100 text-green-700 text-[10px] px-2 py-1 rounded font-bold">✅ {isRtl ? 'فعال' : 'Active'}</span>;
+      case 'error':
+        return <span className="bg-red-100 text-red-700 text-[10px] px-2 py-1 rounded font-bold">❌ {isRtl ? 'خطا' : 'Error'}</span>;
+      default:
+        return <span className="bg-gray-100 text-gray-700 text-[10px] px-2 py-1 rounded font-bold">⚪ {isRtl ? 'آماده' : 'Ready'}</span>;
+    }
+  };
+
+  // محاسبه آمار
+  const stats = {
+    total: logs.length,
+    success: logs.filter(l => l.status === 'success').length,
+    errors: logs.filter(l => l.status === 'error').length,
+    avgLatency: logs.filter(l => l.status === 'success').length > 0
+      ? Math.round(logs.filter(l => l.status === 'success').reduce((acc, curr) => acc + curr.duration, 0) / logs.filter(l => l.status === 'success').length)
+      : 0
+  };
+
+  const tabs = [
+    { id: 'providers', label: isRtl ? '🔌 ارائه‌دهندگان' : '🔌 Providers', count: providers.filter(p => p.enabled).length },
+    { id: 'usage', label: isRtl ? '📊 مصرف' : '📊 Usage' },
+    { id: 'logs', label: isRtl ? '📋 گزارشات' : '📋 Logs', count: logs.length },
+    { id: 'settings', label: isRtl ? '⚙️ تنظیمات' : '⚙️ Settings' }
+  ];
+
+  return (
+    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 ${isRtl ? 'rtl' : 'ltr'}`} dir={isRtl ? 'rtl' : 'ltr'}>
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                🧪 {isRtl ? 'تست API های هوش مصنوعی' : 'AI API Testing'}
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400">
+                {isRtl ? 'تست و مانیتورینگ کلیدهای API ارائه شده' : 'Test and monitor the provided API keys'}
+              </p>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="flex gap-3">
+              <div className="bg-green-100 dark:bg-green-900/30 px-4 py-2 rounded-lg text-center">
+                <div className="text-2xl font-bold text-green-700 dark:text-green-400">{stats.success}</div>
+                <div className="text-xs text-green-600 dark:text-green-500">{isRtl ? 'موفق' : 'Success'}</div>
+              </div>
+              <div className="bg-red-100 dark:bg-red-900/30 px-4 py-2 rounded-lg text-center">
+                <div className="text-2xl font-bold text-red-700 dark:text-red-400">{stats.errors}</div>
+                <div className="text-xs text-red-600 dark:text-red-500">{isRtl ? 'خطا' : 'Errors'}</div>
+              </div>
+              <div className="bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-lg text-center">
+                <div className="text-2xl font-bold text-blue-700 dark:text-blue-400">{stats.avgLatency}ms</div>
+                <div className="text-xs text-blue-600 dark:text-blue-500">{isRtl ? 'میانگین' : 'Avg'}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden">
+          {/* Tabs */}
+          <div className="border-b border-gray-200 dark:border-gray-700">
+            <nav className="flex overflow-x-auto">
+              {tabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={`px-6 py-4 text-sm font-medium whitespace-nowrap transition-colors flex items-center gap-2 ${
+                    activeTab === tab.id
+                      ? 'text-blue-600 border-b-2 border-blue-600 bg-blue-50 dark:bg-blue-900/20'
+                      : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                  }`}
+                >
+                  {tab.label}
+                  {tab.count !== undefined && (
+                    <span className="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-xs px-2 py-0.5 rounded-full">
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              ))}
+            </nav>
+          </div>
+
+          <div className="p-6">
+            {/* Providers Tab */}
+            {activeTab === 'providers' && (
+              <div className="space-y-6">
+                {/* Test Prompt */}
+                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-100 dark:border-blue-800">
+                  <label className="block text-sm font-medium text-blue-800 dark:text-blue-300 mb-2">
+                    📝 {isRtl ? 'پرامپت تست:' : 'Test Prompt:'}
+                  </label>
+                  <div className="flex gap-2">
+                    <input 
+                      type="text" 
+                      value={testPrompt} 
+                      onChange={(e) => setTestPrompt(e.target.value)}
+                      className="flex-grow p-3 rounded-lg border dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      placeholder={isRtl ? 'سوال تست را بنویسید...' : 'Write test question...'}
+                    />
+                    <button
+                      onClick={testAllProviders}
+                      disabled={loading}
+                      className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg hover:from-green-600 hover:to-emerald-700 disabled:opacity-50 transition-all font-bold whitespace-nowrap"
+                    >
+                      {loading ? '⏳' : '🚀'} {isRtl ? 'تست همه' : 'Test All'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Provider Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {providers.map((provider) => (
+                    <div
+                      key={provider.id}
+                      className={`rounded-xl p-5 border-2 transition-all ${
+                        provider.status === 'success' 
+                          ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800' 
+                          : provider.status === 'error'
+                          ? 'bg-red-50 dark:bg-red-900/10 border-red-200 dark:border-red-800'
+                          : 'bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600'
+                      }`}
+                    >
+                      {/* Header */}
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-gray-900 dark:text-white text-lg">{provider.name}</h3>
+                            {!provider.enabled && (
+                              <span className="bg-gray-300 text-gray-600 text-[9px] px-1.5 py-0.5 rounded">
+                                {isRtl ? 'غیرفعال' : 'Disabled'}
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{provider.endpoint}</p>
+                        </div>
+                        {getStatusBadge(provider.status)}
+                      </div>
+
+                      {/* Model Selector */}
+                      <div className="mb-4">
+                        <label className="block text-xs text-gray-500 dark:text-gray-400 mb-1">
+                          {isRtl ? 'مدل:' : 'Model:'}
+                        </label>
+                        <select
+                          value={selectedModel[provider.id] || provider.model}
+                          onChange={(e) => setSelectedModel(prev => ({ ...prev, [provider.id]: e.target.value }))}
+                          className="w-full p-2 text-sm border rounded-lg dark:bg-gray-600 dark:border-gray-500 dark:text-white"
+                        >
+                          {provider.models.map(model => (
+                            <option key={model} value={model}>{model}</option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Latency */}
+                      {provider.lastLatency && (
+                        <div className="flex justify-between text-xs mb-4 bg-white dark:bg-gray-800 p-2 rounded">
+                          <span className="text-gray-500">{isRtl ? 'آخرین زمان پاسخ:' : 'Last latency:'}</span>
+                          <span className={`font-bold ${provider.lastLatency < 1000 ? 'text-green-600' : provider.lastLatency < 3000 ? 'text-yellow-600' : 'text-red-600'}`}>
+                            {provider.lastLatency}ms
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Error */}
+                      {provider.lastError && (
+                        <div className="mb-4 p-2 bg-red-100 dark:bg-red-900/30 rounded text-xs text-red-700 dark:text-red-400 line-clamp-2">
+                          ⚠️ {provider.lastError}
+                        </div>
+                      )}
+
+                      {/* Test Button */}
+                      <button
+                        onClick={() => testProvider(provider.id)}
+                        disabled={testingProvider === provider.id || !provider.enabled}
+                        className={`w-full py-3 rounded-lg font-bold transition-all ${
+                          provider.enabled
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                      >
+                        {testingProvider === provider.id 
+                          ? (isRtl ? '⏳ در حال تست...' : '⏳ Testing...') 
+                          : (isRtl ? '🧪 اجرای تست' : '🧪 Run Test')
+                        }
+                      </button>
+
+                      {/* Result */}
+                      {testResult?.provider === provider.id && (
+                        <div className={`mt-4 p-3 rounded-lg text-sm ${
+                          testResult.success 
+                            ? 'bg-green-100 dark:bg-green-900/30 border border-green-200 dark:border-green-800' 
+                            : 'bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800'
+                        }`}>
+                          <div className="flex justify-between items-center mb-2">
+                            <span className={`font-bold ${testResult.success ? 'text-green-700 dark:text-green-400' : 'text-red-700 dark:text-red-400'}`}>
+                              {testResult.success ? '✅ ' + (isRtl ? 'موفق' : 'Success') : '❌ ' + (isRtl ? 'خطا' : 'Error')}
+                            </span>
+                            <span className="text-gray-500 text-xs">{testResult.duration}ms</span>
+                          </div>
+                          {testResult.model && (
+                            <div className="text-xs text-gray-500 mb-1">Model: {testResult.model}</div>
+                          )}
+                          {testResult.success ? (
+                            <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed bg-white dark:bg-gray-800 p-2 rounded">
+                              "{testResult.response}"
+                            </p>
+                          ) : (
+                            <p className="text-red-600 dark:text-red-400 text-xs">{testResult.error}</p>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Help Box */}
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+                  <h4 className="font-bold text-amber-800 dark:text-amber-300 mb-2">
+                    💡 {isRtl ? 'راهنما' : 'Tips'}
+                  </h4>
+                  <ul className="text-sm text-amber-700 dark:text-amber-400 space-y-1">
+                    <li>• {isRtl ? 'اگر یک مدل کار نکرد، مدل دیگری را امتحان کنید' : 'If one model fails, try another'}</li>
+                    <li>• {isRtl ? 'OpenRouter مدل‌های رایگان با :free دارد' : 'OpenRouter has free models with :free suffix'}</li>
+                    <li>• {isRtl ? 'PoYo از مدل‌های مختلف OpenAI و Claude پشتیبانی می‌کند' : 'PoYo supports various OpenAI and Claude models'}</li>
+                  </ul>
+                </div>
+              </div>
+            )}
+
+            {/* Usage Tab */}
+            {activeTab === 'usage' && (
+              <div className="space-y-6">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                  📊 {isRtl ? 'آمار مصرف' : 'Usage Statistics'}
+                </h2>
+                
+                {/* Stats Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold text-blue-700 dark:text-blue-400">{stats.total}</div>
+                    <div className="text-sm text-blue-600">{isRtl ? 'کل تست‌ها' : 'Total Tests'}</div>
+                  </div>
+                  <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold text-green-700 dark:text-green-400">{stats.success}</div>
+                    <div className="text-sm text-green-600">{isRtl ? 'موفق' : 'Successful'}</div>
+                  </div>
+                  <div className="bg-red-50 dark:bg-red-900/20 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold text-red-700 dark:text-red-400">{stats.errors}</div>
+                    <div className="text-sm text-red-600">{isRtl ? 'ناموفق' : 'Failed'}</div>
+                  </div>
+                  <div className="bg-purple-50 dark:bg-purple-900/20 p-4 rounded-lg text-center">
+                    <div className="text-3xl font-bold text-purple-700 dark:text-purple-400">
+                      {stats.total > 0 ? Math.round((stats.success / stats.total) * 100) : 0}%
+                    </div>
+                    <div className="text-sm text-purple-600">{isRtl ? 'نرخ موفقیت' : 'Success Rate'}</div>
+                  </div>
+                </div>
+
+                {/* Provider Stats Table */}
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="text-left text-gray-500 dark:text-gray-400 border-b dark:border-gray-700">
+                        <th className="pb-3 font-medium">{isRtl ? 'ارائه‌دهنده' : 'Provider'}</th>
+                        <th className="pb-3 font-medium">{isRtl ? 'تعداد تست' : 'Tests'}</th>
+                        <th className="pb-3 font-medium">{isRtl ? 'موفق' : 'Success'}</th>
+                        <th className="pb-3 font-medium">{isRtl ? 'خطا' : 'Errors'}</th>
+                        <th className="pb-3 font-medium">{isRtl ? 'میانگین زمان' : 'Avg Latency'}</th>
+                        <th className="pb-3 font-medium">{isRtl ? 'نرخ موفقیت' : 'Success Rate'}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {providers.map(p => {
+                        const providerLogs = logs.filter(l => l.provider === p.id);
+                        const successLogs = providerLogs.filter(l => l.status === 'success');
+                        const errorLogs = providerLogs.filter(l => l.status === 'error');
+                        const avgLatency = successLogs.length > 0 
+                          ? Math.round(successLogs.reduce((acc, curr) => acc + curr.duration, 0) / successLogs.length)
+                          : 0;
+                        const successRate = providerLogs.length > 0 
+                          ? Math.round((successLogs.length / providerLogs.length) * 100)
+                          : 0;
+                        
+                        return (
+                          <tr key={p.id} className="border-b dark:border-gray-700">
+                            <td className="py-4 font-medium text-gray-900 dark:text-white">
+                              <div className="flex items-center gap-2">
+                                {p.name}
+                                {p.status === 'success' && <span className="text-green-500">●</span>}
+                                {p.status === 'error' && <span className="text-red-500">●</span>}
+                              </div>
+                            </td>
+                            <td className="py-4 text-gray-700 dark:text-gray-300">{providerLogs.length}</td>
+                            <td className="py-4 text-green-600">{successLogs.length}</td>
+                            <td className="py-4 text-red-500">{errorLogs.length}</td>
+                            <td className="py-4 text-gray-600 dark:text-gray-400">
+                              {avgLatency > 0 ? `${avgLatency}ms` : '-'}
+                            </td>
+                            <td className="py-4">
+                              <div className="flex items-center gap-2">
+                                <div className="w-20 bg-gray-200 dark:bg-gray-600 rounded-full h-2">
+                                  <div 
+                                    className={`h-2 rounded-full ${successRate > 70 ? 'bg-green-500' : successRate > 40 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                                    style={{ width: `${successRate}%` }}
+                                  />
+                                </div>
+                                <span className="text-sm text-gray-600 dark:text-gray-400">{successRate}%</span>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Logs Tab */}
+            {activeTab === 'logs' && (
+              <div className="space-y-4">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    📋 {isRtl ? 'گزارشات تست' : 'Test Logs'}
+                  </h2>
+                  <button
+                    onClick={clearLogs}
+                    className="px-4 py-2 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg hover:bg-red-200 transition-colors"
+                  >
+                    🗑️ {isRtl ? 'پاک کردن' : 'Clear'}
+                  </button>
+                </div>
+
+                {logs.length === 0 ? (
+                  <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                    <div className="text-4xl mb-4">📭</div>
+                    {isRtl ? 'هیچ گزارشی یافت نشد. تست‌ها را اجرا کنید.' : 'No logs found. Run some tests.'}
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-gray-500 dark:text-gray-400 border-b dark:border-gray-700">
+                          <th className="pb-3 font-medium">{isRtl ? 'زمان' : 'Time'}</th>
+                          <th className="pb-3 font-medium">{isRtl ? 'ارائه‌دهنده' : 'Provider'}</th>
+                          <th className="pb-3 font-medium">{isRtl ? 'مدل' : 'Model'}</th>
+                          <th className="pb-3 font-medium">{isRtl ? 'وضعیت' : 'Status'}</th>
+                          <th className="pb-3 font-medium">{isRtl ? 'زمان پاسخ' : 'Duration'}</th>
+                          <th className="pb-3 font-medium">{isRtl ? 'پاسخ/خطا' : 'Response/Error'}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {logs.map(log => (
+                          <tr key={log.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                            <td className="py-3 text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                              {new Date(log.timestamp).toLocaleTimeString()}
+                            </td>
+                            <td className="py-3 text-gray-700 dark:text-gray-300 font-medium">{log.provider}</td>
+                            <td className="py-3 text-gray-500 dark:text-gray-400 text-xs font-mono">{log.model}</td>
+                            <td className="py-3">
+                              <span className={`px-2 py-1 rounded text-xs font-medium ${
+                                log.status === 'success' 
+                                  ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' 
+                                  : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+                              }`}>
+                                {log.status === 'success' ? '✅' : '❌'} {log.status}
+                              </span>
+                            </td>
+                            <td className={`py-3 font-mono ${
+                              log.duration < 1000 ? 'text-green-600' : log.duration < 3000 ? 'text-yellow-600' : 'text-red-600'
+                            }`}>
+                              {log.duration}ms
+                            </td>
+                            <td className="py-3 max-w-xs">
+                              {log.error ? (
+                                <span className="text-red-500 text-xs truncate block">{log.error}</span>
+                              ) : log.response ? (
+                                <span className="text-gray-600 dark:text-gray-400 text-xs truncate block">"{log.response.substring(0, 50)}..."</span>
+                              ) : '-'}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Settings Tab */}
+            {activeTab === 'settings' && (
+              <div className="space-y-6 max-w-2xl">
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
+                  ⚙️ {isRtl ? 'تنظیمات کلیدهای API' : 'API Key Settings'}
+                </h2>
+
+                {/* Warning */}
+                <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
+                  <p className="text-amber-800 dark:text-amber-300 text-sm">
+                    ⚠️ {isRtl 
+                      ? 'کلیدها فقط در مرورگر شما ذخیره می‌شوند و به سرور ارسال نمی‌شوند.' 
+                      : 'Keys are stored locally in your browser and never sent to our servers.'}
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  {/* Portkey - Disabled */}
+                  <div className="opacity-50">
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                      Portkey API Key 
+                      <span className="text-red-500 text-xs mr-2">(❌ {isRtl ? 'کلید نامعتبر' : 'Invalid key'})</span>
+                    </label>
+                    <input
+                      type="password"
+                      value={apiKeys.portkey}
+                      onChange={(e) => setApiKeys({ ...apiKeys, portkey: e.target.value })}
+                      className="w-full p-3 border dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-mono text-xs"
+                      placeholder={isRtl ? 'کلید جدید از app.portkey.ai بگیرید' : 'Get new key from app.portkey.ai'}
+                    />
+                  </div>
+
+                  {/* PoYo Keys */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        PoYo Key 1 <span className="text-green-500 text-xs">(✅ Primary)</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={apiKeys.poyo1}
+                        onChange={(e) => setApiKeys({ ...apiKeys, poyo1: e.target.value })}
+                        className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        PoYo Key 2 <span className="text-blue-500 text-xs">(Backup)</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={apiKeys.poyo2}
+                        onChange={(e) => setApiKeys({ ...apiKeys, poyo2: e.target.value })}
+                        className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  {/* OpenRouter Keys */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        OpenRouter Key 1 <span className="text-green-500 text-xs">(✅ Primary)</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={apiKeys.openrouter1}
+                        onChange={(e) => setApiKeys({ ...apiKeys, openrouter1: e.target.value })}
+                        className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        OpenRouter Key 2 <span className="text-blue-500 text-xs">(Backup)</span>
+                      </label>
+                      <input
+                        type="password"
+                        value={apiKeys.openrouter2}
+                        onChange={(e) => setApiKeys({ ...apiKeys, openrouter2: e.target.value })}
+                        className="w-full p-3 border dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-mono text-xs"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={saveApiKeys}
+                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all font-bold"
+                  >
+                    💾 {isRtl ? 'ذخیره کلیدها' : 'Save Keys'}
+                  </button>
+                </div>
+
+                {/* Links */}
+                <div className="pt-4 border-t dark:border-gray-700">
+                  <h3 className="font-medium text-gray-700 dark:text-gray-300 mb-3">
+                    🔗 {isRtl ? 'لینک‌های مفید' : 'Useful Links'}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <a 
+                      href="https://poyo.ai/dashboard/api-key" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg text-purple-700 dark:text-purple-400 text-sm hover:bg-purple-100 transition-colors"
+                    >
+                      🔑 PoYo API Keys
+                    </a>
+                    <a 
+                      href="https://openrouter.ai/keys" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg text-blue-700 dark:text-blue-400 text-sm hover:bg-blue-100 transition-colors"
+                    >
+                      🔑 OpenRouter Keys
+                    </a>
+                    <a 
+                      href="https://app.portkey.ai/api-keys" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="p-3 bg-green-50 dark:bg-green-900/20 rounded-lg text-green-700 dark:text-green-400 text-sm hover:bg-green-100 transition-colors"
+                    >
+                      🔑 Portkey Keys
+                    </a>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ApiTestPage;
+```
+
+---
+
+## 📊 **خلاصه تغییرات**
+
+| تغییر | توضیح |
+|-------|-------|
+| ✅ **مدل PoYo اصلاح شد** | از `gemini-1.5-flash` به `gpt-4o-mini` |
+| ✅ **Portkey غیرفعال شد** | کلید نامعتبر بود |
+| ✅ **انتخاب مدل** | می‌توانید مدل‌های مختلف را امتحان کنید |
+| ✅ **Auto-retry با کلید یدکی** | اگر کلید اول کار نکرد، کلید دوم امتحان می‌شود |
+| ✅ **آمار بهتر** | نمایش نرخ موفقیت و میانگین زمان |
+| ✅ **UI بهتر** | کارت‌های رنگی بر اساس وضعیت |
+| ✅ **لینک‌های مفید** | دسترسی سریع به داشبورد APIها |
+
+---
+
+**این کد را جایگزین کنید و دوباره تست کنید!** 🚀
