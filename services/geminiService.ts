@@ -23,7 +23,7 @@ const POYO_API_KEY = import.meta.env.VITE_POYO_AI_API_KEY || process.env.POYO_AI
 // @ts-ignore
 const PORTKEY_API_KEY = import.meta.env.VITE_PORTKEY_API_KEY || process.env.PORTKEY_API_KEY || '';
 // @ts-ignore
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || process.env.POYO_AI_API_KEY || '';
 // @ts-ignore
 const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY || process.env.OPENROUTER_API_KEY || '';
 
@@ -36,7 +36,12 @@ const getAI = (): GoogleGenAI | null => {
             console.warn("Google Gemini API key not found. Falling back to other providers.");
             return null;
         }
-        aiInstance = new GoogleGenAI({ apiKey });
+        try {
+            aiInstance = new GoogleGenAI({ apiKey });
+        } catch (e) {
+            console.error("Failed to initialize GoogleGenAI:", e);
+            return null;
+        }
     }
     return aiInstance;
 };
@@ -63,8 +68,7 @@ const portkeyProvider: AIProvider = {
                 headers: {
                     'Content-Type': 'application/json',
                     'x-portkey-api-key': PORTKEY_API_KEY,
-                    'x-portkey-provider': 'google',
-                    'x-portkey-model': 'gemini-2.0-flash'
+                    'x-portkey-provider': 'google'
                 },
                 body: JSON.stringify({
                     model: 'gemini-2.0-flash',
@@ -141,7 +145,11 @@ const openRouterProvider: AIProvider = {
                 model: 'google/gemini-2.0-flash-001',
                 messages: [{ role: 'user', content: prompt }],
                 max_tokens: maxTokens,
-                temperature: temperature
+                temperature: temperature,
+                provider: {
+                    order: ['Google', 'OpenAI'],
+                    allow_fallbacks: true
+                }
             })
         });
         if (!response.ok) {
