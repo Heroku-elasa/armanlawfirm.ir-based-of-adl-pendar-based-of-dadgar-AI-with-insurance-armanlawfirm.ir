@@ -139,7 +139,7 @@ export const useLanguage = () => {
 };
 
 // --- TYPE DEFINITIONS ---
-export type PageKey = 'dashboard' | 'legal_drafter' | 'lawyer_finder' | 'news_summarizer' | 'case_strategist' | 'notary_finder' | 'web_analyzer' | 'contract_analyzer' | 'evidence_analyzer' | 'image_generator' | 'corporate_services' | 'insurance_services' | 'site_architect' | 'external_service' | 'general_questions' | 'blog' | 'content_hub' | 'court_assistant' | 'pricing' | 'wp_dashboard' | 'faryadresi' | 'resume_analyzer' | 'job_assistant';
+export type PageKey = 'dashboard' | 'legal_drafter' | 'lawyer_finder' | 'news_summarizer' | 'case_strategist' | 'notary_finder' | 'web_analyzer' | 'contract_analyzer' | 'evidence_analyzer' | 'image_generator' | 'corporate_services' | 'insurance_services' | 'site_architect' | 'external_service' | 'general_questions' | 'blog' | 'content_hub' | 'court_assistant' | 'pricing' | 'wp_dashboard' | 'faryadresi' | 'resume_analyzer' | 'job_assistant' | 'api_test';
 
 export interface LatLng {
   latitude: number;
