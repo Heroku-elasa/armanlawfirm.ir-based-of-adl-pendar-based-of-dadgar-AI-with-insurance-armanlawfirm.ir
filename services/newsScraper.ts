@@ -17,29 +17,37 @@ export async function scrapeLawNews(): Promise<NewsItem[]> {
   try {
     // Example: Scraping a legal news site (adjust URL as needed)
     const url = 'https://www.isna.ir/service/service-Judicial'; 
-    const { data } = await axios.get(url, { 
-      timeout: 15000,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      }
-    }); 
-    const $ = cheerio.load(data);
-    const news: NewsItem[] = [];
-
-    $('.items li').each((i, el) => {
-      if (i < 5) {
-        const title = $(el).find('h3 a').text().trim();
-        const link = 'https://www.isna.ir' + $(el).find('h3 a').attr('href');
-        const description = $(el).find('p').text().trim();
-        const pubDate = $(el).find('.time').text().trim();
-        
-        if (title && link) {
-          news.push({ title, link, description, pubDate });
+    try {
+      const { data } = await axios.get(url, { 
+        timeout: 30000,
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+          'Accept-Language': 'fa-IR,fa;q=0.9,en-US;q=0.8,en;q=0.7'
         }
-      }
-    });
+      }); 
+      const $ = cheerio.load(data);
+      const news: NewsItem[] = [];
 
-    return news;
+      $('.items li, .item-text').each((i, el) => {
+        if (i < 5) {
+          const title = $(el).find('h3 a, .title a').text().trim();
+          const href = $(el).find('h3 a, .title a').attr('href');
+          const link = href ? (href.startsWith('http') ? href : 'https://www.isna.ir' + href) : '';
+          const description = $(el).find('p, .summary').text().trim();
+          const pubDate = $(el).find('.time, .date').text().trim();
+          
+          if (title && link) {
+            news.push({ title, link, description, pubDate });
+          }
+        }
+      });
+
+      return news;
+    } catch (axiosError) {
+      console.error('Network error scraping ISNA:', axiosError instanceof Error ? axiosError.message : axiosError);
+      return [];
+    }
   } catch (error) {
     console.error('Error scraping news:', error);
     return [];
