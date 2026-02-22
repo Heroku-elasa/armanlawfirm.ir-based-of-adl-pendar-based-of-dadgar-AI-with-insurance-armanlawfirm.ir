@@ -8,6 +8,7 @@ interface SettingsModalProps {
     onToggleRole?: () => void;
     currentRole?: 'user' | 'admin';
     onOpenWPDashboard?: () => void;
+    onOpenApiTest?: () => void;
 }
 
 const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggleRole, currentRole, onOpenWPDashboard }) => {
@@ -327,6 +328,20 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
                                 <span className="block text-sm font-medium text-gray-800 dark:text-white">Enable Fast Cache</span>
                                 <span className="text-xs text-gray-500 dark:text-gray-400">Cache API responses for instant loading.</span>
                             </div>
+                            <button 
+                                onClick={onOpenApiTest}
+                                className="w-full flex items-center justify-between bg-brand-gold/10 hover:bg-brand-gold/20 text-brand-gold p-3 rounded-lg border border-brand-gold/30 transition-colors group"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <span className="w-6 h-6 flex items-center justify-center bg-brand-gold text-brand-blue rounded-lg font-bold">🧪</span>
+                                    <div className="text-right">
+                                        <p className="text-sm font-bold">تست پیشرفته API</p>
+                                        <p className="text-xs opacity-80">بررسی دقیق وضعیت سرویس‌دهنده‌ها</p>
+                                    </div>
+                                </div>
+                                <svg className="w-5 h-5 opacity-70 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                            </button>
+
                             <button 
                                 onClick={handleToggleCache}
                                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${fastCacheEnabled ? 'bg-brand-gold' : 'bg-gray-600'}`}
