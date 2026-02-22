@@ -283,6 +283,54 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
 
                     <hr className="border-gray-200 dark:border-gray-700" />
 
+                    {/* API Status Section */}
+                    <section>
+                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-4">API Keys Status</h3>
+                        <div className="space-y-3">
+                            <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <p className="text-xs font-bold text-gray-500 mb-2">PORTKEY API</p>
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 1:</span>
+                                        <span className="text-green-500 font-mono">gASN...JG+</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 2:</span>
+                                        <span className="text-green-500 font-mono">nJqZ...IgzT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <p className="text-xs font-bold text-gray-500 mb-2">POYO API</p>
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 1:</span>
+                                        <span className="text-green-500 font-mono">sk-G8...Jm</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 2:</span>
+                                        <span className="text-green-500 font-mono">sk-Nd...uz_</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="p-3 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                                <p className="text-xs font-bold text-gray-500 mb-2">OPENROUTER API</p>
+                                <div className="space-y-1">
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 1:</span>
+                                        <span className="text-green-500 font-mono">sk-or...76f</span>
+                                    </div>
+                                    <div className="flex justify-between text-[10px]">
+                                        <span className="text-gray-400">Key 2:</span>
+                                        <span className="text-green-500 font-mono">sk-or...88c</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <hr className="border-gray-200 dark:border-gray-700" />
+
                     {/* AI Infrastructure Health */}
                     <section>
                         <div className="flex justify-between items-center mb-4">
