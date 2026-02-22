@@ -659,50 +659,58 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const today = new Date().toISOString().split('T')[0];
       
-      const result = await pool.query(`
-        SELECT 
-          p.id,
-          p.name,
-          p.label,
-          p.enabled,
-          p.priority,
-          p.endpoint,
-          p.model,
-          p.api_key_env_var,
-          p.requests_per_minute,
-          p.requests_per_day,
-          p.description,
-          p.get_key_url,
-          COALESCE(u.requests_count, 0) as requests_today,
-          COALESCE(u.tokens_count, 0) as tokens_today,
-          COALESCE(u.errors_count, 0) as errors_today
-        FROM ai_providers p
-        LEFT JOIN ai_usage u ON p.id = u.provider_id AND u.date = $1
-        ORDER BY p.priority ASC
-      `, [today]);
-      
-      const providers = result.rows.map((row: any) => ({
-        id: row.id,
-        name: row.name,
-        label: row.label || row.name,
-        enabled: row.enabled,
-        priority: row.priority,
-        model: row.model,
-        endpoint: row.endpoint,
-        description: row.description,
-        getKeyUrl: row.get_key_url,
-        keyConfigured: !!process.env[row.api_key_env_var],
-        apiKeyEnvVar: row.api_key_env_var,
-        limits: { 
-          requestsPerMinute: row.requests_per_minute, 
-          requestsPerDay: row.requests_per_day 
-        },
-        usage: { 
-          requestsToday: parseInt(row.requests_today) || 0, 
-          tokensToday: parseInt(row.tokens_today) || 0, 
-          errorsToday: parseInt(row.errors_today) || 0 
-        }
-      }));
+      // Use local storage if pool is not available or failing
+      let providers = [];
+      try {
+        const result = await pool.query(`
+          SELECT 
+            p.id,
+            p.name,
+            p.label,
+            p.enabled,
+            p.priority,
+            p.endpoint,
+            p.model,
+            p.api_key_env_var,
+            p.requests_per_minute,
+            p.requests_per_day,
+            p.description,
+            p.get_key_url,
+            COALESCE(u.requests_count, 0) as requests_today,
+            COALESCE(u.tokens_count, 0) as tokens_today,
+            COALESCE(u.errors_count, 0) as errors_today
+          FROM ai_providers p
+          LEFT JOIN ai_usage u ON p.id = u.provider_id AND u.date = $1
+          ORDER BY p.priority ASC
+        `, [today]);
+        
+        providers = result.rows.map((row: any) => ({
+          id: row.id,
+          name: row.name,
+          label: row.label || row.name,
+          enabled: row.enabled,
+          priority: row.priority,
+          model: row.model,
+          endpoint: row.endpoint,
+          description: row.description,
+          getKeyUrl: row.get_key_url,
+          keyConfigured: !!process.env[row.api_key_env_var],
+          apiKeyEnvVar: row.api_key_env_var,
+          limits: { 
+            requestsPerMinute: row.requests_per_minute, 
+            requestsPerDay: row.requests_per_day 
+          },
+          usage: { 
+            requestsToday: parseInt(row.requests_today) || 0, 
+            tokensToday: parseInt(row.tokens_today) || 0, 
+            errorsToday: parseInt(row.errors_today) || 0 
+          }
+        }));
+      } catch (dbErr) {
+        console.error("Database error fetching AI providers, falling back to empty list:", dbErr);
+        // Fallback or return empty list to prevent crash
+        providers = [];
+      }
       
       res.json(providers);
     } catch (error) {

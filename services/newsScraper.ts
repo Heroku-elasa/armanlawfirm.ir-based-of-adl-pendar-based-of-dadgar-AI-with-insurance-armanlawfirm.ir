@@ -17,7 +17,12 @@ export async function scrapeLawNews(): Promise<NewsItem[]> {
   try {
     // Example: Scraping a legal news site (adjust URL as needed)
     const url = 'https://www.isna.ir/service/service-Judicial'; 
-    const { data } = await axios.get(url, { timeout: 10000 }); 
+    const { data } = await axios.get(url, { 
+      timeout: 15000,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    }); 
     const $ = cheerio.load(data);
     const news: NewsItem[] = [];
 
