@@ -135,6 +135,17 @@ if (typeof window !== 'undefined') {
     }
 }
 
+export const extractTextFromImage = async (base64Image: string): Promise<string> => {
+  try {
+    // We can use Portkey or Poyo vision if available, for now fallback to general call
+    const prompt = "Please extract all text from this image and return it as a string.";
+    return await callWithFallback(prompt); 
+  } catch (error) {
+    console.error("Error extracting text from image:", error);
+    return '';
+  }
+};
+
 export async function callWithFallback(prompt: string, maxTokens: number = 1000, temperature: number = 0.5): Promise<string> {
     // Dynamically reorder based on verified working status if we had a persistent store, 
     // for now we follow the standard fallback order.

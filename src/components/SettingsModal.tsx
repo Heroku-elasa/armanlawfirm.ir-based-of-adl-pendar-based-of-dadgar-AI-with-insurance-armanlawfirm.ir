@@ -135,33 +135,33 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
                             </button>
                         </div>
                         <div className="overflow-x-auto border border-gray-200 dark:border-gray-700 rounded-lg">
-                            <table className="w-full text-sm text-left">
+                            <table className="w-full text-sm text-right rtl">
                                 <thead className="text-xs uppercase bg-gray-50 dark:bg-gray-800 text-gray-500 dark:text-gray-400">
                                     <tr>
-                                        <th className="px-4 py-2">Provider</th>
-                                        <th className="px-4 py-2">Status</th>
-                                        <th className="px-4 py-2">Latency</th>
-                                        <th className="px-4 py-2">Details</th>
+                                        <th className="px-4 py-2 text-right">سرویس دهنده (Provider)</th>
+                                        <th className="px-4 py-2 text-right">وضعیت (Status)</th>
+                                        <th className="px-4 py-2 text-right">تاخیر (Latency)</th>
+                                        <th className="px-4 py-2 text-right">جزئیات (Details)</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                                     {apiStatus.map((api, idx) => (
                                         <tr key={idx} className="bg-white dark:bg-brand-blue/40">
-                                            <td className="px-4 py-2 font-medium text-gray-900 dark:text-white">{api.provider}</td>
-                                            <td className="px-4 py-2">
+                                            <td className="px-4 py-2 font-medium text-gray-900 dark:text-white text-right">{api.provider}</td>
+                                            <td className="px-4 py-2 text-right">
                                                 <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                                                     api.status === 'online' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
                                                     api.status === 'offline' ? 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400' :
                                                     'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
                                                 }`}>
-                                                    {api.status.toUpperCase()}
+                                                    {api.status === 'online' ? 'فعال' : api.status === 'offline' ? 'غیرفعال' : 'خطا'}
                                                 </span>
                                             </td>
-                                            <td className="px-4 py-2 text-gray-500 dark:text-gray-400">
-                                                {api.latency ? `${api.latency}ms` : '-'}
+                                            <td className="px-4 py-2 text-gray-500 dark:text-gray-400 text-right">
+                                                {api.latency ? `${api.latency} میلی‌ثانیه` : '-'}
                                             </td>
-                                            <td className="px-4 py-2 text-[10px] text-gray-400 truncate max-w-[150px]">
-                                                {api.error || 'Working normally'}
+                                            <td className="px-4 py-2 text-[10px] text-gray-400 truncate max-w-[150px] text-right">
+                                                {api.error || 'بدون خطا'}
                                             </td>
                                         </tr>
                                     ))}
