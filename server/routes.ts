@@ -38,7 +38,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   }, express.static(UPLOADS_DIR));
 
-  app.get('/api/health', (_req, res) => {
+  app.post('/api/ai/settings', async (req: Request, res: Response) => {
+    try {
+      const { gemini, openrouter, cloudflareId, cloudflareToken, openai, poyo, portkey } = req.body;
+      
+      // Update process.env for current session (if applicable)
+      if (gemini) process.env.GEMINI_API_KEY = gemini;
+      if (openrouter) process.env.OPENROUTER_API_KEY = openrouter;
+      if (cloudflareId) process.env.CLOUDFLARE_ACCOUNT_ID = cloudflareId;
+      if (cloudflareToken) process.env.CLOUDFLARE_API_TOKEN = cloudflareToken;
+      if (openai) process.env.OPENAI_API_KEY = openai;
+      if (poyo) process.env.POYO_API_KEY_1 = poyo;
+      if (portkey) process.env.PORTKEY_API_KEY_1 = portkey;
+
+      res.json({ message: "Settings updated" });
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      res.status(500).json({ message: "Failed to save settings" });
+    }
+  });
+
+  app.get('/api/ai/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 

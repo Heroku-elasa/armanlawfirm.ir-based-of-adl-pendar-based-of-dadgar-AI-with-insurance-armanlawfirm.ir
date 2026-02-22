@@ -86,6 +86,17 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
         }
     };
 
+    const [apiKeys, setApiKeys] = useState({
+        gemini: '',
+        openrouter: '',
+        cloudflareId: '',
+        cloudflareToken: '',
+        openai: '',
+        poyo: '',
+        portkey: ''
+    });
+
+    const [isSaving, setIsSaving] = useState(false);
     const [apiStatus, setApiStatus] = useState<any[]>([]);
     const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -107,8 +118,53 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
     useEffect(() => {
         if (isOpen) {
             checkApiStatus();
+            // Load keys from localStorage or env placeholders
+            setApiKeys({
+                gemini: localStorage.getItem('GEMINI_API_KEY') || '',
+                openrouter: localStorage.getItem('OPENROUTER_API_KEY') || '',
+                cloudflareId: localStorage.getItem('CLOUDFLARE_ACCOUNT_ID') || '',
+                cloudflareToken: localStorage.getItem('CLOUDFLARE_API_TOKEN') || '',
+                openai: localStorage.getItem('OPENAI_API_KEY') || '',
+                poyo: localStorage.getItem('POYO_API_KEY') || '',
+                portkey: localStorage.getItem('PORTKEY_API_KEY') || ''
+            });
         }
     }, [isOpen]);
+
+    const handleKeyChange = (key: string, value: string) => {
+        setApiKeys(prev => ({ ...prev, [key]: value }));
+    };
+
+    const handleSaveKeys = async () => {
+        setIsSaving(true);
+        try {
+            // Save to localStorage for persistence in this browser
+            Object.entries(apiKeys).forEach(([key, value]) => {
+                const envKey = key === 'gemini' ? 'GEMINI_API_KEY' :
+                             key === 'openrouter' ? 'OPENROUTER_API_KEY' :
+                             key === 'cloudflareId' ? 'CLOUDFLARE_ACCOUNT_ID' :
+                             key === 'cloudflareToken' ? 'CLOUDFLARE_API_TOKEN' :
+                             key === 'openai' ? 'OPENAI_API_KEY' :
+                             key === 'poyo' ? 'POYO_API_KEY' :
+                             key === 'portkey' ? 'PORTKEY_API_KEY' : '';
+                if (envKey) localStorage.setItem(envKey, value);
+            });
+
+            // Call API to update server-side keys if endpoint exists
+            await fetch('/api/ai/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(apiKeys)
+            });
+
+            alert('تنظیمات با موفقیت ذخیره شد (Settings saved successfully)');
+            checkApiStatus();
+        } catch (error) {
+            console.error('Failed to save keys', error);
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     if (!isOpen) return null;
 
@@ -123,6 +179,108 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
                 </div>
                 
                 <div className="p-6 space-y-8 max-h-[80vh] overflow-y-auto">
+                    {/* API Settings Section */}
+                    <section className="space-y-4">
+                        <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider mb-2">تنظیمات API (API Settings)</h3>
+                        
+                        <div className="space-y-3">
+                            <div>
+                                <label className="text-xs text-gray-500 block mb-1">Gemini API Key</label>
+                                <input 
+                                    type="password"
+                                    value={apiKeys.gemini}
+                                    onChange={(e) => handleKeyChange('gemini', e.target.value)}
+                                    placeholder="AIza..."
+                                    className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                />
+                            </div>
+                            
+                            <div>
+                                <label className="text-xs text-gray-500 block mb-1">OpenRouter API Key</label>
+                                <input 
+                                    type="password"
+                                    value={apiKeys.openrouter}
+                                    onChange={(e) => handleKeyChange('openrouter', e.target.value)}
+                                    placeholder="sk-or-v1-..."
+                                    className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-gray-500 block mb-1">Poyo API Key</label>
+                                    <input 
+                                        type="password"
+                                        value={apiKeys.poyo}
+                                        onChange={(e) => handleKeyChange('poyo', e.target.value)}
+                                        placeholder="sk-..."
+                                        className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 block mb-1">Portkey API Key</label>
+                                    <input 
+                                        type="password"
+                                        value={apiKeys.portkey}
+                                        onChange={(e) => handleKeyChange('portkey', e.target.value)}
+                                        placeholder="gASN..."
+                                        className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label className="text-xs text-gray-500 block mb-1">Cloudflare Account ID</label>
+                                    <input 
+                                        type="text"
+                                        value={apiKeys.cloudflareId}
+                                        onChange={(e) => handleKeyChange('cloudflareId', e.target.value)}
+                                        placeholder="abc123..."
+                                        className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-gray-500 block mb-1">Cloudflare API Token</label>
+                                    <input 
+                                        type="password"
+                                        value={apiKeys.cloudflareToken}
+                                        onChange={(e) => handleKeyChange('cloudflareToken', e.target.value)}
+                                        placeholder="..."
+                                        className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-xs text-gray-500 block mb-1">OpenAI API Key</label>
+                                <input 
+                                    type="password"
+                                    value={apiKeys.openai}
+                                    onChange={(e) => handleKeyChange('openai', e.target.value)}
+                                    placeholder="sk-..."
+                                    className="w-full bg-gray-100 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded px-3 py-2 text-sm text-gray-800 dark:text-white"
+                                />
+                            </div>
+
+                            <button 
+                                onClick={handleSaveKeys}
+                                disabled={isSaving}
+                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 rounded transition-colors disabled:opacity-50"
+                            >
+                                {isSaving ? 'در حال ذخیره...' : 'ذخیره تنظیمات (Save Settings)'}
+                            </button>
+
+                            <div className="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-900/30 rounded-lg">
+                                <p className="text-[10px] text-yellow-800 dark:text-yellow-200 text-right leading-relaxed">
+                                    ⚠️ کلیدهای API در متغیرهای محیطی سرور ذخیره می‌شوند. برای امنیت بیشتر، کلیدها را مستقیماً در تنظیمات سرور وارد کنید.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <hr className="border-gray-200 dark:border-gray-700" />
+
                     {/* API Status Table */}
                     <section>
                         <div className="flex justify-between items-center mb-4">
