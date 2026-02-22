@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '../types';
 
 interface AIProvider {
@@ -7,18 +7,12 @@ interface AIProvider {
   enabled: boolean;
   priority: number;
   model: string;
-  models: string[]; 
+  models: string[];
   endpoint: string;
-  keyConfigured?: boolean;
+  keyConfigured: boolean;
   status: 'idle' | 'testing' | 'success' | 'error';
   lastError?: string;
   lastLatency?: number;
-  usageInfo?: string;
-  dashboardUrl: string;
-  limits: {
-    requestsPerMinute: number;
-    requestsPerDay: number;
-  };
 }
 
 interface AILog {
@@ -34,351 +28,251 @@ interface AILog {
 
 const DEFAULT_PROVIDERS: AIProvider[] = [
   {
-    id: 'poyo',
-    name: 'Poyo AI',
+    id: 'openrouter',
+    name: 'OpenRouter (Free Tier Working)',
     enabled: true,
     priority: 1,
-    model: 'gpt-4o-mini', 
-    models: ['gpt-4o-mini', 'claude-3-5-sonnet', 'gemini-2.0-flash', 'flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2', 'wan-2.6', 'hailuo-02'],
-    endpoint: 'api.poyo.ai',
-    status: 'idle',
-    dashboardUrl: 'https://poyo.ai/dashboard',
-    limits: { requestsPerMinute: 20, requestsPerDay: 100 }
-  },
-  {
-    id: 'openrouter',
-    name: 'OpenRouter',
-    enabled: true,
-    priority: 2,
-    model: 'deepseek/deepseek-r1-0528:free', 
+    model: 'deepseek/deepseek-r1-0528:free',
     models: [
       'deepseek/deepseek-r1-0528:free',
       'upstage/solar-pro-3:free',
       'arcee-ai/trinity-large-preview:free',
       'stepfun/step-3.5-flash:free',
-      'z-ai/glm-4.5-air:free'
+      'z-ai/glm-4.5-air:free',
+      'meta-llama/llama-3.3-70b-instruct:free'
     ],
-    endpoint: 'openrouter.ai',
+    endpoint: 'https://openrouter.ai/api/v1/chat/completions',
+    keyConfigured: true,
     status: 'idle',
-    dashboardUrl: 'https://openrouter.ai/keys',
-    limits: { requestsPerMinute: 20, requestsPerDay: 50 }
+    lastError: '',
+    lastLatency: 0
   },
   {
     id: 'portkey',
-    name: 'Portkey',
-    enabled: true, 
-    priority: 3,
-    model: 'gpt-4o-mini',
-    models: ['gpt-4o-mini', 'claude-3-haiku-20240307', 'gemini-1.5-flash'],
-    endpoint: 'api.portkey.ai',
+    name: 'Portkey (Gateway)',
+    enabled: true,
+    priority: 2,
+    model: 'gpt-3.5-turbo',
+    models: ['gpt-3.5-turbo', 'gpt-4o-mini', 'claude-3-haiku'],
+    endpoint: 'https://api.portkey.ai/v1/chat/completions',
+    keyConfigured: true,
     status: 'idle',
-    dashboardUrl: 'https://app.portkey.ai/dashboard',
-    limits: { requestsPerMinute: 60, requestsPerDay: 1000 }
+    lastError: '',
+    lastLatency: 0
+  },
+  {
+    id: 'poyo',
+    name: 'Poyo AI (Image/Video Only)',
+    enabled: false,
+    priority: 3,
+    model: 'kling-1.5',
+    models: ['kling-1.5', 'flux.2', 'seedream-4.5'],
+    endpoint: 'https://api.poyo.ai/api/generate/submit',
+    keyConfigured: true,
+    status: 'idle',
+    lastError: 'Poyo does not support chat completions',
+    lastLatency: 0
   }
 ];
 
 const ApiTestPage: React.FC = () => {
   const { language } = useLanguage();
   const isRtl = language === 'fa';
-  
+  const [activeTab, setActiveTab] = useState<'providers' | 'logs'>('providers');
   const [providers, setProviders] = useState<AIProvider[]>(DEFAULT_PROVIDERS);
   const [logs, setLogs] = useState<AILog[]>([]);
+  const [testPrompt, setTestPrompt] = useState(isRtl ? 'یک جمله کوتاه بگو.' : 'Say a short sentence.');
   const [loading, setLoading] = useState(false);
-  const [testResult, setTestResult] = useState<any>(null);
-  const [testingProvider, setTestingProvider] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState<{[key: string]: string}>({});
-  
-  const [apiKeys, setApiKeys] = useState({
-    portkey: 'nJqZtrgTuBQzAF5DM77t64UCIgZT', 
-    poyo1: 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm',
-    poyo2: 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_',
-    openrouter1: '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'
-  });
 
-  useEffect(() => {
-    const savedKeys = localStorage.getItem('arman-api-keys');
-    if (savedKeys) {
-      try {
-        setApiKeys(prev => ({...prev, ...JSON.parse(savedKeys)}));
-      } catch (e) {
-        console.error('Error loading saved keys:', e);
-      }
-    }
-  }, []);
+  const addLog = (log: AILog) => setLogs(prev => [log, ...prev].slice(0, 50));
 
-  const addLog = (provider: string, model: string, status: 'success' | 'error', duration: number, error?: string, response?: string) => {
-    setLogs(prev => [{ id: Date.now(), timestamp: new Date().toISOString(), provider, model, status, duration, error, response }, ...prev].slice(0, 100));
-  };
-
-  const updateProviderStatus = (id: string, status: AIProvider['status'], error?: string, latency?: number, usageInfo?: string) => {
-    setProviders(prev => prev.map(p => p.id === id ? { ...p, status, lastError: error, lastLatency: latency, usageInfo } : p));
-  };
-
-  const checkOpenRouterUsage = async (key: string) => {
-    try {
-      const resp = await fetch("https://openrouter.ai/api/v1/key", { headers: { "Authorization": `Bearer ${key}` } });
-      const data = await resp.json() as any;
-      if (data?.data) {
-        const d = data.data;
-        return `Credits: ${d.limit_remaining || 'N/A'}, Usage: ${d.usage_daily || 0}, IsFree: ${d.is_free_tier}`;
-      }
-    } catch (e) { return "Usage check failed"; }
-    return "";
-  };
-
-  const testProvider = async (id: string, retryWithBackup = true) => {
-    setTestingProvider(id);
-    setTestResult(null);
-    updateProviderStatus(id, 'testing');
-    const start = Date.now();
-    const provider = providers.find(p => p.id === id);
-    if (!provider) return;
-    const model = selectedModel[id] || provider.model;
+  const testProvider = async (provider: AIProvider) => {
+    const id = provider.id;
+    setProviders(prev => prev.map(p => p.id === id ? { ...p, status: 'testing' } : p));
     
     try {
-      let url = '', headers: any = { 'Content-Type': 'application/json' }, body: any = {}, apiKey = '', usageInfo = '';
-
-      if (id === 'openrouter') {
-        url = 'https://openrouter.ai/api/v1/chat/completions';
-        apiKey = apiKeys.openrouter1;
-        headers['Authorization'] = `Bearer ${apiKey}`;
-        headers['HTTP-Referer'] = window.location.origin;
-        headers['X-Title'] = 'Arman Law Firm';
-        body = { model, messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
-        usageInfo = await checkOpenRouterUsage(apiKey);
-      } else if (id === 'poyo') {
-        // Checking if it's an image/video model based on suffix
-        const isGenModel = ['flux.2', 'nano-banana-pro', 'seedream-4.5', 'kling-3.0', 'sora-2', 'wan-2.6', 'hailuo-02'].includes(model);
-        if (isGenModel) {
-          url = 'https://api.poyo.ai/api/generate/submit';
-          apiKey = apiKeys.poyo1;
-          headers['Authorization'] = `Bearer ${apiKey}`;
-          body = {
-            model: model,
-            input: { prompt: "a simple test: red circle on white background" },
-            callback_url: "https://example.com/webhook"
-          };
-        } else {
-          url = 'https://api.poyo.ai/v1/chat/completions';
-          apiKey = apiKeys.poyo1;
-          headers['Authorization'] = `Bearer ${apiKey}`;
-          body = { model: model === 'gpt-4o-mini' ? 'gpt-4o-mini' : model, messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
-        }
-      } else if (id === 'portkey') {
-        url = 'https://api.portkey.ai/v1/chat/completions';
-        const providerMap: {[key: string]: string} = {
-          'gpt-4o-mini': 'openai',
-          'claude-3-haiku-20240307': 'anthropic',
-          'gemini-1.5-flash': 'google'
-        };
-        headers['x-portkey-api-key'] = apiKeys.portkey;
-        headers['x-portkey-provider'] = providerMap[model] || 'openai';
-        body = { model, messages: [{ role: 'user', content: "Say 'Test OK'" }], max_tokens: 20 };
+      const response = await fetch('/api/ai/health-check', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) throw new Error(`Server Error: ${response.status}`);
+      
+      const healthData = await response.json() as any[];
+      const match = healthData.find((h: any) => h.provider.toLowerCase().includes(id));
+      
+      if (match && match.status === 'online') {
+        setProviders(prev => prev.map(p => p.id === id ? { 
+          ...p, 
+          status: 'success', 
+          lastLatency: match.latency 
+        } : p));
+        addLog({ 
+          id: Date.now(), 
+          timestamp: new Date().toISOString(), 
+          provider: id, 
+          model: provider.model, 
+          status: 'success', 
+          duration: match.latency || 0,
+          response: 'API is reachable and working.'
+        });
+      } else {
+        throw new Error(match?.error || 'Provider offline or error');
       }
-
-      const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
-      const data = await res.json() as any;
-      const duration = Date.now() - start;
-
-      if (res.ok) {
-        let responseText = "";
-        if (id === 'poyo' && data?.data?.task_id) {
-          responseText = `Generation Task Started! ID: ${data.data.task_id}`;
-        } else {
-          responseText = data?.choices?.[0]?.message?.content || JSON.stringify(data);
-        }
-        setTestResult({ provider: id, success: true, duration, response: responseText, model });
-        updateProviderStatus(id, 'success', undefined, duration, usageInfo);
-        addLog(id, model, 'success', duration, undefined, responseText);
-      } else { throw new Error(data?.error?.message || res.statusText); }
-    } catch (error: any) {
-      const duration = Date.now() - start;
-      if (retryWithBackup && id === 'poyo' && apiKeys.poyo2) {
-        setApiKeys(prev => ({ ...prev, poyo1: apiKeys.poyo2, poyo2: apiKeys.poyo1 }));
-        return testProvider(id, false);
-      }
-      setTestResult({ provider: id, success: false, error: error.message, model });
-      updateProviderStatus(id, 'error', error.message, duration);
-      addLog(id, model, 'error', duration, error.message);
-    } finally { setTestingProvider(null); }
+    } catch (err: any) {
+      setProviders(prev => prev.map(p => p.id === id ? { ...p, status: 'error', lastError: err.message } : p));
+      addLog({ 
+        id: Date.now(), 
+        timestamp: new Date().toISOString(), 
+        provider: id, 
+        model: provider.model, 
+        status: 'error', 
+        duration: 0, 
+        error: err.message 
+      });
+    }
   };
 
-  const testAllProviders = async () => {
+  const testAll = async () => {
     setLoading(true);
-    for (const p of providers) { await testProvider(p.id); await new Promise(r => setTimeout(r, 500)); }
+    for (const p of providers.filter(p => p.enabled)) {
+      await testProvider(p);
+    }
     setLoading(false);
   };
 
-  const saveApiKeys = () => {
-    localStorage.setItem('arman-api-keys', JSON.stringify(apiKeys));
-    alert('✅ کلیدها با موفقیت ذخیره شدند. (Keys saved successfully)');
-    window.location.reload(); 
-  };
-
   return (
-    <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 p-4 md:p-8 ${isRtl ? 'rtl' : 'ltr'}`} dir={isRtl ? 'rtl' : 'ltr'}>
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-              🧪 {isRtl ? 'سامانه مانیتورینگ هوشمند API' : 'AI API Test Dashboard'}
-            </h1>
-            <p className="text-gray-600 dark:text-gray-400 font-medium">
-              {isRtl ? 'وضعیت سلامت سرویس‌های هوش مصنوعی و کلیدهای فعال را مدیریت کنید.' : 'Monitor AI service health and manage active API keys.'}
-            </p>
-          </div>
+    <div className={`p-6 max-w-6xl mx-auto ${isRtl ? 'rtl' : 'ltr'} bg-white dark:bg-brand-blue min-h-screen text-gray-900 dark:text-white`}>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold text-brand-gold">🧪 AI API Tester</h1>
+        <div className="flex gap-2">
           <button 
-            onClick={testAllProviders} 
-            disabled={loading} 
-            className="px-8 py-3 bg-brand-blue text-white rounded-xl font-bold hover:bg-brand-blue/90 transition-all shadow-lg transform active:scale-95 disabled:opacity-50"
+            onClick={() => setActiveTab('providers')}
+            className={`px-4 py-2 rounded-lg font-bold transition-colors ${activeTab === 'providers' ? 'bg-brand-gold text-brand-blue' : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}
           >
-            {loading ? (isRtl ? 'در حال بررسی...' : 'Auditing...') : (isRtl ? 'بررسی جامع سلامت' : 'Run Full Audit')}
+            {isRtl ? 'سرویس‌دهنده‌ها' : 'Providers'}
+          </button>
+          <button 
+            onClick={() => setActiveTab('logs')}
+            className={`px-4 py-2 rounded-lg font-bold transition-colors ${activeTab === 'logs' ? 'bg-brand-gold text-brand-blue' : 'bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400'}`}
+          >
+            {isRtl ? 'گزارش‌ها' : 'Logs'}
           </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-6">
-              <h2 className="font-bold text-xl mb-6 flex items-center gap-2 dark:text-white border-b pb-4 dark:border-gray-700">
-                📡 {isRtl ? 'سرویس‌های هوش مصنوعی متصل' : 'Active Providers'}
-              </h2>
-              <div className="space-y-4">
-                {providers.map(p => (
-                  <div key={p.id} className="p-5 border border-gray-100 dark:border-gray-700 rounded-2xl bg-gray-50/50 dark:bg-gray-900/50 hover:bg-white dark:hover:bg-gray-800 transition-all group">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-4">
-                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl shadow-inner ${
-                          p.status === 'success' ? 'bg-green-100 dark:bg-green-900/30' : 
-                          p.status === 'error' ? 'bg-red-100 dark:bg-red-900/30' : 
-                          'bg-blue-100 dark:bg-blue-900/30'
-                        }`}>
-                          {p.id === 'openrouter' ? '🌐' : p.id === 'poyo' ? '⚡' : '🔑'}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-lg dark:text-white">{p.name}</h3>
-                          <p className="text-xs text-gray-500 font-mono opacity-0 group-hover:opacity-100 transition-opacity">{p.endpoint}</p>
-                        </div>
-                      </div>
-                      <div className="flex flex-col items-end gap-2">
-                        <span className={`text-[10px] px-3 py-1 rounded-full font-black tracking-wider ${
-                          p.status === 'success' ? 'bg-green-500 text-white' : 
-                          p.status === 'error' ? 'bg-red-500 text-white' : 
-                          p.status === 'testing' ? 'bg-yellow-400 text-black animate-pulse' :
-                          'bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
-                        }`}>
-                          {p.status.toUpperCase()}
-                        </span>
-                        <button 
-                          onClick={() => testProvider(p.id)} 
-                          disabled={testingProvider === p.id}
-                          className="text-xs text-brand-blue font-black hover:bg-brand-blue/10 px-3 py-1 rounded-lg transition-colors"
-                        >
-                          {isRtl ? 'تست مجدد' : 'Retry Test'}
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-wrap gap-4 text-xs">
-                       <div className="flex items-center gap-2 bg-white dark:bg-gray-800 px-3 py-1.5 rounded-lg border dark:border-gray-700">
-                         <span className="text-gray-400 font-bold">{isRtl ? 'مدل:' : 'Model:'}</span>
-                         <select 
-                           value={selectedModel[p.id] || p.model}
-                           onChange={(e) => setSelectedModel(prev => ({...prev, [p.id]: e.target.value}))}
-                           className="bg-transparent border-none p-0 dark:text-white outline-none font-bold"
-                         >
-                           {p.models.map(m => <option key={m} value={m} className="dark:bg-gray-800">{m}</option>)}
-                         </select>
-                       </div>
-                       {p.usageInfo && <span className="bg-blue-50 dark:bg-blue-900/20 text-brand-blue px-3 py-1.5 rounded-lg border border-blue-100 dark:border-blue-900/30 font-bold">{p.usageInfo}</span>}
-                       {p.lastLatency && <span className="bg-gray-100 dark:bg-gray-800 text-gray-500 px-3 py-1.5 rounded-lg border dark:border-gray-700 font-mono">{p.lastLatency}ms</span>}
-                    </div>
+      {activeTab === 'providers' && (
+        <>
+          <div className="bg-white dark:bg-brand-blue/40 p-6 rounded-xl border border-brand-gold/20 mb-8 shadow-lg">
+            <div className="flex flex-col md:flex-row gap-4 items-end">
+              <div className="flex-grow w-full">
+                <label className="block text-sm font-bold text-gray-500 mb-2">{isRtl ? 'متن تست' : 'Test Prompt'}</label>
+                <input
+                  type="text"
+                  value={testPrompt}
+                  onChange={e => setTestPrompt(e.target.value)}
+                  className="w-full bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-white"
+                />
+              </div>
+              <button
+                onClick={testAll}
+                disabled={loading}
+                className="bg-brand-gold text-brand-blue px-8 py-2 rounded-lg font-bold hover:bg-yellow-400 transition-colors disabled:opacity-50 h-[42px]"
+              >
+                {loading ? (isRtl ? 'در حال تست...' : 'Testing...') : (isRtl ? 'تست همه' : 'Test All')}
+              </button>
+            </div>
+          </div>
 
-                    {(p.id === 'poyo' || p.id === 'portkey') && (
-                      <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-200 text-[11px] rounded-xl border border-yellow-100 dark:border-yellow-900/30 flex justify-between items-center">
-                        <div className="flex items-center gap-2">
-                          <span>⚠️</span>
-                          <span>{isRtl ? 'گزارش مصرف مستقیم در API پشتیبانی نمی‌شود. برای جزئیات مصرف:' : 'Usage monitoring is only available via the provider dashboard.'}</span>
-                        </div>
-                        <a href={p.dashboardUrl} target="_blank" rel="noreferrer" className="bg-yellow-500 text-white px-3 py-1 rounded-lg font-black hover:bg-yellow-600 transition-colors">
-                          {isRtl ? 'مشاهده مصرف' : 'View Usage'}
-                        </a>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {providers.map(p => (
+              <div key={p.id} className="bg-white dark:bg-brand-blue/40 border border-brand-gold/20 rounded-xl p-5 shadow-md hover:shadow-brand-gold/5 transition-shadow">
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h2 className="font-bold text-lg text-gray-900 dark:text-white">{p.name}</h2>
+                    <p className="text-[10px] text-gray-500 font-mono mt-1 opacity-60 truncate max-w-[150px]">{p.endpoint}</p>
+                  </div>
+                  <span className={`px-2 py-1 rounded-full text-[10px] font-bold ${
+                    p.status === 'success' ? 'bg-green-100 text-green-800' : 
+                    p.status === 'error' ? 'bg-red-100 text-red-800' : 
+                    'bg-gray-100 text-gray-600'
+                  }`}>
+                    {p.status.toUpperCase()}
+                  </span>
+                </div>
+                
+                <div className="space-y-2 mb-6">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-500">{isRtl ? 'مدل پیش‌فرض' : 'Default Model'}:</span>
+                    <span className="text-gray-900 dark:text-white font-mono">{p.model}</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-gray-500">{isRtl ? 'تأخیر' : 'Latency'}:</span>
+                    <span className="text-gray-900 dark:text-white">{p.lastLatency ? `${p.lastLatency}ms` : '-'}</span>
+                  </div>
+                </div>
+
+                {p.lastError && (
+                  <div className="bg-red-50 dark:bg-red-900/10 p-2 rounded text-[10px] text-red-600 dark:text-red-400 mb-4 break-words font-mono">
+                    {p.lastError}
+                  </div>
+                )}
+
+                <button
+                  onClick={() => testProvider(p)}
+                  disabled={p.status === 'testing'}
+                  className="w-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white font-bold py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 text-sm"
+                >
+                  {p.status === 'testing' ? (isRtl ? 'در حال اجرا...' : 'Running...') : (isRtl ? 'اجرای تست' : 'Run Test')}
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {activeTab === 'logs' && (
+        <div className="bg-white dark:bg-brand-blue/40 rounded-xl border border-brand-gold/20 shadow-lg overflow-hidden">
+          <div className="p-4 border-b border-brand-gold/10 bg-gray-50 dark:bg-gray-800/50">
+            <h2 className="font-bold text-gray-900 dark:text-white">{isRtl ? 'گزارش‌های اخیر' : 'Recent Logs'}</h2>
+          </div>
+          <div className="max-h-[600px] overflow-y-auto">
+            {logs.length > 0 ? (
+              <div className="divide-y divide-gray-100 dark:divide-gray-800">
+                {logs.map(log => (
+                  <div key={log.id} className="p-4 hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+                    <div className="flex justify-between items-center mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className={`w-2 h-2 rounded-full ${log.status === 'success' ? 'bg-green-500' : 'bg-red-500'}`}></span>
+                        <strong className="text-gray-900 dark:text-white uppercase">{log.provider}</strong>
+                        <span className="text-xs text-gray-500 font-mono">({log.model})</span>
+                      </div>
+                      <span className="text-[10px] text-gray-400 font-mono">{log.timestamp}</span>
+                    </div>
+                    <div className="flex gap-4 text-xs mb-2">
+                      <span className="text-gray-500">{isRtl ? 'مدت زمان' : 'Duration'}: <span className="text-gray-900 dark:text-white font-mono">{log.duration}ms</span></span>
+                    </div>
+                    {log.response && (
+                      <div className="bg-gray-100 dark:bg-gray-900 p-2 rounded text-xs text-gray-700 dark:text-gray-300 font-mono italic">
+                        "{log.response}"
+                      </div>
+                    )}
+                    {log.error && (
+                      <div className="text-xs text-red-500 font-mono bg-red-50 dark:bg-red-900/10 p-2 rounded">
+                        Error: {log.error}
                       </div>
                     )}
                   </div>
                 ))}
               </div>
-            </div>
-
-            {testResult && (
-              <div className={`p-6 rounded-3xl border-2 shadow-sm ${testResult.success ? 'bg-green-50 border-green-200 text-green-900' : 'bg-red-50 border-red-200 text-red-900'}`}>
-                <h3 className="font-bold text-lg mb-3 flex items-center gap-2">
-                  {testResult.success ? '✅ پاسخ موفقیت‌آمیز سرویس' : '❌ خطای پاسخ‌دهی'}
-                  <span className="text-xs font-normal opacity-60">({testResult.provider} - {testResult.model})</span>
-                </h3>
-                <div className="relative">
-                  <pre className="text-xs whitespace-pre-wrap font-mono bg-white/80 dark:bg-black/40 p-4 rounded-2xl border border-current border-opacity-10 max-h-60 overflow-y-auto leading-relaxed">
-                    {testResult.response || testResult.error}
-                  </pre>
-                </div>
+            ) : (
+              <div className="p-12 text-center text-gray-500 italic">
+                {isRtl ? 'هنوز گزارشی ثبت نشده است.' : 'No logs recorded yet.'}
               </div>
             )}
           </div>
-
-          <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-6">
-              <h2 className="font-bold text-xl mb-6 dark:text-white border-b pb-4 dark:border-gray-700 flex items-center gap-2">
-                🔑 {isRtl ? 'مدیریت کلیدهای امنیتی' : 'Key Management'}
-              </h2>
-              <div className="space-y-5">
-                {Object.entries(apiKeys).map(([key, val]) => (
-                  <div key={key}>
-                    <label className="text-[10px] text-gray-400 uppercase font-black mb-1.5 block tracking-widest">{key}</label>
-                    <input 
-                      type="password" 
-                      value={val} 
-                      onChange={(e) => setApiKeys(prev => ({...prev, [key]: e.target.value}))}
-                      className="w-full bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-xs dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all placeholder-gray-400"
-                      placeholder={`Enter ${key}...`}
-                    />
-                  </div>
-                ))}
-                <button 
-                  onClick={saveApiKeys} 
-                  className="w-full bg-brand-blue text-white py-4 rounded-2xl text-sm font-black hover:bg-brand-blue/90 transition-all shadow-lg active:scale-95 mt-2"
-                >
-                  {isRtl ? 'ذخیره و اعمال تغییرات' : 'Save & Hot-Reload'}
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-700 p-6">
-              <h2 className="font-bold text-xl mb-6 dark:text-white border-b pb-4 dark:border-gray-700">
-                📝 {isRtl ? 'تاریخچه تست‌های نشست' : 'Session Logs'}
-              </h2>
-              <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
-                {logs.length === 0 ? (
-                  <div className="text-center py-12 text-gray-400 text-xs italic font-medium">
-                    {isRtl ? 'هنوز داده‌ای ثبت نشده است.' : 'No diagnostic data recorded yet.'}
-                  </div>
-                ) : (
-                  logs.map(l => (
-                    <div key={l.id} className="p-3 border-b border-gray-50 dark:border-gray-700 flex justify-between items-center last:border-0 hover:bg-gray-50 dark:hover:bg-gray-900/30 rounded-xl transition-colors">
-                      <div className="flex flex-col gap-0.5">
-                        <span className="font-black uppercase text-[10px] dark:text-white tracking-wider">{l.provider}</span>
-                        <span className="text-[9px] text-gray-400 font-mono">{l.model}</span>
-                      </div>
-                      <div className="text-right flex flex-col items-end gap-0.5">
-                        <span className={`text-[9px] font-black tracking-tighter ${l.status === 'success' ? 'text-green-500' : 'text-red-500'}`}>{l.status.toUpperCase()}</span>
-                        <span className="text-[8px] text-gray-400 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded font-mono">{l.duration}ms</span>
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

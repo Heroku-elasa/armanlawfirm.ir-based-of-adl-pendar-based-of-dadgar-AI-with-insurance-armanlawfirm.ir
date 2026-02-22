@@ -3,15 +3,23 @@ import React, { useState, useEffect } from 'react';
 import { useAppearance, THEME_PRESETS, ColorScheme, useLanguage } from '../types';
 import { FastCache } from '../services/cacheService';
 
+interface ApiHealthStatus {
+    provider: string;
+    status: 'online' | 'offline' | 'error';
+    latency?: number;
+    error?: string;
+}
+
 interface SettingsModalProps {
     isOpen: boolean;
     onClose: () => void;
     onToggleRole?: () => void;
     currentRole?: 'user' | 'admin';
     onOpenWPDashboard?: () => void;
+    setPage: (page: any) => void;
 }
 
-const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggleRole, currentRole, onOpenWPDashboard }) => {
+const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggleRole, currentRole, onOpenWPDashboard, setPage }) => {
     const { t } = useLanguage();
     const { 
         theme, toggleTheme,
@@ -22,6 +30,27 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
 
     const [inputLogo, setInputLogo] = useState(customLogo);
     const [inputColor, setInputColor] = useState(colorScheme.primary);
+    const [apiHealth, setApiHealth] = useState<ApiHealthStatus[]>([]);
+    const [isRefreshingHealth, setIsRefreshingHealth] = useState(false);
+
+    const refreshHealth = async () => {
+        setIsRefreshingHealth(true);
+        try {
+            const response = await fetch('/api/ai/health-check', { method: 'POST' });
+            if (response.ok) {
+                const data = await response.json();
+                setApiHealth(data);
+            }
+        } catch (err) {
+            console.error("Health check failed", err);
+        } finally {
+            setIsRefreshingHealth(false);
+        }
+    };
+
+    useEffect(() => {
+        if (isOpen) refreshHealth();
+    }, [isOpen]);
 
     useEffect(() => {
         setInputLogo(customLogo);
@@ -250,6 +279,57 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, onToggle
                                 <img src={inputLogo} alt="Preview" className="w-8 h-8 object-contain rounded-full border border-gray-300" />
                             </div>
                         </div>
+                    </section>
+
+                    <hr className="border-gray-200 dark:border-gray-700" />
+
+                    {/* AI Infrastructure Health */}
+                    <section>
+                        <div className="flex justify-between items-center mb-4">
+                            <h3 className="text-sm font-bold text-brand-gold uppercase tracking-wider">AI Infrastructure</h3>
+                            <button 
+                                onClick={refreshHealth} 
+                                disabled={isRefreshingHealth}
+                                className="text-[10px] bg-brand-gold/10 hover:bg-brand-gold/20 text-brand-gold px-2 py-1 rounded border border-brand-gold/30 transition-colors disabled:opacity-50"
+                            >
+                                {isRefreshingHealth ? 'Refreshing...' : 'Refresh Status'}
+                            </button>
+                        </div>
+                        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                            <table className="w-full text-left text-xs">
+                                <thead className="bg-gray-200 dark:bg-gray-900 text-gray-600 dark:text-gray-400">
+                                    <tr>
+                                        <th className="px-3 py-2">Provider</th>
+                                        <th className="px-3 py-2">Status</th>
+                                        <th className="px-3 py-2">Latency</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {apiHealth.length > 0 ? apiHealth.map(h => (
+                                        <tr key={h.provider} className="hover:bg-gray-50 dark:hover:bg-gray-700/30">
+                                            <td className="px-3 py-2 font-medium text-gray-800 dark:text-gray-200 uppercase">{h.provider}</td>
+                                            <td className="px-3 py-2">
+                                                <span className={`flex items-center gap-1.5 ${h.status === 'online' ? 'text-green-500' : 'text-red-500'}`}>
+                                                    <span className={`w-1.5 h-1.5 rounded-full ${h.status === 'online' ? 'bg-green-500' : 'bg-red-500 animate-pulse'}`}></span>
+                                                    {h.status === 'online' ? 'Online' : 'Offline'}
+                                                </span>
+                                            </td>
+                                            <td className="px-3 py-2 text-gray-500 font-mono">{h.latency ? `${h.latency}ms` : '-'}</td>
+                                        </tr>
+                                    )) : (
+                                        <tr>
+                                            <td colSpan={3} className="px-3 py-4 text-center text-gray-500 italic">No health data available</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                        <button 
+                          onClick={() => { setPage('apitest'); onClose(); }}
+                          className="w-full mt-3 text-[10px] text-brand-gold hover:underline text-center"
+                        >
+                          Open Advanced API Tester 🧪
+                        </button>
                     </section>
 
                     <hr className="border-gray-200 dark:border-gray-700" />

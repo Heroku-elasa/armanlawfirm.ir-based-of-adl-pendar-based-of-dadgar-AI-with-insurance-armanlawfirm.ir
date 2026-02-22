@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
     });
   }
 
-  const port = process.env.PORT || 3001;
+  const port = Number(process.env.PORT) || 3001;
   server.on('error', (e: any) => {
     if (e.code === 'EADDRINUSE') {
       console.error(`Port ${port} is in use, retrying...`);

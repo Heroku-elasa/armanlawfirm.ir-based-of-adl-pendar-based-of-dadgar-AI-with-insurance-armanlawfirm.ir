@@ -1423,11 +1423,11 @@ const AppContent: React.FC = () => {
         case 'investment':
             return <InvestmentPage />;
         case 'ai_dashboard':
-            return <AIDashboard />;
-        case 'api_test':
-            return <ApiTestPage />;
-        default:
-            return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} onOpenChatbot={() => setIsWhatsAppChatOpen(true)} />;
+        return <AIDashboard />;
+      case 'apitest':
+        return <ApiTestPage />;
+      default:
+        return <HomePage setPage={setPage} onOpenAIGuide={() => setIsAIGuideOpen(true)} onOpenBooking={() => setIsBookingOpen(true)} onOpenChatbot={() => setIsWhatsAppChatOpen(true)} />;
     }
   };
 
@@ -1485,6 +1485,7 @@ const AppContent: React.FC = () => {
             onToggleRole={toggleUserRole}
             currentRole={state.userRole}
             onOpenWPDashboard={() => { setPage('wp_dashboard'); setIsSettingsOpen(false); }}
+            setPage={setPage}
         />
         
         {!isAuthenticated && (
