@@ -467,15 +467,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Execution sequence
       const workingKeys = [
-        { key: process.env.OPENROUTER_API_KEY || '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', name: 'OpenRouter-Main' },
-        { key: process.env.PORTKEY_API_KEY || 'nJqZtrgTuBQzAF5DM77t64UCIgZT', name: 'Portkey-Main' },
-        { key: process.env.POYO_AI_API_KEY || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm', name: 'Poyo-Main' },
-        { key: process.env.OPENROUTER_API_KEY_1, name: 'OpenRouter-1' },
-        { key: process.env.OPENROUTER_API_KEY_2, name: 'OpenRouter-2' },
-        { key: process.env.POYO_API_KEY_1, name: 'Poyo-1' },
-        { key: process.env.POYO_API_KEY_2, name: 'Poyo-2' },
-        { key: process.env.PORTKEY_API_KEY_1, name: 'Portkey-1' },
-        { key: process.env.PORTKEY_API_KEY_2, name: 'Portkey-2' },
+        { key: process.env.OPENROUTER_API_KEY_1 || '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', name: 'OpenRouter-1' },
+        { key: process.env.OPENROUTER_API_KEY_2 || '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', name: 'OpenRouter-2' },
+        { key: process.env.PORTKEY_API_KEY_1 || 'gASN7iokVzgqJLweJTWr12V75JG+', name: 'Portkey-1' },
+        { key: process.env.PORTKEY_API_KEY_2 || 'nJqZtrgTuBQzAF5DM77t64UCIgZT', name: 'Portkey-2' },
+        { key: process.env.POYO_API_KEY_1 || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm', name: 'Poyo-1' },
+        { key: process.env.POYO_API_KEY_2 || 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_', name: 'Poyo-2' },
+        { key: process.env.OPENROUTER_API_KEY, name: 'OpenRouter-Main' },
+        { key: process.env.PORTKEY_API_KEY, name: 'Portkey-Main' },
+        { key: process.env.POYO_AI_API_KEY, name: 'Poyo-Main' },
       ];
 
       for (const entry of workingKeys) {
@@ -614,12 +614,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const messages = [{ role: 'user', content: 'hi' }];
     
     await Promise.all([
-      checkProvider('Poyo-1', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_1, { 'Authorization': `Bearer ${process.env.POYO_API_KEY_1}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
-      checkProvider('Poyo-2', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_2, { 'Authorization': `Bearer ${process.env.POYO_API_KEY_2}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
-      checkProvider('Portkey-1', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_1, { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_1, 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
-      checkProvider('Portkey-2', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_2, { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_2, 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
-      checkProvider('OpenRouter-1', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_1, { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_1}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
-      checkProvider('OpenRouter-2', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_2, { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_2}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
+      checkProvider('Poyo-1', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_1 || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm', { 'Authorization': `Bearer ${process.env.POYO_API_KEY_1 || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm'}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Poyo-2', 'https://api.poyo.ai/v1/chat/completions', process.env.POYO_API_KEY_2 || 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_', { 'Authorization': `Bearer ${process.env.POYO_API_KEY_2 || 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_'}` }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Portkey-1', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_1 || 'gASN7iokVzgqJLweJTWr12V75JG+', { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_1 || 'gASN7iokVzgqJLweJTWr12V75JG+', 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('Portkey-2', 'https://api.portkey.ai/v1/chat/completions', process.env.PORTKEY_API_KEY_2 || 'nJqZtrgTuBQzAF5DM77t64UCIgZT', { 'x-portkey-api-key': process.env.PORTKEY_API_KEY_2 || 'nJqZtrgTuBQzAF5DM77t64UCIgZT', 'x-portkey-provider': 'google' }, { model: 'gemini-2.0-flash', messages, max_tokens: 1 }),
+      checkProvider('OpenRouter-1', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_1 || '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', { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_1 || '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'}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
+      checkProvider('OpenRouter-2', 'https://openrouter.ai/api/v1/chat/completions', process.env.OPENROUTER_API_KEY_2 || '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', { 'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY_2 || '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'}` }, { model: 'google/gemini-2.0-flash-001', messages, max_tokens: 1 }),
     ]);
 
     return res.json(results);
