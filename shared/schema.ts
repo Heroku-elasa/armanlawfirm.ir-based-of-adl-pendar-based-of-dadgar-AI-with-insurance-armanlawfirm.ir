@@ -90,3 +90,39 @@ export type Post = typeof posts.$inferSelect;
 
 export type InsertFile = typeof files.$inferInsert;
 export type File = typeof files.$inferSelect;
+
+export const aiProviders = pgTable("ai_providers", {
+  id: serial("id").primaryKey(),
+  name: varchar("name").notNull(),
+  label: varchar("label"),
+  enabled: boolean("enabled").default(true),
+  priority: integer("priority").default(0),
+  endpoint: varchar("endpoint"),
+  model: varchar("model"),
+  apiKeyEnvVar: varchar("api_key_env_var"),
+  requestsPerMinute: integer("requests_per_minute"),
+  requestsPerDay: integer("requests_per_day"),
+  description: text("description"),
+  getKeyUrl: text("get_key_url"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const aiUsage = pgTable("ai_usage", {
+  id: serial("id").primaryKey(),
+  providerId: integer("provider_id").references(() => aiProviders.id),
+  date: varchar("date").notNull(),
+  requestsCount: integer("requests_count").default(0),
+  tokensCount: integer("tokens_count").default(0),
+  errorsCount: integer("errors_count").default(0),
+  avgLatency: integer("avg_latency"),
+  lastUsedAt: timestamp("last_used_at").defaultNow(),
+});
+
+export const aiHealthLogs = pgTable("ai_health_logs", {
+  id: serial("id").primaryKey(),
+  provider: varchar("provider").notNull(),
+  status: varchar("status").notNull(),
+  latency: integer("latency"),
+  error: text("error"),
+  timestamp: timestamp("timestamp").defaultNow(),
+});

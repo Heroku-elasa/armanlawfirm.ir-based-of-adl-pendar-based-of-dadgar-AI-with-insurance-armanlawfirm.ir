@@ -72,7 +72,7 @@ const ContentHubPage: React.FC<ContentHubPageProps> = ({
         if (activeTab === 'trends' && !trends && !isFetchingTrends && !trendsError) {
             onFetchTrends();
         }
-    }, [activeTab, trends, isFetchingTrends, trendsError, onFetchTrends]);
+    }, [activeTab, trends, isFetchingTrends, trendsError]);
     
     // Clear sub-content when new post is generated or cleared
     useEffect(() => {
@@ -206,13 +206,13 @@ const ContentHubPage: React.FC<ContentHubPageProps> = ({
 
         try {
             if (instaTool === 'reel') {
-                const result = await generateInstagramReelScript(instaInput);
+                const result = await generateInstagramReelScript(instaInput, language);
                 setReelScript(result);
             } else if (instaTool === 'story') {
-                const result = await generateInstagramStoryBoard(instaInput);
+                const result = await generateInstagramStoryBoard(instaInput, language);
                 setStoryBoard(result);
             } else if (instaTool === 'growth') {
-                const result = await getInstagramGrowthPlan(instaInput);
+                const result = await getInstagramGrowthPlan(instaInput, language);
                 setGrowthPlan(result);
             }
         } catch (error) {
@@ -338,7 +338,7 @@ const ContentHubPage: React.FC<ContentHubPageProps> = ({
                                     <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-xl text-sm whitespace-pre-wrap font-medium">
                                         {reelScript.caption_viral}
                                         <div className="mt-2 text-blue-500">
-                                            {reelScript.hashtags_seo.map(t => `#${t} `)}
+                                            {reelScript.hashtags_seo.map((t: string) => `#${t} `)}
                                         </div>
                                     </div>
                                 </div>

@@ -140,9 +140,48 @@ export const useLanguage = () => {
 // --- TYPE DEFINITIONS ---
 export type PageKey = 'dashboard' | 'legal_drafter' | 'lawyer_finder' | 'news_summarizer' | 'case_strategist' | 'notary_finder' | 'web_analyzer' | 'contract_analyzer' | 'evidence_analyzer' | 'image_generator' | 'corporate_services' | 'insurance_services' | 'site_architect' | 'external_service' | 'general_questions' | 'blog' | 'content_hub' | 'court_assistant' | 'pricing' | 'wp_dashboard' | 'faryadresi' | 'resume_analyzer' | 'job_assistant' | 'map_finder' | 'geo_referencer' | 'investment' | 'ai_dashboard' | 'apitest';
 
-export interface LatLng {
-  latitude: number;
-  longitude: number;
+export interface InstagramReel {
+  title: string;
+  hook_3sec: string;
+  audio_suggestion: string;
+  scenes: { time: string; visual: string; text_overlay: string }[];
+  caption_viral: string;
+  hashtags_seo: string[];
+}
+
+export interface InstagramStory {
+  frame_1: string;
+  frame_2: string;
+  frame_3: string;
+  interactive_sticker: string;
+}
+
+export interface InstagramGrowthPlan {
+  profile_audit: string;
+  content_strategy_2025: string;
+  hashtags_strategy: string;
+  engagement_tactic: string;
+}
+
+export interface VideoTool {
+  name: string;
+  url: string;
+  description: string;
+  price: string;
+}
+
+export interface VideoScript {
+  title: string;
+  hook: string;
+  scenes: { timecode: string; visual: string; voiceover: string; emotion: string; audio_cues: string }[];
+  cta: string;
+  caption: string;
+  hashtags: string[];
+}
+
+export interface PublishingStrategy {
+  title: string;
+  platforms: { name: string; content: string; best_time: string; hashtags: string[] }[];
 }
 
 // Type for auto-save status indicator

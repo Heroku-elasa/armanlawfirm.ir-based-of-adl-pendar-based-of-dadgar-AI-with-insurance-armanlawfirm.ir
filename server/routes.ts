@@ -431,6 +431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Helper for OpenRouter
       const tryOpenRouter = async (apiKey: string, keyName: string): Promise<boolean> => {
         if (aiResponse) return true;
+        if (!apiKey || apiKey.includes('`')) return false; // Skip placeholder keys
         try {
           console.log(`Trying ${keyName}...`);
           const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -456,20 +457,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
               usedProvider = keyName;
               return true;
             }
+          } else {
+            const errData = await response.json() as any;
+            console.error(`OpenRouter ${keyName} error:`, errData);
           }
         } catch (e) {}
         return false;
       };
 
       // Execution sequence
-      await tryPoyo(poyoKey1!, 'Poyo-1');
-      if (!aiResponse) await tryPoyo(poyoKey2!, 'Poyo-2');
-      if (!aiResponse) await tryPortkey(portkeyKey1!, 'Portkey-1');
-      if (!aiResponse) await tryPortkey(portkeyKey2!, 'Portkey-2');
-      if (!aiResponse) await tryOpenRouter(openRouterKey1!, 'OpenRouter-1');
-      if (!aiResponse) await tryOpenRouter(openRouterKey2!, 'OpenRouter-2');
+      const workingKeys = [
+        { key: process.env.OPENROUTER_API_KEY || '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', name: 'OpenRouter-Main' },
+        { key: process.env.PORTKEY_API_KEY || 'nJqZtrgTuBQzAF5DM77t64UCIgZT', name: 'Portkey-Main' },
+        { key: process.env.POYO_AI_API_KEY || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm', name: 'Poyo-Main' },
+        { key: process.env.OPENROUTER_API_KEY_1, name: 'OpenRouter-1' },
+        { key: process.env.OPENROUTER_API_KEY_2, name: 'OpenRouter-2' },
+        { key: process.env.POYO_API_KEY_1, name: 'Poyo-1' },
+        { key: process.env.POYO_API_KEY_2, name: 'Poyo-2' },
+        { key: process.env.PORTKEY_API_KEY_1, name: 'Portkey-1' },
+        { key: process.env.PORTKEY_API_KEY_2, name: 'Portkey-2' },
+      ];
 
-      // Fallback to OpenAI if OpenRouter failed or not configured
+      for (const entry of workingKeys) {
+          if (!entry.key) continue;
+          if (entry.name.startsWith('OpenRouter')) {
+              await tryOpenRouter(entry.key, entry.name);
+          } else if (entry.name.startsWith('Poyo')) {
+              await tryPoyo(entry.key, entry.name);
+          } else if (entry.name.startsWith('Portkey')) {
+              await tryPortkey(entry.key, entry.name);
+          }
+          if (aiResponse) break;
+      }
+
+      // Fallback to OpenAI if all others failed
       if (!aiResponse && openaiKey) {
         try {
           console.log("Falling back to OpenAI API...");
@@ -575,7 +596,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           body: JSON.stringify(body)
         });
-        results.push({
+        // Log health check to DB
+      await pool.query('INSERT INTO ai_health_logs (provider, model, status, latency, error) VALUES ($1, $2, $3, $4, $5)', 
+        [name, body.model, response.ok ? 'online' : 'error', Date.now() - start, response.ok ? null : `Status ${response.status}`]);
+
+      results.push({
           provider: name,
           status: response.ok ? 'online' : 'error',
           latency: Date.now() - start,
