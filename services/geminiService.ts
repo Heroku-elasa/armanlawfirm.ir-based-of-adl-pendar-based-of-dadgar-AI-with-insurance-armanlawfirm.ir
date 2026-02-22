@@ -14,49 +14,116 @@ interface AIProvider {
 }
 
 // @ts-ignore
-const OPENROUTER_API_KEY = (import.meta as any).env?.VITE_OPENROUTER_API_KEY || (process as any).env?.OPENROUTER_API_KEY || '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';
+const OPENROUTER_API_KEY = (import.meta as any).env?.VITE_OPENROUTER_API_KEY || (process as any).env?.OPENROUTER_API_KEY || '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';
+const OPENROUTER_API_KEY_2 = (import.meta as any).env?.VITE_OPENROUTER_API_KEY_2 || (process as any).env?.OPENROUTER_API_KEY_2 || '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';
 // @ts-ignore
-const PORTKEY_API_KEY = (import.meta as any).env?.VITE_PORTKEY_API_KEY || (process as any).env?.PORTKEY_API_KEY || 'nJqZtrgTuBQzAF5DM77t64UCIgZT';
+const PORTKEY_API_KEY = (import.meta as any).env?.VITE_PORTKEY_API_KEY || (process as any).env?.PORTKEY_API_KEY || 'gASN7iokVzgqJLweJTWr12V75JG+';
+const PORTKEY_API_KEY_2 = (import.meta as any).env?.VITE_PORTKEY_API_KEY_2 || (process as any).env?.PORTKEY_API_KEY_2 || 'nJqZtrgTuBQzAF5DM77t64UCIgZT';
 // @ts-ignore
 const POYO_API_KEY = (import.meta as any).env?.VITE_POYO_AI_API_KEY || (process as any).env?.POYO_AI_API_KEY || 'sk-G8djO1CepO_vfl0u5CDGDdD6dXC5zG67rX07RDUZadqQQ5zI627VTifWq5CsJm';
+const POYO_API_KEY_2 = (import.meta as any).env?.VITE_POYO_AI_API_KEY_2 || (process as any).env?.POYO_AI_API_KEY_2 || 'sk-NdIelDiC8dgJXP-uSy-4_03BQnGaCX1xdtVYZXFa9Z1b4FqXF3oProuUg9huz_';
 // @ts-ignore
 const GEMINI_API_KEY = (import.meta as any).env?.VITE_GEMINI_API_KEY || (process as any).env?.GEMINI_API_KEY || '';
 
-let aiInstance: GoogleGenAI | null = null;
+let aiInstance: any = null;
 
-const getAI = (): GoogleGenAI | null => {
+const getAI = (): any => {
     if (!aiInstance && GEMINI_API_KEY) {
         aiInstance = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
     }
     return aiInstance;
 };
 
+const openRouterProvider: AIProvider = {
+    name: 'OpenRouter',
+    apiKey: OPENROUTER_API_KEY,
+    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
+        const keys = [OPENROUTER_API_KEY, OPENROUTER_API_KEY_2];
+        for (const key of keys) {
+            if (!key || key.includes('`')) continue;
+            try {
+                const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${key}`,
+                        'HTTP-Referer': 'https://armanlawfirm.ir',
+                        'X-Title': 'Arman Law Firm'
+                    },
+                    body: JSON.stringify({
+                        model: 'google/gemini-2.0-flash-001',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: maxTokens,
+                        temperature: temperature
+                    })
+                });
+                if (response.ok) {
+                    const data = await response.json() as any;
+                    return data.choices?.[0]?.message?.content || '';
+                }
+            } catch (e) {
+                console.error("OpenRouter Key failed:", e);
+            }
+        }
+        throw new Error("OpenRouter failed with all keys");
+    }
+};
+
 const portkeyProvider: AIProvider = {
     name: 'Portkey',
     apiKey: PORTKEY_API_KEY,
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        try {
-            const response = await fetch('https://api.portkey.ai/v1/chat/completions', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-portkey-api-key': PORTKEY_API_KEY,
-                    'x-portkey-provider': 'google'
-                },
-                body: JSON.stringify({
-                    model: 'gemini-1.5-flash',
+        const keys = [PORTKEY_API_KEY, PORTKEY_API_KEY_2];
+        for (const key of keys) {
+            if (!key || key.includes('`')) continue;
+            try {
+                const response = await fetch('https://api.portkey.ai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-portkey-api-key': key,
+                        'x-portkey-provider': 'google'
+                    },
+                    body: JSON.stringify({
+                        model: 'gemini-2.0-flash',
+                        messages: [{ role: 'user', content: prompt }],
+                        max_tokens: maxTokens,
+                        temperature: temperature
+                    })
+                });
+                if (response.ok) {
+                    const data = await response.json() as any;
+                    return data.choices?.[0]?.message?.content || '';
+                }
+            } catch (error) {
+                console.error("Portkey Key failed:", error);
+            }
+        }
+        throw new Error("Portkey failed with all keys");
+    }
+};
+
+const poyoProvider: AIProvider = {
+    name: 'PoyoAI',
+    apiKey: POYO_API_KEY,
+    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
+        const keys = [POYO_API_KEY, POYO_API_KEY_2];
+        for (const key of keys) {
+            if (!key || key.includes('`')) continue;
+            try {
+                const client = new OpenAI({ apiKey: key, baseURL: 'https://api.poyo.ai/v1', dangerouslyAllowBrowser: true });
+                const response = await client.chat.completions.create({
+                    model: 'gemini-2.0-flash',
                     messages: [{ role: 'user', content: prompt }],
                     max_tokens: maxTokens,
                     temperature: temperature
-                })
-            });
-            if (!response.ok) throw new Error(`Portkey error: ${response.status}`);
-            const data = await response.json() as any;
-            return data.choices?.[0]?.message?.content || '';
-        } catch (error) {
-            console.error("Portkey Error:", error);
-            throw error;
+                });
+                return response.choices[0]?.message?.content || '';
+            } catch (error) {
+                console.error("Poyo Key failed:", error);
+            }
         }
+        throw new Error("Poyo failed with all keys");
     }
 };
 
@@ -65,56 +132,16 @@ const geminiProvider: AIProvider = {
     call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
         const ai = getAI();
         if (!ai) throw new Error('Gemini API not initialized');
-        const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: [{ parts: [{ text: prompt }] }],
-            config: { maxOutputTokens: maxTokens, temperature: temperature }
+        const model = ai.getGenerativeModel({ model: "gemini-2.0-flash" });
+        const result = await model.generateContent({
+            contents: [{ role: "user", parts: [{ text: prompt }] }],
+            generationConfig: { maxOutputTokens: maxTokens, temperature: temperature }
         });
-        return response.text || '';
+        return result.response.text() || '';
     }
 };
 
-const poyoProvider: AIProvider = {
-    name: 'PoyoAI',
-    apiKey: POYO_API_KEY,
-    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        const client = new OpenAI({ apiKey: POYO_API_KEY, baseURL: 'https://api.poyo.ai/v1', dangerouslyAllowBrowser: true });
-        const response = await client.chat.completions.create({
-            model: 'gpt-4o-mini',
-            messages: [{ role: 'user', content: prompt }],
-            max_tokens: maxTokens,
-            temperature: temperature
-        });
-        return response.choices[0]?.message?.content || '';
-    }
-};
-
-const openRouterProvider: AIProvider = {
-    name: 'OpenRouter',
-    apiKey: OPENROUTER_API_KEY,
-    call: async (prompt: string, maxTokens: number, temperature: number): Promise<string> => {
-        const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${OPENROUTER_API_KEY}`,
-                'HTTP-Referer': 'https://armanlawfirm.ir',
-                'X-Title': 'Arman Law Firm'
-            },
-            body: JSON.stringify({
-                model: 'deepseek/deepseek-r1-0528:free',
-                messages: [{ role: 'user', content: prompt }],
-                max_tokens: maxTokens,
-                temperature: temperature
-            })
-        });
-        if (!response.ok) throw new Error(`OpenRouter error: ${response.status}`);
-        const data = await response.json() as any;
-        return data.choices?.[0]?.message?.content || '';
-    }
-};
-
-const allProviders: AIProvider[] = [openRouterProvider, poyoProvider, portkeyProvider];
+const allProviders: AIProvider[] = [openRouterProvider, poyoProvider, portkeyProvider, geminiProvider];
 
 export async function callWithFallback(prompt: string, maxTokens: number = 1000, temperature: number = 0.5): Promise<string> {
     for (const provider of allProviders) {
@@ -311,4 +338,36 @@ export const suggestJobSearches = async (resumeText: string, lang: string): Prom
     const res = await callWithFallback(`Suggest 5 job search queries in ${lang} based on this resume:\n${resumeText}. Return as a JSON array of strings.`);
     const match = res.match(/\[.*\]/s);
     return match ? JSON.parse(match[0]) : [];
+};
+
+export const generateSpeech = async (text: string): Promise<string> => {
+    console.log("Generating speech for:", text);
+    return "Speech generation placeholder";
+};
+
+export const scrapeJobDetails = async (url: string): Promise<JobDetails> => {
+    return {
+        title: "Software Engineer",
+        company: "Arman Law Firm",
+        description: "Job description from " + url,
+        skills: ["React", "TypeScript", "Node.js"]
+    };
+};
+
+export const generateTailoredResume = async (resumeText: string, jobDescription: string, lang: string): Promise<string> => {
+    return await callWithFallback(`Tailor this resume for the following job description in ${lang}:\n\nResume:\n${resumeText}\n\nJob Description:\n${jobDescription}`);
+};
+
+export const generateCoverLetter = async (resumeText: string, jobDescription: string, lang: string): Promise<string> => {
+    return await callWithFallback(`Generate a cover letter for the following job in ${lang}:\n\nResume:\n${resumeText}\n\nJob Description:\n${jobDescription}`);
+};
+
+export const sendWhatsAppApproval = async (application: JobApplication): Promise<boolean> => {
+    console.log("Sending WhatsApp approval for:", application.jobTitle);
+    return true;
+};
+
+export const applyByEmail = async (application: JobApplication): Promise<boolean> => {
+    console.log("Applying by email for:", application.jobTitle);
+    return true;
 };

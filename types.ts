@@ -2,6 +2,11 @@
 import React, { useState, useCallback, createContext, useContext, useEffect } from 'react';
 import { en, fa } from './constants';
 
+export interface LatLng {
+    lat: number;
+    lng: number;
+}
+
 // --- THEME & APPEARANCE SETUP ---
 type Theme = 'light' | 'dark';
 
@@ -252,6 +257,7 @@ export interface IntentRoute {
   module: PageKey;
   confidencePercentage: number;
   reasoning: string;
+  suggestedQuery?: string;
 }
 
 // Interface for the result of preparing a draft from a strategy task

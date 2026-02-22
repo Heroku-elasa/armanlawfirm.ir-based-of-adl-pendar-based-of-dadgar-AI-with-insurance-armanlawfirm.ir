@@ -582,7 +582,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const results = [];
     
     const checkProvider = async (name: string, url: string, key: string | undefined, headers: any, body: any) => {
-      if (!key) {
+      const activeKey = key || 'NOT_CONFIGURED';
+      if (activeKey === 'NOT_CONFIGURED' || activeKey.includes('`')) {
         results.push({ provider: name, status: 'offline', error: 'Key not configured' });
         return;
       }
@@ -596,15 +597,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
           },
           body: JSON.stringify(body)
         });
-        // Log health check to DB
-      await pool.query('INSERT INTO ai_health_logs (provider, model, status, latency, error) VALUES ($1, $2, $3, $4, $5)', 
-        [name, body.model, response.ok ? 'online' : 'error', Date.now() - start, response.ok ? null : `Status ${response.status}`]);
+        
+        const status = response.ok ? 'online' : 'error';
+        const latency = Date.now() - start;
+        const error = response.ok ? null : `Status ${response.status}`;
 
-      results.push({
+        // Log health check to DB safely
+        try {
+          await pool.query('INSERT INTO ai_health_logs (provider, model, status, latency, error) VALUES ($1, $2, $3, $4, $5)', 
+            [name, body.model, status, latency, error]);
+        } catch (dbErr) {
+          console.error("Failed to log health to DB:", dbErr);
+        }
+
+        results.push({
           provider: name,
-          status: response.ok ? 'online' : 'error',
-          latency: Date.now() - start,
-          error: response.ok ? null : `Status ${response.status}`
+          status,
+          latency,
+          error
         });
       } catch (err: any) {
         results.push({ provider: name, status: 'offline', error: err.message });
