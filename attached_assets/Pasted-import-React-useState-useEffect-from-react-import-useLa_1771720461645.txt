@@ -1,0 +1,377 @@
+import React, { useState, useEffect } from 'react';
+
+import { useLanguage } from './types'; // assuming this exists for RTL/Language
+
+interface AIProvider {
+
+  id: string;
+
+  name: string;
+
+  enabled: boolean;
+
+  priority: number;
+
+  model: string;
+
+  models: string[];
+
+  endpoint: string;
+
+  keyConfigured: boolean;
+
+  status: 'idle' | 'testing' | 'success' | 'error';
+
+  lastError?: string;
+
+  lastLatency?: number;
+
+}
+
+interface AILog {
+
+  id: number;
+
+  timestamp: string;
+
+  provider: string;
+
+  model: string;
+
+  status: 'success' | 'error';
+
+  duration: number;
+
+  error?: string;
+
+  response?: string;
+
+}
+
+const DEFAULT_PROVIDERS: AIProvider[] = [
+
+  {
+
+    id: 'openrouter',
+
+    name: 'OpenRouter (Free Tier Working)',
+
+    enabled: true,
+
+    priority: 1,
+
+    model: 'deepseek/deepseek-r1-0528:free',
+
+    models: [
+
+      'deepseek/deepseek-r1-0528:free',
+
+      'upstage/solar-pro-3:free',
+
+      'arcee-ai/trinity-large-preview:free',
+
+      'stepfun/step-3.5-flash:free',
+
+      'z-ai/glm-4.5-air:free',
+
+      'meta-llama/llama-3.3-70b-instruct:free'
+
+    ],
+
+    endpoint: 'https://openrouter.ai/api/v1/chat/completions',
+
+    keyConfigured: true,
+
+    status: 'idle',
+
+    lastError: '',
+
+    lastLatency: 0
+
+  },
+
+  {
+
+    id: 'portkey',
+
+    name: 'Portkey (Gateway)',
+
+    enabled: true,
+
+    priority: 2,
+
+    model: 'gpt-3.5-turbo',
+
+    models: ['gpt-3.5-turbo', 'gpt-4o-mini', 'claude-3-haiku'],
+
+    endpoint: 'https://api.portkey.ai/v1/chat/completions',
+
+    keyConfigured: true,
+
+    status: 'idle',
+
+    lastError: '',
+
+    lastLatency: 0
+
+  },
+
+  {
+
+    id: 'poyo',
+
+    name: 'Poyo AI (Image/Video Only)',
+
+    enabled: false, // Disabled by default - no chat support
+
+    priority: 3,
+
+    model: 'kling-1.5',
+
+    models: ['kling-1.5', 'flux.2', 'seedream-4.5'],
+
+    endpoint: 'https://api.poyo.ai/api/generate/submit',
+
+    keyConfigured: true,
+
+    status: 'idle',
+
+    lastError: 'Poyo does not support chat completions',
+
+    lastLatency: 0
+
+  }
+
+];
+
+const ApiTest: React.FC = () => {
+
+  const { language } = useLanguage();
+
+  const isRtl = language === 'fa';
+
+  const [activeTab, setActiveTab] = useState<'providers' | 'logs' | 'settings'>('providers');
+
+  const [providers, setProviders] = useState<AIProvider[]>(DEFAULT_PROVIDERS);
+
+  const [logs, setLogs] = useState<AILog[]>([]);
+
+  const [testPrompt, setTestPrompt] = useState(isRtl ? 'یک جمله کوتاه بگو.' : 'Say a short sentence.');
+
+
+
+  });
+
+  const addLog = (log: AILog) => setLogs(prev => [log, ...prev].slice(0, 50));
+
+  const testProvider = async (provider: AIProvider) => {
+
+    const id = provider.id;
+
+    setProviders(prev => prev.map(p => p.id === id ? { ...p, status: 'testing' } : p));
+
+    try {
+
+      let url = provider.endpoint;
+
+      let headers: Record<string, string> = { 'Content-Type': 'application/json' };
+
+      let body: any = {
+
+        messages: [{ role: 'user', content: testPrompt }],
+
+        max_tokens: 60
+
+      };
+
+      let apiKey = '';
+
+      if (id === 'openrouter') {
+
+        apiKey = apiKeys.openrouter;
+
+        headers['Authorization'] = `Bearer ${apiKey}`;
+
+        headers['HTTP-Referer'] = window.location.origin;
+
+        headers['X-Title'] = 'Green Hope Project';
+
+      } else if (id === 'portkey') {
+
+        apiKey = apiKeys.portkey;
+
+        headers['x-portkey-api-key'] = apiKey;
+
+        headers['x-portkey-provider'] = 'openai'; // FIXED - required header
+
+        url = 'https://api.portkey.ai/v1/chat/completions';
+
+      } else if (id === 'poyo') {
+
+        // Poyo uses different endpoint/payload (image/video)
+
+        apiKey = apiKeys.poyo;
+
+        headers['Authorization'] = `Bearer ${apiKey}`;
+
+        body = { model: provider.model, prompt: testPrompt };
+
+        url = provider.endpoint;
+
+      }
+
+      if (!apiKey) throw new Error('API key missing');
+
+      const start = Date.now();
+
+      const res = await fetch(url, { method: 'POST', headers, body: JSON.stringify(body) });
+
+      const data = await res.json();
+
+      const duration = Date.now() - start;
+
+      if (res.ok && data.choices?.[0]?.message?.content) {
+
+        const response = data.choices[0].message.content;
+
+        setProviders(prev => prev.map(p => p.id === id ? { ...p, status: 'success', lastLatency: duration } : p));
+
+        addLog({ id: Date.now(), timestamp: new Date().toISOString(), provider: id, model: provider.model, status: 'success', duration, response });
+
+      } else {
+
+        throw new Error(data.error?.message || res.statusText);
+
+      }
+
+    } catch (err: any) {
+
+      setProviders(prev => prev.map(p => p.id === id ? { ...p, status: 'error', lastError: err.message } : p));
+
+      addLog({ id: Date.now(), timestamp: new Date().toISOString(), provider: id, model: provider.model, status: 'error', duration: 0, error: err.message });
+
+    }
+
+  };
+
+  const testAll = async () => {
+
+    for (const p of providers.filter(p => p.enabled)) {
+
+      await testProvider(p);
+
+      await new Promise(r => setTimeout(r, 1000)); // avoid rate limits
+
+    }
+
+  };
+
+  return (
+
+    <div className={`p-6 ${isRtl ? 'rtl' : 'ltr'}`}>
+
+      <h1 className="text-3xl font-bold mb-6">🧪 AI API Tester (Cloudflare Pages)</h1>
+
+      <div className="mb-6">
+
+        <input
+
+          type="text"
+
+          value={testPrompt}
+
+          onChange={e => setTestPrompt(e.target.value)}
+
+          placeholder="Test prompt..."
+
+          className="border p-2 rounded w-full md:w-96"
+
+        />
+
+        <button
+
+          onClick={testAll}
+
+          className="ml-4 bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+
+        >
+
+          Test All Providers
+
+        </button>
+
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        {providers.map(p => (
+
+          <div key={p.id} className="border rounded-lg p-4 shadow">
+
+            <h2 className="font-bold text-lg">{p.name}</h2>
+
+            <p className="text-sm text-gray-500">{p.endpoint}</p>
+
+            <p className="mt-2">
+
+              Status: {p.status === 'success' ? '✅ OK' : p.status === 'error' ? '❌ Error' : '⚪ Idle'}
+
+            </p>
+
+            {p.lastError && <p className="text-red-600 text-sm mt-1">{p.lastError}</p>}
+
+            <button
+
+              onClick={() => testProvider(p)}
+
+              disabled={p.status === 'testing'}
+
+              className="mt-3 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+
+            >
+
+              {p.status === 'testing' ? 'Testing...' : 'Run Test'}
+
+            </button>
+
+          </div>
+
+        ))}
+
+      </div>
+
+      {logs.length > 0 && (
+
+        <div className="mt-8">
+
+          <h2 className="text-2xl mb-4">Logs</h2>
+
+          <ul className="space-y-2">
+
+            {logs.map(log => (
+
+              <li key={log.id} className="border-l-4 pl-3" style={{ borderColor: log.status === 'success' ? 'green' : 'red' }}>
+
+                <span className="font-mono text-sm">{log.timestamp}</span> - <strong>{log.provider}</strong> ({log.model}) - {log.status} ({log.duration}ms)
+
+                {log.response && <p className="text-sm mt-1">{log.response}</p>}
+
+                {log.error && <p className="text-red-600 text-sm mt-1">{log.error}</p>}
+
+              </li>
+
+            ))}
+
+          </ul>
+
+        </div>
+
+      )}
+
+    </div>
+
+  );
+
+};
+
+export default ApiTest;

@@ -515,6 +515,48 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post('/api/ai/vision', async (req: Request, res: Response) => {
+    try {
+      const { image, prompt } = req.body;
+      const poyoKey = process.env.POYO_API_KEY_1 || process.env.POYO_AI_API_KEY;
+      
+      if (!poyoKey) {
+        return res.status(500).json({ message: "Vision API not configured" });
+      }
+
+      const response = await fetch('https://api.poyo.ai/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${poyoKey}`
+        },
+        body: JSON.stringify({
+          model: 'gemini-2.0-flash',
+          messages: [
+            {
+              role: 'user',
+              content: [
+                { type: 'text', text: prompt || "Describe this image or extract text." },
+                { type: 'image_url', image_url: { url: image.startsWith('data:') ? image : `data:image/jpeg;base64,${image}` } }
+              ]
+            }
+          ]
+        })
+      });
+
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`Poyo Vision Error: ${response.status} ${err}`);
+      }
+
+      const data = await response.json() as any;
+      res.json({ text: data.choices?.[0]?.message?.content || '' });
+    } catch (error: any) {
+      console.error("Vision Error:", error);
+      res.status(500).json({ message: error.message });
+    }
+  });
+
   app.post('/api/ai/health-check', async (_req: Request, res: Response) => {
     const results = [];
     
